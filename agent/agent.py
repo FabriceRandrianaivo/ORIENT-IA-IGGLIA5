@@ -102,7 +102,11 @@ _STOPWORDS = {"quel", "quelle", "sont", "dans", "pour", "avec", "cette", "votre"
               "faire", "avoir", "est", "bien", "comme", "cela", "plus", "tres",
               "aussi", "ainsi", "tout", "toute", "fait", "sans", "sous", "entre",
               "vers", "chez", "donc", "alors", "apres", "avant", "depuis", "encore",
-              "deja", "meme", "autre", "quoi", "quand", "trouve", "existe"}
+              "deja", "meme", "autre", "quoi", "quand", "trouve", "existe",
+              # tournures conversationnelles : ne portent pas d'information de recherche
+              "bonjour", "bonsoir", "salut", "merci", "svp", "voudrais", "veux",
+              "aimerais", "souhaite", "souhaiterais", "connaitre", "savoir",
+              "dire", "dites", "parle", "parlez", "peu", "petit"}
 
 
 def _pertinent(question: str, texte: str) -> bool:
@@ -279,7 +283,8 @@ def _mode_gemini(question: str, profil: dict, appels: list) -> str:
     try:
         import urllib.request
         cle = os.environ["GEMINI_API_KEY"]
-        modele = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+        # Alias auto-mis-a-jour par Google : toujours la derniere version flash.
+        modele = os.environ.get("GEMINI_MODEL", "gemini-flash-latest")
         donnees = json.dumps([{"outil": a["outil"], "sortie": a["sortie"]} for a in appels],
                              ensure_ascii=False, default=str)[:8000]
         consigne = (

@@ -30,11 +30,16 @@ ENVIRONNEMENTS = ["", "Bureau", "Terrain / exterieur", "Laboratoire", "Atelier /
 METIERS = ["Technique / ingenierie", "Gestion / management", "Creation / design",
            "Commerce / relation client", "Recherche / enseignement", "Entrepreneur / independant"]
 
+EMOJI_FILIERE = {"IGGLIA": "💻", "ESIIA": "🔌", "IMTICIA": "🎬", "ISAIA": "📈",
+                 "CAA": "💼", "FIC": "💰", "DTJA": "⚖️", "EMP": "📊",
+                 "IAA": "🏭", "PIP": "💊", "AEE": "🌱",
+                 "EMII": "⚙️", "GCA": "🏗️", "ICMP": "⛏️", "TEE": "🌍", "TEH": "🏨"}
+
 SUGGESTIONS = [
-    "🧭 Quels parcours me correspondent ?",
     "⚖️ Compare ISAIA et IGGLIA en citant tes sources",
     "🎓 Quels diplômes délivre l'ISPM ?",
     "📋 Quelles séries de bac pour la biotechnologie ?",
+    "🏫 Présente-moi la filière GCA",
 ]
 
 st.set_page_config(page_title="ORIENT'IA — ISPM", page_icon="🎓", layout="wide",
@@ -46,134 +51,93 @@ st.markdown("""
 
   html, body, [class*="css"] { font-family: 'Public Sans', 'Segoe UI', sans-serif; }
   h1, h2, h3 { font-family: 'Outfit', 'Segoe UI', sans-serif; }
-  .block-container { padding-top: 1.3rem; max-width: 60rem; }
+  .block-container { padding-top: 1.2rem; max-width: 62rem; }
   #MainMenu, footer, header[data-testid="stHeader"] { visibility: hidden; height: 0; }
 
   .orientia-hero {
     position: relative; overflow: hidden;
     background: linear-gradient(115deg, #0d3b23 0%, #1e6b45 55%, #2e8a5c 100%);
-    border-radius: 18px; padding: 30px 34px 24px; color: #ffffff; margin-bottom: 8px;
-    box-shadow: 0 10px 30px rgba(13, 59, 35, .25);
+    border-radius: 16px; padding: 22px 28px 18px; color: #ffffff;
+    box-shadow: 0 8px 26px rgba(13, 59, 35, .22);
   }
   .orientia-hero::before {
     content: ""; position: absolute; right: -60px; top: -60px; width: 240px; height: 240px;
     background: radial-gradient(circle, rgba(255,255,255,.14) 0%, transparent 65%);
   }
-  .orientia-hero::after {
-    content: ""; position: absolute; left: 30%; bottom: -90px; width: 260px; height: 260px;
-    background: radial-gradient(circle, rgba(255,255,255,.08) 0%, transparent 60%);
+  .orientia-hero h1 { color: #fff; font-size: 1.9rem; font-weight: 700; margin: 0; display: inline; }
+  .orientia-hero .tagline { color: #cfe8d9; margin: 4px 0 0; font-size: .9rem; }
+
+  .etapes { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0 4px; }
+  .etape {
+    flex: 1; min-width: 180px; display: flex; align-items: center; gap: 10px;
+    background: #ffffff; border: 1.5px solid #dfe7e1; border-radius: 12px; padding: 10px 14px;
   }
-  .orientia-hero h1 {
-    color: #ffffff; font-size: 2.35rem; font-weight: 700; letter-spacing: .01em; margin: 0 0 4px;
+  .etape.ok { border-color: #1e6b45; background: #eaf3ed; }
+  .etape .num {
+    width: 26px; height: 26px; border-radius: 50%; flex: none;
+    display: flex; align-items: center; justify-content: center;
+    background: #dfe7e1; color: #5b6459; font-weight: 700; font-size: .85rem;
   }
-  .orientia-hero .tagline { color: #cfe8d9; margin: 0 0 14px; font-size: .98rem; }
-  .hero-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .hero-chips span {
-    background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.25);
-    color: #eaf6ef; font-size: .74rem; font-weight: 600; letter-spacing: .03em;
-    padding: 4px 12px; border-radius: 999px;
-  }
+  .etape.ok .num { background: #1e6b45; color: #fff; }
+  .etape .lbl { font-size: .82rem; line-height: 1.3; color: #2c4636; }
+  .etape .lbl b { display: block; font-size: .86rem; color: #14321f; }
 
   .mention {
     background: #eef5f0; border: 1px solid #d5e5da; border-left: 5px solid #1e6b45;
-    border-radius: 0 10px 10px 0; padding: 10px 16px; font-size: .82rem;
-    color: #2c4636; margin: 12px 0 20px;
+    border-radius: 0 10px 10px 0; padding: 8px 14px; font-size: .8rem;
+    color: #2c4636; margin: 10px 0 16px;
   }
 
+  .carte-filiere {
+    background: #ffffff; border: 1.5px solid #d3e4d9; border-radius: 14px;
+    padding: 14px 16px 12px; height: 100%;
+    box-shadow: 0 3px 12px rgba(31, 60, 43, .07);
+  }
+  .carte-filiere.premiere { border-color: #1e6b45; background: linear-gradient(180deg, #eaf3ed 0%, #ffffff 60%); }
+  .carte-filiere .rang { font-size: .68rem; font-weight: 700; letter-spacing: .06em; color: #7d8a80; }
+  .carte-filiere.premiere .rang { color: #1e6b45; }
+  .carte-filiere .sigle { font-family: 'Outfit'; font-size: 1.25rem; font-weight: 700; color: #14321f; margin: 2px 0; }
+  .carte-filiere .nom { font-size: .74rem; color: #5b6459; line-height: 1.35; min-height: 2.6em; }
+  .carte-filiere .barre { height: 8px; background: #e2eae4; border-radius: 99px; overflow: hidden; margin-top: 8px; }
+  .carte-filiere .barre div { height: 100%; background: linear-gradient(90deg, #1e6b45, #2e8a5c); border-radius: 99px; }
+  .carte-filiere .pct { font-family: 'Outfit'; font-weight: 700; color: #1e6b45; font-size: .95rem; margin-top: 4px; }
+
   [data-testid="stChatMessage"] {
-    border-radius: 14px; padding: 15px 18px; margin-bottom: 12px;
+    border-radius: 14px; padding: 14px 17px; margin-bottom: 11px;
     border: 1px solid #e2eae4; background: #ffffff;
     box-shadow: 0 2px 10px rgba(31, 60, 43, .05);
   }
-  [data-testid="stChatMessage"]:has([aria-label="Chat message from user"]) {
-    background: #eaf3ed; border-color: #d3e4d9;
-  }
 
   [data-testid="stSidebar"] { background: linear-gradient(180deg, #eef4f0 0%, #e6efe9 100%); }
-  [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2 {
-    color: #145032; font-family: 'Outfit', sans-serif;
-  }
+  [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2 { color: #145032; font-family: 'Outfit'; }
   [data-testid="stSidebar"] [data-testid="stExpander"] {
     background: #ffffff; border-radius: 10px; border: 1px solid #dbe7de;
   }
 
   .stButton button {
     border: 1.5px solid #1e6b45; color: #145032; background: #ffffff;
-    border-radius: 999px; font-size: .82rem; font-weight: 600; padding: 6px 16px;
+    border-radius: 999px; font-size: .82rem; font-weight: 600; padding: 6px 15px;
     transition: all .15s ease;
   }
-  .stButton button:hover {
-    background: #1e6b45; color: #ffffff; border-color: #1e6b45;
+  .stButton button:hover:enabled {
+    background: #1e6b45; color: #ffffff;
     transform: translateY(-1px); box-shadow: 0 4px 12px rgba(30, 107, 69, .30);
   }
+  .stButton button[kind="primary"], .stButton button[data-testid="stBaseButton-primary"] {
+    background: #1e6b45; color: #ffffff; border-color: #1e6b45; font-size: .9rem; padding: 9px 15px;
+  }
+  .stButton button:disabled { opacity: .45; }
 
-  div[data-testid="stExpander"] summary { font-size: .85rem; }
   .footer-note {
-    text-align: center; color: #7d8a80; font-size: .74rem;
-    margin-top: 26px; padding-top: 14px; border-top: 1px solid #e2eae4;
+    text-align: center; color: #7d8a80; font-size: .72rem;
+    margin-top: 24px; padding-top: 12px; border-top: 1px solid #e2eae4;
   }
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown("""
-<div class="orientia-hero">
-  <h1>🎓 ORIENT'IA</h1>
-  <p class="tagline">Assistant intelligent d'orientation — Institut Supérieur Polytechnique de Madagascar</p>
-  <div class="hero-chips">
-    <span>16 FILIÈRES</span><span>SOURCES OFFICIELLES CITÉES</span><span>MODÈLE ML EXPLIQUÉ</span>
-    <span>INCERTITUDE DÉCLARÉE</span><span>32/32 TESTS</span>
-  </div>
-</div>
-<div class="mention">ℹ️ ORIENT'IA constitue un outil d'aide à l'orientation. Ses recommandations ne
-remplacent ni l'avis d'un conseiller pédagogique ni une décision officielle d'admission.</div>
-""", unsafe_allow_html=True)
-
-# ----------------------------------------------------------- profil declare
-with st.sidebar:
-    st.header("👤 Mon profil")
-    st.caption("L'assistant n'utilise que ce que vous déclarez ici — jamais votre style d'écriture.")
-
-    serie = st.selectbox("🎯 Série de bac", [""] + tools.SERIES)
-    matieres = st.multiselect("📚 Matières préférées (max 3)", MATIERES, max_selections=3)
-    interets = st.multiselect("💡 Centres d'intérêt (max 4)", INTERETS, max_selections=4)
-    with st.expander("📊 Mes niveaux (1 → 5)"):
-        note_maths = st.slider("Mathématiques", 1, 5, 3)
-        note_sciences = st.slider("Sciences", 1, 5, 3)
-        note_langues = st.slider("Langues", 1, 5, 3)
-        note_eco = st.slider("Éco-gestion", 1, 5, 3)
-    with st.expander("➕ Compléter mon profil"):
-        competences = st.multiselect("Compétences", COMPETENCES)
-        environnement = st.selectbox("Environnement de travail", ENVIRONNEMENTS)
-        metiers = st.multiselect("Métier visé (max 2)", METIERS, max_selections=2)
-
-    remplis = sum(bool(v) for v in [serie, matieres, interets, competences, environnement, metiers])
-    st.progress(remplis / 6, text=f"Profil : {remplis}/6 sections remplies")
-    if remplis < 3:
-        st.caption("⚠️ Série, matières et intérêts sont nécessaires pour une recommandation.")
-
-    st.divider()
-    if st.button("🧹 Nouvelle conversation", use_container_width=True):
-        st.session_state.pop("messages", None)
-        st.rerun()
-    if agent.os.environ.get("ANTHROPIC_API_KEY"):
-        st.caption("Mode agent : 🔑 LLM Anthropic")
-    elif agent.os.environ.get("GEMINI_API_KEY"):
-        st.caption("Mode agent : 🔑 LLM Gemini (gratuit)")
-    else:
-        st.caption("Mode agent : ⚙️ Déterministe · 100 % local")
-
-profil = {"serie_bac": serie, "note_maths": note_maths, "note_sciences": note_sciences,
-          "note_langues": note_langues, "note_eco": note_eco,
-          "matieres_preferees": matieres, "competences": competences, "interets": interets,
-          "environnement": environnement, "metiers_vises": metiers}
-
-# ------------------------------------------------------------------ chat
+# ------------------------------------------------------------------- etat
 if "messages" not in st.session_state:
-    st.session_state.messages = [{"role": "assistant", "contenu":
-        "Bonjour 👋 Je suis **ORIENT'IA**, l'assistant d'orientation de l'ISPM.\n\n"
-        "Renseignez votre profil à gauche, puis posez vos questions — ou utilisez les "
-        "suggestions ci-dessous : présentation d'une filière, comparaison, prérequis, "
-        "recommandation personnalisée…", "meta": None}]
+    st.session_state.messages = []
 
 
 def traiter(question: str):
@@ -183,9 +147,115 @@ def traiter(question: str):
                                       "meta": {k: r[k] for k in ["outils", "latence_ms", "refus", "mode"]}})
 
 
+# ----------------------------------------------------------- profil declare
+with st.sidebar:
+    st.header("👤 Étape 1 — Mon profil")
+    st.caption("L'assistant n'utilise que ce que vous déclarez ici — jamais votre style d'écriture.")
+
+    serie = st.selectbox("🎯 Série de bac *", [""] + tools.SERIES,
+                         help="Obligatoire : détermine les filières accessibles")
+    matieres = st.multiselect("📚 Matières préférées * (max 3)", MATIERES, max_selections=3)
+    interets = st.multiselect("💡 Centres d'intérêt * (max 4)", INTERETS, max_selections=4)
+    with st.expander("📊 Mes niveaux (1 → 5)"):
+        note_maths = st.slider("Mathématiques", 1, 5, 3)
+        note_sciences = st.slider("Sciences", 1, 5, 3)
+        note_langues = st.slider("Langues", 1, 5, 3)
+        note_eco = st.slider("Éco-gestion", 1, 5, 3)
+    with st.expander("➕ Affiner (facultatif)"):
+        competences = st.multiselect("Compétences", COMPETENCES)
+        environnement = st.selectbox("Environnement de travail", ENVIRONNEMENTS)
+        metiers = st.multiselect("Métier visé (max 2)", METIERS, max_selections=2)
+
+    profil = {"serie_bac": serie, "note_maths": note_maths, "note_sciences": note_sciences,
+              "note_langues": note_langues, "note_eco": note_eco,
+              "matieres_preferees": matieres, "competences": competences, "interets": interets,
+              "environnement": environnement, "metiers_vises": metiers}
+
+    pret = bool(serie and matieres and interets)
+    if pret:
+        st.success("Profil prêt ✔", icon="✅")
+    else:
+        manques = [n for n, v in [("série de bac", serie), ("matières", matieres),
+                                  ("intérêts", interets)] if not v]
+        st.warning("Il manque : " + ", ".join(manques), icon="✏️")
+
+    if st.button("🧭 Obtenir ma recommandation", type="primary",
+                 use_container_width=True, disabled=not pret):
+        traiter("Quels parcours me correspondent ?")
+        st.rerun()
+
+    st.divider()
+    if st.button("🧹 Nouvelle conversation", use_container_width=True):
+        st.session_state.messages = []
+        st.rerun()
+    if agent.os.environ.get("ANTHROPIC_API_KEY"):
+        st.caption("Mode agent : 🔑 LLM Anthropic")
+    elif agent.os.environ.get("GEMINI_API_KEY"):
+        st.caption("Mode agent : 🔑 LLM Gemini (gratuit)")
+    else:
+        st.caption("Mode agent : ⚙️ Déterministe · 100 % local")
+
+# ------------------------------------------------------------------- entete
+a_pose_question = any(m["role"] == "user" for m in st.session_state.messages)
+a_recommandation = any(m.get("meta") and any(o["outil"] == "analyser_profil_ml"
+                                             for o in m["meta"]["outils"])
+                       for m in st.session_state.messages if m.get("meta"))
+
+st.markdown(f"""
+<div class="orientia-hero">
+  <h1>🎓 ORIENT'IA</h1>
+  <p class="tagline">Assistant intelligent d'orientation — Institut Supérieur Polytechnique de Madagascar · 16 filières</p>
+</div>
+<div class="etapes">
+  <div class="etape {'ok' if pret else ''}">
+    <div class="num">{'✓' if pret else '1'}</div>
+    <div class="lbl"><b>Remplir mon profil</b>dans le panneau de gauche 👈</div>
+  </div>
+  <div class="etape {'ok' if a_pose_question else ''}">
+    <div class="num">{'✓' if a_pose_question else '2'}</div>
+    <div class="lbl"><b>Poser une question</b>ou cliquer « Obtenir ma recommandation »</div>
+  </div>
+  <div class="etape {'ok' if a_recommandation else ''}">
+    <div class="num">{'✓' if a_recommandation else '3'}</div>
+    <div class="lbl"><b>Explorer les résultats</b>top 3, sources citées, traces</div>
+  </div>
+</div>
+<div class="mention">ℹ️ ORIENT'IA constitue un outil d'aide à l'orientation. Ses recommandations ne
+remplacent ni l'avis d'un conseiller pédagogique ni une décision officielle d'admission.</div>
+""", unsafe_allow_html=True)
+
+
+# ---------------------------------------------------------------- rendu chat
+def cartes_top3(meta):
+    """Si la reponse contient un appel au modele ML, affiche le top-3 en cartes."""
+    for a in meta["outils"]:
+        if a["outil"] == "analyser_profil_ml" and "top3" in a.get("sortie", {}):
+            top3 = a["sortie"]["top3"]
+            colonnes = st.columns(len(top3))
+            for i, (col, t) in enumerate(zip(colonnes, top3)):
+                pct = round(t["probabilite"] * 100)
+                col.markdown(f"""
+<div class="carte-filiere {'premiere' if i == 0 else ''}">
+  <div class="rang">{'🥇 MEILLEURE CORRESPONDANCE' if i == 0 else f'#{i + 1}'}</div>
+  <div class="sigle">{EMOJI_FILIERE.get(t['sigle'], '🎓')} {t['sigle']}</div>
+  <div class="nom">{t['nom']}</div>
+  <div class="barre"><div style="width:{max(pct, 3)}%"></div></div>
+  <div class="pct">{pct} %</div>
+</div>""", unsafe_allow_html=True)
+            return
+
+
+if not st.session_state.messages:
+    with st.chat_message("assistant", avatar="🎓"):
+        st.markdown("Bonjour 👋 Je suis **ORIENT'IA**. Remplissez votre profil à gauche puis "
+                    "cliquez sur **🧭 Obtenir ma recommandation** — ou posez-moi directement "
+                    "une question sur les filières de l'ISPM :")
+
 for m in st.session_state.messages:
     avatar = "🎓" if m["role"] == "assistant" else "🧑"
     with st.chat_message(m["role"], avatar=avatar):
+        if m.get("meta"):
+            cartes_top3(m["meta"])
         st.markdown(m["contenu"])
         if m.get("meta"):
             meta = m["meta"]
@@ -200,16 +270,14 @@ for m in st.session_state.messages:
                     st.caption("Aucun outil appelé (refus de sécurité ou réponse directe).")
                 st.caption("Trace complète : dossier traces/ (JSONL).")
 
-# Suggestions cliquables (utile pour la demo et la video).
-if len(st.session_state.messages) <= 1:
-    colonnes = st.columns(2)
-    for i, s in enumerate(SUGGESTIONS):
-        if colonnes[i % 2].button(s, key=f"sugg-{i}", use_container_width=True):
-            with st.spinner("Analyse en cours…"):
-                traiter(s.split(" ", 1)[1])
-            st.rerun()
+# Suggestions toujours disponibles.
+colonnes = st.columns(len(SUGGESTIONS))
+for col, s in zip(colonnes, SUGGESTIONS):
+    if col.button(s, key=f"sugg-{s[:14]}", use_container_width=True):
+        traiter(s.split(" ", 1)[1])
+        st.rerun()
 
-if question := st.chat_input("Posez votre question…"):
+if question := st.chat_input("Posez votre question sur les filières, prérequis, débouchés…"):
     with st.spinner("Analyse en cours…"):
         traiter(question)
     st.rerun()

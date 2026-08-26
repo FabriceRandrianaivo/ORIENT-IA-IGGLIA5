@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>.::. Institut Sup&eacute;rieur Polytechnique de Madagascar</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="Description" content="Le premier Institut Sup&eacute;rieur Polytechnique priv&eacute; à Madagascar. Formation de haut niveau." />
+    <meta name="Keywords" content="ISPM, institut, polytechnique, madagascar, &eacute;cole, universit&eacute;, priv&eacute;e, informatique, logiciel, agronomie, &eacute;lectronique, commerce, multim&eacute;dia, tourisme, environnement" />
+
+    <!--css-->
+    <link href="resources/css/ispm.css" rel="stylesheet" type="text/css">
+    <link href="resources/css/topmenu.css" rel="stylesheet" type="text/css" />
+    <link href="resources/css/n2tabs.css" rel="stylesheet" type="text/css" />
+
+
+    <!--Fonctionnalite accordion -->
+    <link rel="stylesheet" href="resources/jquery/jquery-ui.css" />
+    <script type="text/javascript" src="resources/jquery/jquery-1.8.2.js"></script>
+    <script type="text/javascript" src="resources/jquery/jquery-ui.js"></script>
+
+
+    <!--js-->
+    <script type="text/javascript" src="resources/js/anylink.js"></script>
+    <script type="text/javascript" src="resources/js/marquee.js"></script>
+    <script type="text/javascript" src="resources/js/topmenu.js"></script>
+    <script type="text/javascript" src="resources/js/content-scroller.js"></script>
+    <script type="text/javascript" src="resources/js/cookie_menu.js"></script>
+    <script type="text/javascript" src="resources/js/changingcontent.js"></script>
+    <script type="text/javascript" src="resources/js/ajaxfileupload.js"></script>
+
+<!-- Fonctionnalite d'onglets avec le composant Tabber. Noter que parmis
+les deux fichiers javascript, celui pour les cookies code must be included first. -->
+<link rel="stylesheet" href="resources/tabber/css/tabber.css" TYPE="text/css" MEDIA="screen">
+<script type="text/javascript" src="resources/tabber/js/tabber-cookies.js"></script>
+<script type="text/javascript" src="resources/tabber/js/tabber.js"></script>
+
+<!--Slide show -->
+<script type="text/javascript" src="resources/slideshow/fadeinslideshow.js"></script>
+
+<!--jcarosellite-->
+<!-- Slider images on footer -->
+<link rel="stylesheet" type="text/css" href="resources/css/jcarousellite.css" />
+<script src="resources/js/jcarousellite.js" type="text/javascript"></script>
+
+<!-- Rounded box -->
+<script type="text/JavaScript" src="resources/js/curvycorners.js"></script>
+<script type="text/JavaScript">
+
+  addEvent(window, 'load', initCorners);
+
+  function initCorners() {
+    var settings = {
+      tl: { radius: 6 },
+      tr: { radius: 6 },
+      bl: { radius: 6 },
+      br: { radius: 6 },
+      antiAlias: true
+    }
+    curvyCorners(settings, ".roundedbox");
+    //curvyCorners(settings, ".forum_box");
+ }
+
+     function dayDiff(d1, d2) {
+        d1 = d1.getTime() / 86400000;
+        d2 = d2.getTime() / 86400000;
+        return Math.ceil(d2 - d1);
+     }
+
+</script>
+
+<!-- Calendrier flottant de selection de date.
+Source: The DHTML Calendar, version 0.9.2, Mihai Bazon, 2002, http://students.infoiasi.ro/~mishoo -->
+<script language="JavaScript" type="text/javascript" src="resources/calendar/calendar.js"></script>
+<script language="JavaScript" type="text/javascript" src="resources/calendar/lang/calendar-fr.js"></script>
+<link rel="Stylesheet" href="resources/calendar/calendar.css" type="text/css">
+</head>
+
+<body>
+
+<div align="center" style="margin-top:5px;"><!--Conteneur-->
+<table width="900" border="0" align="center" cellpadding="0" cellspacing="0" class="borderbody">
+    <tr>
+        <td colspan="2" class="bg_entete">
+            <!--Entete image-->
+            <a href="index.php" style="text-decoration: none; cursor: pointer;">
+                <div class="head">
+                    <div id="banner" style="margin:0; width: 876px; height: 119px; background-image: url('resources/images/institut/entete_ispm1.jpg');">
+                        <!--<div id="annif" style="padding: 5px; color: #3f3; text-align: center;"></div>-->
+                    </div>
+                </div>
+            </a>
+            
+            <a href="index.php" style="position:absolute; left:435px; top:110px; text-decoration: none; cursor: pointer;">
+                <img src="resources/images/fr.png" alt="FR" />
+            </a>
+
+            <a href="en/index.php" style="position:absolute; left:460px; top:110px; text-decoration: none; cursor: pointer;">
+                <img src="resources/images/en.png" alt="EN" />
+            </a>
+
+            <!--Menu-->
+            <table class="topmenu" cellpadding="0" cellspacing="0" border="0">
+                <tr><td>
+                    <div id="t1" title="Accueil|index.php" class="tabContentMenu">
+                         <a href="index.php">Les mots du Recteur</a>
+                    </div>
+
+                    <div id="t2" title="Présentation|presentation.php" class="tabContentMenu">
+                        <a href="presentation.php">Présentation Générale</a>
+                        
+                        <a href="filieres.php">Départements & Filières</a>
+                        <a href="inscription.php">S'inscrire</a>
+                                                    <a href="ispmdixit.php">ISPM DIXIT</a>
+                            <a href="hymne.php">Hymnes</a>
+                            <a href="logo.php">Devise & Logo</a>
+                            <a href="tenue.php">Tenue</a>
+							<a href="majors.php">Les majors</a>
+                            <!--<a href="statistiquevisiteurs.php">Stat. visiteurs</a>-->
+                                            </div>
+                    
+                    <div id="t3" title="Actualités & Evénements|actualites.php" class="tabContentMenu">
+                        <span style="padding-left:10px"></span>
+                        <a href="actualites.php">Actualités</a>
+                        <a href="presses.php">ISPM dans la presse</a>
+                        <a href="evenements.php">Evénements marquants</a>
+                        <a href="evenements.php?mar_nais=1">Mariages et Autres événements heureux</a>
+                        <a href="parascolaires.php">Activités parascolaires & sportives</a>
+                    </div>
+
+                    <div id="t5" title="Recherches|recherchepharmaceutique.php" class="tabContentMenu">
+                                                    <span style="padding-left:175px"></span>
+                            <a href="projets.php">Projets</a>
+                                                <a href="prix.php">Prix obtenus</a>
+                        <a href="publications.php">Publications Scientifiques</a>
+                                                    <a href="memoires.php">Mémoires & Thèses</a>
+                            <a href="recherchepharmaceutique.php">Recherches Pharmaceutiques</a>
+                                            </div>
+
+                    <div id="t6" title="Arts & Culture|artculture.php" class="tabContentMenu">
+                        <span style="padding-left:375px"></span>
+                        <a href="mikanto.php">Tarika &laquo; Mi'Kanto &raquo;</a>
+                        <a href="artculture.php">Kolontsaina isan-karazany</a>
+                    </div>
+
+                    <div id="t7" title="Anciens|membres.php?IsAncien=1" class="tabContentMenu">
+                        <span style="padding-left:305px"></span>
+                        <a href="aaispm.php">AAISPM</a>
+                        <!--Partie connexion-->
+                                                    <a href="connexion.php"></a>
+                            <a href="membre.php?IsAncien=1">S'inscrire</a>
+                                                <a href="membres.php?IsAncien=1">Annuaire	</a>
+                        <a href="journalanciens.php">Journal des anciens</a>
+                        <a href="offres.php">Offres d'emploi</a>
+                        <!--<a href="emplois_liste.php">Emplois</a>-->
+                    </div>
+
+                    <div id="t8" title="Photos|albums.php" class="tabContentMenu">
+                        <span style="padding-left:510px"></span>
+                        <a href="photo.php?type=s">Photos de la semaine</a>
+                        <a href="photo.php?type=a">Photo de l'année</a>
+                        <a href="albums.php">Albums</a>
+                    </div>
+                    
+                    <div id="t9" title="IORST|iorst.php" class="tabContentMenu">
+                        <span style="padding-left:625px"></span>
+                        <a href="iorst.php">Call for papers</a>
+                        <a href="papers.php">Published papers</a>
+
+                    </div>
+
+                </td></tr>
+            </table>
+
+            <script type="text/javascript">
+                jQuery(".tabContentMenu").topmenu("t", Get_Cookie("t"));
+            </script>
+
+        </td>
+    </tr>
+    <!--Ligne left content and body content-->
+    <tr>
+        <!--Colonne contenant left menu-->
+        <td valign="top" class="bg_left">
+
+        <!--<div style="text-align: center;"><a href="projetscarlton.php" style="color:#000099">Liste des projets admis au Salon de l'ISPM au Carlton</a></div><br />-->
+
+        <!--Zone de recherche-->
+        <div style="border:0px solid #409940;width:250px; background-color:#fff;" class="forum_box">
+        <div style="margin:0 5px;">
+            <!--<form name="frmSearch" action="resultatsrecherches.php" method="post">
+                <input type="text" name="txtSearch" class="textbox_search"/>
+                <input type="submit" name="txtSearch" value="GO" class="button_search"/>
+            </form>-->
+            <div style="border: 1px dotted #409940; width:245px;" class="bodytext">
+                <div id="infoblinked" style="color:#B78748; text-align: center; font-weight: bold; padding: 5px;">
+                    L'ISPM a gagné le 1er prix de l'Olympiade d'Informatique de Madagascar 2012 pour sa première participation.                </div>
+
+                <div style="margin:10px;border-bottom:1px dotted #C5D9DA"></div>
+
+                <div id="infoblinked2" style="text-align: center; font-weight: bold; padding: 5px;">
+                    D'après le Shangaï ranking of Universities, ISPM est classé parmi les dix meilleures Universités de Madagascar (Top-10) (parmi les 140 universités publiques et privées).                </div>
+            </div>
+        </div>
+        </div>
+        <p></p>
+
+        <!--Zone pour les membres-->
+        
+            <p></p>
+            <script type="text/javascript">
+
+/***********************************************
+* Pausing up-down scroller- © Dynamic Drive (www.dynamicdrive.com)
+* This notice MUST stay intact for legal use
+* Visit http://www.dynamicdrive.com/ for this script and 100s more.
+***********************************************/
+
+function pausescroller(content, divId, divClass, delay){
+this.content=content //message array content
+this.tickerid=divId //ID of ticker div to display information
+this.delay=delay //Delay between msg change, in miliseconds.
+this.mouseoverBol=0 //Boolean to indicate whether mouse is currently over scroller (and pause it if it is)
+this.hiddendivpointer=1 //index of message array for hidden div
+document.write('<div id="'+divId+'" class="'+divClass+'" style="position: relative; overflow: hidden"><div class="innerDiv" style="position: absolute; width: 100%" id="'+divId+'1">'+content[0]+'</div><div class="innerDiv" style="position: absolute; width: 100%; visibility: hidden" id="'+divId+'2">'+content[1]+'</div></div>')
+var scrollerinstance=this
+if (window.addEventListener) //run onload in DOM2 browsers
+window.addEventListener("load", function(){scrollerinstance.initialize()}, false)
+else if (window.attachEvent) //run onload in IE5.5+
+window.attachEvent("onload", function(){scrollerinstance.initialize()})
+else if (document.getElementById) //if legacy DOM browsers, just start scroller after 0.5 sec
+setTimeout(function(){scrollerinstance.initialize()}, 500)
+}
+
+// -------------------------------------------------------------------
+// initialize()- Initialize scroller method.
+// -Get div objects, set initial positions, start up down animation
+// -------------------------------------------------------------------
+
+pausescroller.prototype.initialize=function(){
+this.tickerdiv=document.getElementById(this.tickerid)
+this.visiblediv=document.getElementById(this.tickerid+"1")
+this.hiddendiv=document.getElementById(this.tickerid+"2")
+this.visibledivtop=parseInt(pausescroller.getCSSpadding(this.tickerdiv))
+//set width of inner DIVs to outer DIV's width minus padding (padding assumed to be top padding x 2)
+this.visiblediv.style.width=this.hiddendiv.style.width=this.tickerdiv.offsetWidth-(this.visibledivtop*2)+"px"
+this.getinline(this.visiblediv, this.hiddendiv)
+this.hiddendiv.style.visibility="visible"
+var scrollerinstance=this
+document.getElementById(this.tickerid).onmouseover=function(){scrollerinstance.mouseoverBol=1}
+document.getElementById(this.tickerid).onmouseout=function(){scrollerinstance.mouseoverBol=0}
+if (window.attachEvent) //Clean up loose references in IE
+window.attachEvent("onunload", function(){scrollerinstance.tickerdiv.onmouseover=scrollerinstance.tickerdiv.onmouseout=null})
+setTimeout(function(){scrollerinstance.animateup()}, this.delay)
+}
+
+
+// -------------------------------------------------------------------
+// animateup()- Move the two inner divs of the scroller up and in sync
+// -------------------------------------------------------------------
+
+pausescroller.prototype.animateup=function(){
+var scrollerinstance=this
+if (parseInt(this.hiddendiv.style.top)>(this.visibledivtop+5)){
+this.visiblediv.style.top=parseInt(this.visiblediv.style.top)-5+"px"
+this.hiddendiv.style.top=parseInt(this.hiddendiv.style.top)-5+"px"
+setTimeout(function(){scrollerinstance.animateup()}, 50)
+}
+else{
+this.getinline(this.hiddendiv, this.visiblediv)
+this.swapdivs()
+setTimeout(function(){scrollerinstance.setmessage()}, this.delay)
+}
+}
+
+// -------------------------------------------------------------------
+// swapdivs()- Swap between which is the visible and which is the hidden div
+// -------------------------------------------------------------------
+
+pausescroller.prototype.swapdivs=function(){
+var tempcontainer=this.visiblediv
+this.visiblediv=this.hiddendiv
+this.hiddendiv=tempcontainer
+}
+
+pausescroller.prototype.getinline=function(div1, div2){
+div1.style.top=this.visibledivtop+"px"
+div2.style.top=Math.max(div1.parentNode.offsetHeight, div1.offsetHeight)+"px"
+}
+
+// -------------------------------------------------------------------
+// setmessage()- Populate the hidden div with the next message before it's visible
+// -------------------------------------------------------------------
+
+pausescroller.prototype.setmessage=function(){
+var scrollerinstance=this
+if (this.mouseoverBol==1) //if mouse is currently over scoller, do nothing (pause it)
+setTimeout(function(){scrollerinstance.setmessage()}, 100)
+else{
+var i=this.hiddendivpointer
+var ceiling=this.content.length
+this.hiddendivpointer=(i+1>ceiling-1)? 0 : i+1
+this.hiddendiv.innerHTML=this.content[this.hiddendivpointer]
+this.animateup()
+}
+}
+
+pausescroller.getCSSpadding=function(tickerobj){ //get CSS padding value, if any
+if (tickerobj.currentStyle)
+return tickerobj.currentStyle["paddingTop"]
+else if (window.getComputedStyle) //if DOM2
+return window.getComputedStyle(tickerobj, "").getPropertyValue("padding-top")
+else
+return 0
+}
+</script>
+            <!--Tableau pour les news-->
+            <div class="roundedbox">
+                <table cellpadding="0" cellspacing="0" width="240" border="0" class="cadregauche">
+                    <tr>
+                        <td>
+                            <!--News-->
+                            <h4 style="text-transform: uppercase" >Actualités</h4>
+                                <script type="text/javascript">
+/* THE NEWS HERE */
+
+var pausecontent=new Array();
+   pausecontent[0]="<div><i>20/03/2020</i></div><a href='actualite.php?IdNews=349'>Coronavirus : miato 15 andro ny fampianarana</a><div>Araky ny fanapahan-kevitry ny fitondrampanjakana hifehezana ny fiparitahan'ny valan'aretina &laquo; Coronavirus &raquo; dia miato 15 andro ny fampiana...</div>"
+       pausecontent[1]="<div><i>16/03/2020</i></div><a href='actualite.php?IdNews=346'>Examens semestriels</a><div>Début des examens semestriels (1ère, 2e et 3e année) : jeudi 26 mars 2020.<br />Bonne fête de Pâques tout le monde !</div>"
+       pausecontent[2]="<div><i>13/03/2020</i></div><a href='actualite.php?IdNews=347'>ISPM - Ambassade de Japon</a><div>A l'occasion du 60e anniversaire de Sa majesté l'Empereur du Japon, monsieur et madame Recteur ont été invités à l'Ambassade de Japon le jeudi 12...</div>"
+       pausecontent[3]="<div><i>02/03/2020</i></div><a href='actualite.php?IdNews=348'>Mariage de Solofo et Mialy</a><div>Solofo (enseignant en biotechnologie) et Mialy se sont mariés le samedi 22 février.<br />Ils ont célébré l'événement à la Résidence &laquo; Mi'Ka...</div>"
+       pausecontent[4]="<div><i>17/02/2020</i></div><a href='actualite.php?IdNews=345'>Naissance d'Arnel</a><div>Arnel fils d'Odon (Enseignant en informatique) est né le vendredi 14 février 2020 au MSM Avaradoha. <br />Félicitations aux heureux parents !</div>"
+    
+</script>                                <script type="text/javascript">
+                                //new pausescroller(name_of_message_array, CSS_ID, CSS_classname, pause_in_miliseconds)
+                                new pausescroller(pausecontent, "pscroller1", "someclass", 5000)
+                                </script>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <p></p>
+
+            <div class="roundedbox">
+                <table cellpadding="0" cellspacing="0" width="240" border="0" class="cadrephoto">
+                    <tr>
+                        <td>
+                            <script type="text/javascript">
+                                //new fadeshow(IMAGES_ARRAY_NAME, slideshow_width, slideshow_height, borderwidth, delay, pause (0=no, 1=yes), RandomOrder="R" else 0)
+                                var resourcesPath = "" + "resources";
+                                for (var i = 0; i <= 8 ; i++) {
+                                    fadeimages2[i][0] = fadeimages2[i][0].replace("resources", resourcesPath);
+                                }
+                                new fadeshow(fadeimages2, 240, 135, 0, 2000, 1, 0)
+                            </script>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <p></p>
+
+            <!--Table pour afficher la page de contact-->
+            <div class="roundedbox">
+            <table cellpadding="0" cellspacing="0" width="240" border="0" class="cadregauche">
+            <tr>
+                <td>
+                    <h4 style="text-transform: uppercase;">Contact</h4>
+                    <div style="padding:10px;">
+                        <span style="color:#b78748;">INSTITUT SUPERIEUR POLYTECHNIQUE DE MADAGASCAR</span><br/>
+                        Ambatomaro Antsobolo<br/>
+                        Antananarivo MADAGASCAR<br/><br/>
+                        Téléphone : +261 33 12 171 60<br />
+                        <span style="padding-left: 72px;">+261 34 20 874 28</span><br />
+                        <span style="padding-left: 72px;">+261 32 02 544 72</span><br/> <br />
+                        Email : contact@ispm.education
+                    </div>
+                 </td>
+            </tr>
+            </table>
+            </div>
+        </td>
+
+        <!--Colonne contenant le body-->
+        <td valign="top" class="containerbody">
+
+
+<h1>Les différents départements et filières</h1>
+<div class="bodytext">
+    <!--<img src="resources/images/pdf.jpg" alt="pdf"/>
+    <a href="#" class="link_1" onclick="document.location='download.php?file=brochure';">T&eacute;l&eacute;charger la brochure</a>&nbsp;(153 ko)<br /><br />-->
+    <i>Survoler sur le nom du département pour en voir les différentes filères.</i>
+</div>
+
+<table class="bodytext" border="0" cellspacing="0" cellpadding="0" width="100%">
+    <tr>
+        <td valign="top" width="130">
+            <div class="submenu">
+                 <div><a href="#" id="link_1" class="link_4" onmouseover="show_hide('tab_', '5', '1', 'showcontent', 'hidecontent'); show_hide('link_', '5', '1', 'link_4', 'link_3');"">INFORMATIQUE ET TELECOMMUNICATION</a></div>  <p><a href="#" id="link_2" class="link_3" onmouseover="show_hide('tab_', '5', '2', 'showcontent', 'hidecontent'); show_hide('link_', '5', '2', 'link_4', 'link_3');"">TECHNIQUES DES AFFAIRES</a></p>  <p><a href="#" id="link_3" class="link_3" onmouseover="show_hide('tab_', '5', '3', 'showcontent', 'hidecontent'); show_hide('link_', '5', '3', 'link_4', 'link_3');"">BIOTECHNOLOGIE ET AGRONOMIE</a></p>  <p><a href="#" id="link_4" class="link_3" onmouseover="show_hide('tab_', '5', '4', 'showcontent', 'hidecontent'); show_hide('link_', '5', '4', 'link_4', 'link_3');"">GENIE INDUSTRIEL ET GENIE CIVIL</a></p>  <p><a href="#" id="link_5" class="link_3" onmouseover="show_hide('tab_', '5', '5', 'showcontent', 'hidecontent'); show_hide('link_', '5', '5', 'link_4', 'link_3');"">TECHNIQUES DU TOURISME</a></p>             </div>
+        </td>
+        <td valign="top">
+             <div id='tab_1' class='showcontent'><h2>INFORMATIQUE ET TELECOMMUNICATION</h2>
+             <table width="100%" class="bodytext" border="0" cellspacing="4" cellpadding="2">
+                 <tr>
+                     <td width="14%" valign="top">
+                         <p style = "padding:5px;"><img src="resources/images/computer.gif" alt="Image" /></p>
+                    </td>
+                    <td width="86%" valign="top">
+                        <h3>Informatique de Gestion Génie Logiciel et Intelligence Artificielle&nbsp;<span class="styletext1">(IGGLIA)</span></h3>
+                        <p>Toutes les entreprises (publiques ou privées) ne peuvent plus se passer de l'outil informatique surtout l'informatique appliquée à la gestion. La filière Informatique de Gestion Génie Logiciel et Intelligence Artificielle est une filière dont l'objectif est la formation d'Ingénieurs et de Techniciens Supérieurs capables de maîtriser toutes les techniques informatiques relatives à la gestion des entreprises.</p>
+                    </td>
+                </tr>
+                <tr><td class="pointille" colspan="2"></td></tr>
+            </table>
+             <table width="100%" class="bodytext" border="0" cellspacing="4" cellpadding="2">
+                 <tr>
+                     <td width="14%" valign="top">
+                         <p style = "padding:5px;"><img src="resources/images/electronique.gif" alt="Image" /></p>
+                    </td>
+                    <td width="86%" valign="top">
+                        <h3>Electronique Système Informatique et Intelligence Artificielle&nbsp;<span class="styletext1">(ESIIA)</span></h3>
+                        <p>L'informatique n'est pas seulement le software. L'électronique est avant tout l'origine de l'informatique. Elle est aussi à l'origine de la technologie des télécommunications. Ainsi, c'est dans cette filière que l'ISPM donne une formation d'Ingénieurs et de Techniciens Supérieurs qui  seront capables de maîtriser à la fois l'électronique, la structure des ordinateurs et des applications fondamentales de l'informatique.</p>
+                    </td>
+                </tr>
+                <tr><td class="pointille" colspan="2"></td></tr>
+            </table>
+             <table width="100%" class="bodytext" border="0" cellspacing="4" cellpadding="2">
+                 <tr>
+                     <td width="14%" valign="top">
+                         <p style = "padding:5px;"><img src="resources/images/computer2.gif" alt="Image" /></p>
+                    </td>
+                    <td width="86%" valign="top">
+                        <h3>Informatique Multimédia Technologie de L'information et de la Communication et Intelligence Artificielle&nbsp;<span class="styletext1">(IMTICIA)</span></h3>
+                        <p>C'est une filière dont la finalité est la formation des étudiants dans l'informatique multimédia, la télécommunication et d'une manière générale dans les nouvelles technologies de l'information et de la télécommunication.</p>
+                    </td>
+                </tr>
+                <tr><td class="pointille" colspan="2"></td></tr>
+            </table>
+             <table width="100%" class="bodytext" border="0" cellspacing="4" cellpadding="2">
+                 <tr>
+                     <td width="14%" valign="top">
+                         <p style = "padding:5px;"><img src="resources/images/terreweb.png" alt="Image" /></p>
+                    </td>
+                    <td width="86%" valign="top">
+                        <h3>Informatique Statistique Appliquée et Intelligence Artificielle&nbsp;<span class="styletext1">(ISAIA)</span></h3>
+                        <p>C'est une filière dont le but est de focaliser sur l'application des méthodes statistiques avec les méthodes informatiques dans les divers domaines de l'Economie. Le cursus est basé sur un  solide apprentissage des Mathématiques avec les éléments Informatiques nécessaires. A l'issue de cette formation, les étudiants peuvent travailler dans diverses branches de l'économie : les banques, les entreprises industrielles, les entreprises commerciales.</p>
+                    </td>
+                </tr>
+                <tr><td class="pointille" colspan="2"></td></tr>
+            </table></div> <div id='tab_2' class='hidecontent'><h2>TECHNIQUES DES AFFAIRES</h2>
+             <table width="100%" class="bodytext" border="0" cellspacing="4" cellpadding="2">
+                 <tr>
+                     <td width="14%" valign="top">
+                         <p style = "padding:5px;"><img src="resources/images/billet.gif" alt="Image" /></p>
+                    </td>
+                    <td width="86%" valign="top">
+                        <h3>Commerce et Administration des Affaires&nbsp;<span class="styletext1">(CAA)</span></h3>
+                        <p>Madagascar comme presque tous les pays du monde a opté pour l'économie libérale où la concurrence surtout sur le plan économique et commercial est très important. A cela s'ajoute le contexte de mondialisation et de globalisation actuelles. C'est dans ce sens que nous avons créé la filière commerce et administration des affaires qui est une filière de formation fondée sur le marketing et les différentes techniques commerciales ainsi que les différentes techniques d'organisation et de management des entreprises.</p>
+                    </td>
+                </tr>
+                <tr><td class="pointille" colspan="2"></td></tr>
+            </table>
+             <table width="100%" class="bodytext" border="0" cellspacing="4" cellpadding="2">
+                 <tr>
+                     <td width="14%" valign="top">
+                         <p style = "padding:5px;"><img src="resources/images/compta.gif" alt="Image" /></p>
+                    </td>
+                    <td width="86%" valign="top">
+                        <h3>Finances et Comptabilités&nbsp;<span class="styletext1">(FIC)</span></h3>
+                        <p>Toute entreprise qu'elle soit publique ou privée ne peut se passer des services offerts par les départements finances et comptabilités. Ce sont les départements clés d'une entreprise. C'est dans ce sens que nous avons créé cette filière dont l'objectif est de former des étudiants dans les différentes techniques quantitatives de la gestion des entreprises telles que les finances et la comptabilité.</p>
+                    </td>
+                </tr>
+                <tr><td class="pointille" colspan="2"></td></tr>
+            </table>
+             <table width="100%" class="bodytext" border="0" cellspacing="4" cellpadding="2">
+                 <tr>
+                     <td width="14%" valign="top">
+                         <p style = "padding:5px;"><img src="resources/images/computer1(2).gif" alt="Image" /></p>
+                    </td>
+                    <td width="86%" valign="top">
+                        <h3>Droit et Techniques Juridiques des Affaires&nbsp;<span class="styletext1">(DTJA)</span></h3>
+                        <p>Dans cette filière, l'ISPM veut former des juristes capables de maîtriser toutes les techniques juridiques à la fois nationales et internationales. L'originalité de cette filière est qu'elle utilise l'outil informatique. Les techniciens du droit formés par l'ISPM pourront travailler soit dans l'administration publique soit dans les entreprises privées.</p>
+                    </td>
+                </tr>
+                <tr><td class="pointille" colspan="2"></td></tr>
+            </table>
+             <table width="100%" class="bodytext" border="0" cellspacing="4" cellpadding="2">
+                 <tr>
+                     <td width="14%" valign="top">
+                         <p style = "padding:5px;"><img src="resources/images/compta(1).gif" alt="Image" /></p>
+                    </td>
+                    <td width="86%" valign="top">
+                        <h3>Economie et Management de Projet&nbsp;<span class="styletext1">(EMP)</span></h3>
+                        <p>La maîtrise des techniques économiques est indispensable aux dirigeants de l'administration publique et des entreprises privées à tous les niveaux. Dans cette filière, l'ISPM veut former des économistes capables de faire des analyses économiques objectives, relationnelles et de les appliquer aux réalités des entreprises.</p>
+                    </td>
+                </tr>
+                <tr><td class="pointille" colspan="2"></td></tr>
+            </table></div> <div id='tab_3' class='hidecontent'><h2>BIOTECHNOLOGIE ET AGRONOMIE</h2>
+             <table width="100%" class="bodytext" border="0" cellspacing="4" cellpadding="2">
+                 <tr>
+                     <td width="14%" valign="top">
+                         <p style = "padding:5px;"><img src="resources/images/agro.gif" alt="Image" /></p>
+                    </td>
+                    <td width="86%" valign="top">
+                        <h3>Industrie Agroalimentaire&nbsp;<span class="styletext1">(IAA)</span></h3>
+                        <p>Les différentes industries agroalimentaires ont une place et un rôle important dans notre économie. L'ISPM a comme objectif de former des cadres de qualité pour ces entreprises.</p>
+                    </td>
+                </tr>
+                <tr><td class="pointille" colspan="2"></td></tr>
+            </table>
+             <table width="100%" class="bodytext" border="0" cellspacing="4" cellpadding="2">
+                 <tr>
+                     <td width="14%" valign="top">
+                         <p style = "padding:5px;"><img src="resources/images/pharmaco(1).gif" alt="Image" /></p>
+                    </td>
+                    <td width="86%" valign="top">
+                        <h3>Pharmacologie et Industries Pharmaceutiques&nbsp;<span class="styletext1">(PIP)</span></h3>
+                        <p>L'existence des plantes médicinales endémiques est une réalité à  Madagascar. L'ISPM veut mettre en valeur les propriétés therapeutiques de ces plantes d'une manière scientifique.</p>
+                    </td>
+                </tr>
+                <tr><td class="pointille" colspan="2"></td></tr>
+            </table>
+             <table width="100%" class="bodytext" border="0" cellspacing="4" cellpadding="2">
+                 <tr>
+                     <td width="14%" valign="top">
+                         <p style = "padding:5px;"><img src="resources/images/elevage.gif" alt="Image" /></p>
+                    </td>
+                    <td width="86%" valign="top">
+                        <h3>Agriculture et Elevage&nbsp;<span class="styletext1">(AEE)</span></h3>
+                        <p>Plus de 80% de Malagasy vivent et travaillent dans le monde rural. Par ailleurs, il est clair que le secteur primaire est un des secteurs fondamentaux dans l'économie d'un pays. C'est dans ce sens qu'a été créée la filière Agriculture et élevage car il nous faut des jeunes capables d'appliquer les techniques et les technologies modernes dans le monde rural. Ils sont aussi formés au concept de l'agri-business.</p>
+                    </td>
+                </tr>
+                <tr><td class="pointille" colspan="2"></td></tr>
+            </table></div> <div id='tab_4' class='hidecontent'><h2>GENIE INDUSTRIEL ET GENIE CIVIL</h2>
+             <table width="100%" class="bodytext" border="0" cellspacing="4" cellpadding="2">
+                 <tr>
+                     <td width="14%" valign="top">
+                         <p style = "padding:5px;"><img src="resources/images/meca.gif" alt="Image" /></p>
+                    </td>
+                    <td width="86%" valign="top">
+                        <h3>Electro-Mécanique et Informatique Industrielle&nbsp;<span class="styletext1">(EMII)</span></h3>
+                        <p>Toute grande école polytechnique qui se respecte doit avoir un département d'éléctro-mécanique. D'ailleurs, la révolution industrielle n'a été possible qu'à travers la maîtrise de la mécanique et des technologies industrielles. ISPM par le biais de son département Electro-Mécanique et Informatique Industrielle (EMII) forme des jeunes capables de maîtriser toutes les technologies mentionnées ci-dessus auxquelles s'ajoutent l'informatique et l'informatique industrielle. A l'issu de leurs études, ils seront capables de participer au développement industriel de Madagascar.</p>
+                    </td>
+                </tr>
+                <tr><td class="pointille" colspan="2"></td></tr>
+            </table>
+             <table width="100%" class="bodytext" border="0" cellspacing="4" cellpadding="2">
+                 <tr>
+                     <td width="14%" valign="top">
+                         <p style = "padding:5px;"><img src="resources/images/batiment.gif" alt="Image" /></p>
+                    </td>
+                    <td width="86%" valign="top">
+                        <h3>Génie Civil et Architecture&nbsp;<span class="styletext1">(GCA)</span></h3>
+                        <p>La construction des infrastructures est un élément fondamental pour améliorer le niveau de vie d'un pays. C'est pourquoi l'ISPM forme à travers sa filière Génie Civil et Architecture les jeunes qui vont améliorer non seulement les infrastructures mais participer à l'aménagement urbain et rural.</p>
+                    </td>
+                </tr>
+                <tr><td class="pointille" colspan="2"></td></tr>
+            </table>
+             <table width="100%" class="bodytext" border="0" cellspacing="4" cellpadding="2">
+                 <tr>
+                     <td width="14%" valign="top">
+                         <p style = "padding:5px;"><img src="resources/images/batiment(1).gif" alt="Image" /></p>
+                    </td>
+                    <td width="86%" valign="top">
+                        <h3>Industries Chimiques, Minières et Pétrolières&nbsp;<span class="styletext1">(ICMP)</span></h3>
+                        <p>Dans le contexte actuel, tout pays qui se respecte doit avoir des jeunes capables de maîtriser les différents domaines tels que les Industries Chimiques, Minières et Pétrolières. C'est dans ce sens nous avons créé cette filière.</p>
+                    </td>
+                </tr>
+                <tr><td class="pointille" colspan="2"></td></tr>
+            </table></div> <div id='tab_5' class='hidecontent'><h2>TECHNIQUES DU TOURISME</h2>
+             <table width="100%" class="bodytext" border="0" cellspacing="4" cellpadding="2">
+                 <tr>
+                     <td width="14%" valign="top">
+                         <p style = "padding:5px;"><img src="resources/images/tourisme.gif" alt="Image" /></p>
+                    </td>
+                    <td width="86%" valign="top">
+                        <h3>Tourisme et Environnement&nbsp;<span class="styletext1">(TEE)</span></h3>
+                        <p>Madagascar est un des rares pays au monde à avoir un environnement unique et endémique par sa faune et sa flore. Par ailleurs, la civilisation malagasy est aussi unique par l'apport des cultures à la fois asiatiques, africaines et plus tard européennes. La filière tourisme et environnement a pour objectifs d'enseigner aux étudiants à la fois la richesse de notre environnement et de notre civilisation. Car ces étudiants seront les futurs professionnels du secteur "tourisme".</p>
+                    </td>
+                </tr>
+                <tr><td class="pointille" colspan="2"></td></tr>
+            </table>
+             <table width="100%" class="bodytext" border="0" cellspacing="4" cellpadding="2">
+                 <tr>
+                     <td width="14%" valign="top">
+                         <p style = "padding:5px;"><img src="resources/images/batiment(2).gif" alt="Image" /></p>
+                    </td>
+                    <td width="86%" valign="top">
+                        <h3>Tourisme et Hôtellerie&nbsp;<span class="styletext1">(TEH)</span></h3>
+                        <p>La civilisation malagasy est unique par l'apport des cultures à la fois asiatiques, africaines et plus tard européennes. La filière tourisme et hôtellerie a pour objectifs d'enseigner aux étudiants la richesse de notre civilisation. Par ailleurs, les autres cultures ne seront pas négligées car l'ISPM forme des étudiants capables de maîtriser les différentes techniques de l'art culinaire à la fois national et international.</p>
+                    </td>
+                </tr>
+                <tr><td class="pointille" colspan="2"></td></tr>
+            </table></div>        </td>
+    </tr>
+</table>
+    
+            </td>
+        </tr>
+    </table>
+    <div align="center">
+        <h4>FAHAIZANA - FAMPANDROSONA - FIHAVANANA</h4>
+    </div>
+</div>
+
+</body>
+</html>
+ </td>
+    </tr>
+</table>
+    

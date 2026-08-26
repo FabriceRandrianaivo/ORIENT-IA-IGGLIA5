@@ -1,0 +1,6 @@
+id,titre,origine_url,date_consultation,statut,donnees_extraites,limites
+src-accueil,Page d'accueil du site officiel,https://ispm-edu.com/index.php,2026-08-26,officiel,texte integral de la page,site institutionnel ; date de mise a jour du contenu inconnue
+src-presentation,Presentation generale de l'institut,https://ispm-edu.com/presentation.php,2026-08-26,officiel,texte integral de la page,site institutionnel ; date de mise a jour du contenu inconnue
+src-filieres,Departements et filieres : liste officielle des 16 filieres avec sigles et descriptions,https://ispm-edu.com/filieres.php,2026-08-26,officiel,texte integral de la page,site institutionnel ; date de mise a jour du contenu inconnue
+src-inscription,Modalites et conditions d'inscription,https://ispm-edu.com/inscription.php,2026-08-26,officiel,texte integral de la page,site institutionnel ; date de mise a jour du contenu inconnue
+src-brochure,Brochure officielle des filieres,https://ispm-edu.com/download.php?file=brochure,2026-08-26,officiel,"document PDF integral (departements, cursus et diplomes, taux d'embauche)","lien desactive sur le site mais fichier encore servi ; document non date, prix listes jusqu'en 2009 -> contenu potentiellement obsolete ; mentionne un 'concours d'entree' la ou inscription.php decrit une 'selection de dossier' (contradiction a signaler par l'assistant)"

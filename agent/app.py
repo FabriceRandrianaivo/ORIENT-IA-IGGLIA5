@@ -50,7 +50,12 @@ with st.sidebar:
     interets = st.multiselect("Centres d'intérêt (max 4)", INTERETS, max_selections=4)
     environnement = st.selectbox("Environnement de travail préféré", ENVIRONNEMENTS)
     metiers = st.multiselect("Type de métier visé (max 2)", METIERS, max_selections=2)
-    mode = "🔑 LLM (clé API détectée)" if agent.os.environ.get("ANTHROPIC_API_KEY") else "⚙️ Déterministe (sans clé API)"
+    if agent.os.environ.get("ANTHROPIC_API_KEY"):
+        mode = "🔑 LLM Anthropic"
+    elif agent.os.environ.get("GEMINI_API_KEY"):
+        mode = "🔑 LLM Gemini (gratuit)"
+    else:
+        mode = "⚙️ Déterministe (sans clé API)"
     st.caption(f"Mode agent : {mode}")
 
 profil = {"serie_bac": serie, "note_maths": note_maths, "note_sciences": note_sciences,

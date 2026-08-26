@@ -2,7 +2,7 @@
 
 Deux modes :
   - LLM (si ANTHROPIC_API_KEY est definie) : boucle d'appels d'outils pilotee
-    par un modele Claude avec le system prompt de prompts.py ;
+    par un modele Anthropic avec le system prompt de prompts.py ;
   - deterministe (secours, sans reseau) : routeur d'intentions qui appelle les
     memes outils et compose une reponse sourcee. La demo ne depend donc jamais
     d'une cle API.

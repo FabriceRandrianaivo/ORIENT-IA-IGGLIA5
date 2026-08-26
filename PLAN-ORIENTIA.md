@@ -62,7 +62,7 @@ Enquête réelle (valid/test) ──┘                                         
 |---|---|---|
 | Langage / data | Python, pandas, scikit-learn | Maîtrisé par tous ; notebooks livrables. |
 | Embeddings + index | `sentence-transformers` (multilingue) + ChromaDB, BM25 via `rank_bm25` | Local, gratuit, recherche hybride facile. |
-| LLM | API Claude / Gemini, ou modèle local via Ollama en secours | Function calling fiable pour les outils. |
+| LLM | API Anthropic / Gemini, ou modèle local via Ollama en secours | Function calling fiable pour les outils. |
 | Interface | Streamlit (ou Gradio) | Chat + panneau « traces » en ~1 h. Pas de front custom. |
 | Traces | Fichier JSONL, 1 ligne par interaction | Suffit au sujet ; lisible par le jury. |
 | Graphe (extension) | Dict Python / NetworkX sérialisé en JSON | Pas besoin de Neo4j. |

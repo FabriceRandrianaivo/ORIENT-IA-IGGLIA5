@@ -2,7 +2,7 @@
 
 Deux modes :
   - LLM (si ANTHROPIC_API_KEY est definie) : boucle d'appels d'outils pilotee
-    par un modele Claude avec le system prompt de prompts.py ;
+    par un modele Anthropic avec le system prompt de prompts.py ;
   - deterministe (secours, sans reseau) : routeur d'intentions qui appelle les
     memes outils et compose une reponse sourcee. La demo ne depend donc jamais
     d'une cle API.
@@ -253,13 +253,58 @@ def _mode_llm(question: str, profil: dict, historique: list, appels: list) -> st
     return "Je n'ai pas pu conclure (trop d'etapes d'outils). Reformulez votre question."
 
 
+# -------------------------------------------------- mode Gemini (LLM gratuit)
+def _mode_gemini(question: str, profil: dict, appels: list) -> str:
+    """Couche LLM gratuite (Google AI Studio) : le routeur deterministe appelle
+    les outils, puis Gemini reformule la reponse sans pouvoir ajouter de faits.
+    En cas d'echec reseau/quota, on renvoie le brouillon deterministe : la
+    reponse reste toujours correcte et sourcee."""
+    brouillon = _mode_deterministe(question, profil, appels)
+    try:
+        import urllib.request
+        cle = os.environ["GEMINI_API_KEY"]
+        modele = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+        donnees = json.dumps([{"outil": a["outil"], "sortie": a["sortie"]} for a in appels],
+                             ensure_ascii=False, default=str)[:8000]
+        consigne = (
+            "Reformule le brouillon ci-dessous en une reponse claire et naturelle en francais.\n"
+            "REGLES STRICTES : conserver tous les identifiants de sources [src-...] ; conserver "
+            "les probabilites et chiffres exacts ; ne rien affirmer qui ne figure pas dans les "
+            "donnees d'outils ; garder la distinction entre resultat du modele ML, informations "
+            "documentaires et regles officielles ; garder les avertissements d'incertitude.\n\n"
+            f"Question de l'utilisateur : {question}\n"
+            f"Profil declare : {json.dumps(profil, ensure_ascii=False)}\n"
+            f"Resultats des outils (JSON) : {donnees}\n\n"
+            f"Brouillon a reformuler :\n{brouillon}")
+        corps = json.dumps({
+            "system_instruction": {"parts": [{"text": SYSTEM}]},
+            "contents": [{"role": "user", "parts": [{"text": consigne}]}],
+            "generationConfig": {"maxOutputTokens": 1200, "temperature": 0.3},
+        }).encode("utf-8")
+        req = urllib.request.Request(
+            f"https://generativelanguage.googleapis.com/v1beta/models/{modele}:generateContent?key={cle}",
+            data=corps, headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=30) as rep:
+            resultat = json.loads(rep.read().decode("utf-8"))
+        texte = "".join(p.get("text", "")
+                        for p in resultat["candidates"][0]["content"]["parts"])
+        return texte.strip() or brouillon
+    except Exception:  # noqa: BLE001 — degradation volontaire vers le brouillon
+        return brouillon
+
+
 # ------------------------------------------------------------------- entree
 def repondre(question: str, profil: dict, historique: list = None) -> dict:
     """Point d'entree unique. Renvoie reponse + trace complete."""
     debut = time.time()
     appels, erreurs = [], []
     refus = _detecter_refus(question)
-    mode = "llm" if os.environ.get("ANTHROPIC_API_KEY") else "deterministe"
+    if os.environ.get("ANTHROPIC_API_KEY"):
+        mode = "llm"
+    elif os.environ.get("GEMINI_API_KEY"):
+        mode = "gemini"
+    else:
+        mode = "deterministe"
 
     if refus:
         reponse = REFUS[refus]
@@ -267,6 +312,8 @@ def repondre(question: str, profil: dict, historique: list = None) -> dict:
         try:
             if mode == "llm":
                 reponse = _mode_llm(question, profil, historique or [], appels)
+            elif mode == "gemini":
+                reponse = _mode_gemini(question, profil, appels)
             else:
                 reponse = _mode_deterministe(question, profil, appels)
         except Exception as exc:  # noqa: BLE001 — trace puis message honnete

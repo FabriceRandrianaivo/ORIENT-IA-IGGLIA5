@@ -28,7 +28,7 @@ Livrable 12 du sujet. Principe directeur : nommer les limites plutôt que les ma
 
 - Régression logistique : hypothèse de séparabilité linéaire — assumée car elle **bat** la forêt aléatoire en généralisation ET en calibration (ECE 0,073 vs 0,193) sur ce jeu.
 - Top-1 ≈ 0,49 : reflète le bruit d'étiquette irréductible ; la métrique métier est le **top-3 (0,83)** car le système propose 3 parcours, jamais un verdict unique.
-- La **mesure décisive** — le transfert synthétique → profils réels — dépend de l'enquête ; tant qu'elle n'est pas gelée, les performances rapportées sont internes au synthétique.
+- La **mesure décisive** — le transfert synthétique → profils réels — a été réalisée sur 79 réponses d'enquête : top-3 0,73 ± 0,10 (perte de transfert ~10 points vs validation interne, top-1 quasi identique). Détail et limites dans `models/RAPPORT-TRANSFERT.md`.
 - Stabilité : retirer un centre d'intérêt conserve en moyenne 82 % du top-3 — les 18 % restants montrent que le modèle reste sensible aux petites variations de profil.
 
 ## 3. Limites de l'agent

@@ -1,0 +1,29 @@
+{
+  "toutes_populations": {
+    "top1_accuracy": 0.481,
+    "top3_accuracy": 0.7342,
+    "mrr": 0.6339,
+    "f1_macro": 0.4026,
+    "ece": 0.1144,
+    "n_reponses": 79,
+    "avertissement": "Echantillon reel petit et auto-selectionne : intervalles de confiance larges, a annoncer comme tels (cf. sujet)."
+  },
+  "etudiant": {
+    "top1_accuracy": 0.4507,
+    "top3_accuracy": 0.7183,
+    "mrr": 0.6102,
+    "f1_macro": 0.357,
+    "ece": 0.1298,
+    "n_reponses": 71,
+    "avertissement": "Echantillon reel petit et auto-selectionne : intervalles de confiance larges, a annoncer comme tels (cf. sujet)."
+  },
+  "professionnel": {
+    "top1_accuracy": 0.75,
+    "top3_accuracy": 0.875,
+    "mrr": 0.8438,
+    "f1_macro": 0.5238,
+    "ece": 0.1881,
+    "n_reponses": 8,
+    "avertissement": "Echantillon reel petit et auto-selectionne : intervalles de confiance larges, a annoncer comme tels (cf. sujet)."
+  }
+}

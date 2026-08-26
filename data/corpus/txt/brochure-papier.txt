@@ -1,5 +1,11 @@
-BROCHURE OFFICIELLE ISPM (edition papier, posterieure a 2025)
+BROCHURE OFFICIELLE ISPM (edition papier datee AOUT 2025)
 Transcription fournie par l'equipe le 26/08/2026. Source : src-brochure-papier.
+
+COUVERTURE
+Institut Superieur Polytechnique de Madagascar. Habilite et reconnu par l'Etat (MESUPRES et Fonction Publique). Devise : Fahaizana - Fampandrosoana - Fihavanana. Slogan : "Beaucoup plus qu'une grande ecole, nous sommes une grande famille". Adresse : Ambatomaro-Antsobolo, Antananarivo. Acces en bus : terminus des lignes 147bis et 182. Contact : contact@ispm.education ; site web officiel www.ispm.education (redirige vers ispm-edu.com) ; telephones +261 32 02 544 72, +261 33 12 171 60, +261 34 20 874 28.
+
+CURSUS A L'ISPM (systeme LMD, schema officiel)
+Baccalaureat, puis selection de dossier, puis premier cycle menant a la Licence (BAC+3), puis second cycle menant au Master, egalement appele Ingenorat (BAC+5), puis troisieme cycle : Doctorat. Les activites professionnelles sont accessibles apres la Licence comme apres le Master.
 
 LES MENTIONS ET LEURS PARCOURS (structure LMD officielle)
 L'offre de formation de l'ISPM est organisee en six mentions.
@@ -36,6 +42,9 @@ L'ISPM se presente comme la seule ecole polytechnique privee dans l'Ocean Indien
 
 VIE ETUDIANTE ET PERFORMANCES
 Performances sportives et culturelles : champion de la competition inter-universitaire Let's Dance en 2025 ; champion Interfac 2018 et vice-champion Interfac 2019 en football hommes.
+
+PRIX OBTENUS PAR L'ISPM (extrait de la brochure d'aout 2025)
+1er prix, Developpement d'outil pedagogique interactif et adaptatif pour l'education personnalisee avec l'IA generative, 2024, Orange Digital Center. 1er prix, Hackathon Tech Zara, 2022. 1er prix, Frontend Awards, 2021, Pulse. 1er prix, DevFest, 2021, Google Developer Group Tana. 1er prix, WebCup, 2021, association HavanaHub. 1er prix, Manorina, 2017, Holcim. 1er prix, WebCup, 2017. 1er prix (viralite) et 1er prix, WebCup, 2015 (Goticom et office du tourisme). 2eme prix, Flash Credit et Safe SMS, 2014, concours Orange Madagascar. 1er prix, Olympiade Informatique, 2012, MTT Madagascar aux Temps TIC. 1er et 2eme prix, SmartPlan Managing et Intelligent House, 2012, Forum de la Recherche MESUPRES. 1er prix, production d'un plastique biodegradable, 2009, Fondation Tany Meva. 1er prix, rechaud a alcool, 2007, Fondation Tany Meva. 2eme prix, etuve phytotronique assistee par ordinateur, 2006. 1er prix, analyse de la structure biotechnologique du riz, 2006, Salon de la Creativite et de l'Invention MENRS. 3eme prix, SRI repiqueuse, 2003, Fiermada. 1er prix, logiciel de Fanorona, 1997, Ambassade de France.
 
 RECHERCHE ET PUBLICATIONS SCIENTIFIQUES (extraits)
 Les enseignants-chercheurs de l'ISPM publient au niveau international et national. Exemples de publications internationales : Green Design of Plant Based Pharmaceutical Drugs (Journal of Bioresource Management, 2024) ; Mathematical Analysis of Marketing Management (IORST, 2017) ; travaux presentes a IEEE AFRICON 2015 et 2017 (systemes experts de bio-informatique, e-learning, jeu de Fanorona) ; Essential Oil Composition of four Croton species from Madagascar (Biochemical Systematics and Ecology, 2006) ; Moving Averages and Price Dynamics (International Applied Finance, 2002) ; Mean-field solution of the randomizing model (Physical Review E, 1996). Exemples de publications nationales : traitement automatique de la langue malagasy, traduction automatique malgache-francais (LATEC 2008), prototypes presentes aux Forums de la recherche (alarme via GSM 2005, logiciel de gestion communale 2008, Intelligent House 2012, Smart Plan Managing 2012).

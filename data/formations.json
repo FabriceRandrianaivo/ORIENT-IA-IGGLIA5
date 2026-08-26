@@ -12,7 +12,9 @@
   },
   "etablissement": {
     "nom": "Institut Supérieur Polytechnique de Madagascar (ISPM)",
-    "adresse": "Ambatomaro Antsobolo, Antananarivo, Madagascar",
+    "adresse": "Ambatomaro Antsobolo, Antananarivo, Madagascar (accès bus : terminus des lignes 147bis et 182)",
+    "site_web": "www.ispm.education (redirige vers ispm-edu.com — même site officiel)",
+    "reconnaissance": "Habilité et reconnu par l'État : MESUPRES (Ministère de l'Enseignement Supérieur) et Fonction Publique (src-brochure-papier, août 2025)",
     "telephones": ["+261 33 12 171 60", "+261 34 20 874 28", "+261 32 02 544 72"],
     "email": "contact@ispm.education",
     "devise": "Fahaizana - Fampandrosoana - Fihavanana",
@@ -21,17 +23,19 @@
       "Classé parmi les dix meilleures universités de Madagascar selon le classement cité sur le site (src-accueil).",
       "Environ 4 000 ingénieurs formés depuis 1993 ; se présente comme la seule école polytechnique privée de l'Océan Indien (src-brochure-papier).",
       "La brochure ancienne indique un taux d'embauche de 95% des diplômés, les 5% restants poursuivant leurs études (src-brochure ; document non daté, chiffre à présenter avec prudence).",
-      "Infrastructures : 70 salles de cours, amphithéâtre plein air de 3 000 places, laboratoires (2 informatique, électronique, langues, chimie, biologie-pharmacologie, son/audiovisuel), atelier de fabrication mécanique, atelier culinaire (src-brochure-papier)."
+      "Infrastructures : 70 salles de cours, amphithéâtre plein air de 3 000 places, laboratoires (2 informatique, électronique, langues, chimie, biologie-pharmacologie, son/audiovisuel), atelier de fabrication mécanique, atelier culinaire (src-brochure-papier).",
+      "Prix récents : 1er prix 2024 (outil pédagogique adaptatif avec IA générative, Orange Digital Center), 1er prix Hackathon Tech Zara 2022, 1ers prix Frontend Awards / DevFest / WebCup 2021 — liste complète dans le corpus (src-brochure-papier, août 2025)."
     ],
     "sources": ["src-accueil", "src-brochure", "src-brochure-papier"]
   },
   "cursus": {
     "systeme": "LMD depuis l'habilitation de 2015 : l'ISPM est habilité à délivrer les diplômes de Licence et de Master pour tous les parcours qu'il offre. Les diplômes sont reconnus par le Ministère de la Fonction Publique.",
     "diplomes": [
-      { "nom": "Licence", "niveau": "BAC+3 (L1 à L3)", "source": "src-brochure-papier" },
-      { "nom": "Master", "niveau": "BAC+5 (M1, M2)", "source": "src-brochure-papier" }
+      { "nom": "Licence", "niveau": "BAC+3 (L1 à L3)", "cycle": "premier cycle", "source": "src-brochure-papier" },
+      { "nom": "Master (également appelé Ingénorat)", "niveau": "BAC+5 (M1, M2)", "cycle": "second cycle", "source": "src-brochure-papier" },
+      { "nom": "Doctorat", "niveau": "après le Master", "cycle": "troisième cycle", "source": "src-brochure-papier" }
     ],
-    "cursus_pre_lmd_obsolete": "L'ancienne brochure (src-brochure, non datée, antérieure au LMD) décrivait Technicien Supérieur (BAC+2), Ingéniorat (BAC+5) et un troisième cycle DEA/Doctorat — conservé pour mémoire, ne plus le présenter comme l'offre actuelle.",
+    "cursus_pre_lmd_obsolete": "L'ancienne brochure (src-brochure, non datée, antérieure au LMD) décrivait Technicien Supérieur (BAC+2) et Ingéniorat (BAC+5) : depuis le LMD, l'Ingénorat correspond au Master (BAC+5) et le diplôme de Technicien Supérieur n'apparaît plus dans le schéma officiel d'août 2025.",
     "source": "src-brochure-papier"
   },
   "conditions_acces_premiere_annee": {

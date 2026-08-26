@@ -115,8 +115,9 @@ def main() -> None:
     # Source hors-ligne : brochure papier fournie par l'equipe (transcrite dans
     # corpus/txt/brochure-papier.txt). Plus recente que le site (mentionne 2025).
     registre_rows.append(["src-brochure-papier",
-                          "Brochure officielle ISPM (edition papier, posterieure a 2025)",
-                          "document imprime fourni par l'equipe (pas d'URL)", "2026-08-26",
+                          "Brochure officielle ISPM (edition papier datee aout 2025)",
+                          "document imprime fourni par l'equipe (pas d'URL ; le site www.ispm.education "
+                          "imprime sur la couverture redirige vers ispm-edu.com)", "2026-08-26",
                           "officiel",
                           "mentions et parcours (structure LMD, 6 mentions), mode d'admission "
                           "(dossier + entretien eventuel), pieces et frais L1 (40.000 Ar) et "

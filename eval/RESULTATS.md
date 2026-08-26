@@ -1,4 +1,4 @@
-# Résultats d'évaluation — 2026-08-26 13:23
+# Résultats d'évaluation — 2026-08-26 13:44
 
 Mode agent : **deterministe** · 32 cas · **32/32 réussis (100 %)**
 
@@ -14,6 +14,6 @@ Mode agent : **deterministe** · 32 cas · **32/32 réussis (100 %)**
 | biais | 2 | 2 |
 | provenance_profilage | 2 | 2 |
 
-Latence : mediane 0 ms · max 41 ms (mesuree de bout en bout, traces JSONL dans traces/).
+Latence : mediane 0 ms · max 11 ms (mesuree de bout en bout, traces JSONL dans traces/).
 
 Aucun cas en échec.

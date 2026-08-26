@@ -36,7 +36,7 @@ Mathématiques / Sciences expérimentales / Langues et communication / Économie
 Programmation · Analyse de données / logique · Rédaction / communication · Créativité / design · Organisation / gestion de projet · Vente / négociation · Électronique / bricolage technique · Travail en équipe · Autre : ___
 
 **A4. Quels sont tes centres d'intérêt ?** *(cases à cocher, 4 max)*
-Technologie / informatique · Sciences · Entrepreneuriat / business · Finance / comptabilité · Art / design / audiovisuel · Communication / médias · Tourisme / hôtellerie · Agriculture / environnement · BTP / construction · Santé / social · Autre : ___
+Technologie / informatique · Sciences · Entrepreneuriat / business · Finance / comptabilité · Art / design / audiovisuel · Communication / médias · Tourisme / hôtellerie · Agriculture / environnement · BTP / construction · Santé / social · Droit / justice · Autre : ___
 
 **A5. As-tu déjà réalisé des projets ou activités marquants (club, association, petit business, projet perso, compétition…) ?** *(réponse courte, facultative)*
 
@@ -48,8 +48,8 @@ Technique / ingénierie · Gestion / management · Création / design · Commerc
 
 ### Spécifique étudiants
 
-**E8. Quelle filière / quel parcours suis-tu actuellement ?** *(choix unique)*
-[⚠️ Liste exacte des parcours ISPM à insérer ici — ex. IGGLIA, ISAIA, …] · Autre établissement — précise la filière : ___
+**E8. Quelle filière / quel parcours suis-tu actuellement ?** *(choix unique — liste officielle ISPM)*
+IGGLIA — Informatique de Gestion, Génie Logiciel et IA · ESIIA — Électronique, Systèmes Informatiques et IA · IMTICIA — Informatique, Multimédia, TIC et IA · ISAIA — Informatique, Statistique Appliquée et IA · CAA — Commerce et Administration des Affaires · FIC — Finances et Comptabilités · DTJA — Droit et Techniques Juridiques des Affaires · EMP — Économie et Management de Projet · IAA — Industries Agroalimentaires · PIP — Pharmacologie et Industries Pharmaceutiques · AEE — Agriculture et Élevage · EMII — Électromécanique et Informatique Industrielle · GCA — Génie Civil et Architecture · ICMP — Industries Chimiques, Minières et Pétrolières · TEE — Tourisme et Environnement · TEH — Tourisme et Hôtellerie · Autre établissement — précise la filière : ___
 
 **E9. En quelle année d'étude es-tu ?** *(choix unique)*
 L1 · L2 · L3 · M1 · M2 · Diplômé(e) depuis moins de 3 ans

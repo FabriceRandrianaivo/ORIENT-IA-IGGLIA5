@@ -28,6 +28,12 @@ TRACES = ROOT / "traces"
 MENTION = ("ORIENT'IA constitue un outil d'aide a l'orientation. Ses recommandations ne "
            "remplacent ni l'avis d'un conseiller pedagogique ni une decision officielle d'admission.")
 
+def _sans_accents(s: str) -> str:
+    import unicodedata
+    s = unicodedata.normalize("NFD", s)
+    return "".join(c for c in s if unicodedata.category(c) != "Mn")
+
+
 # ----------------------------------------------------------------- securite
 INJECTION = re.compile(r"ignore|oublie tes|fais comme si|invente|pretend|affirme qu", re.I)
 DISCRIMINATION = re.compile(r"\b(sexe|genre|fille|garcon|femme|homme|age)\b.{0,40}(recommande|oriente|choisis)"
@@ -57,11 +63,12 @@ RE_SIGLES = re.compile("|".join(SIGLES), re.I)
 
 
 def _detecter_refus(question: str):
-    if INJECTION.search(question):
+    q = _sans_accents(question)
+    if INJECTION.search(q):
         return "injection"
-    if DISCRIMINATION.search(question):
+    if DISCRIMINATION.search(q):
         return "discrimination"
-    if PROFILAGE.search(question):
+    if PROFILAGE.search(q):
         return "profilage"
     return None
 
@@ -74,26 +81,34 @@ def _tracer(entree: dict):
         fh.write(json.dumps(entree, ensure_ascii=False, default=str) + "\n")
 
 
-_STOPWORDS = {"quel", "quels", "quelle", "quelles", "sont", "dans", "pour", "avec",
-              "cette", "votre", "vous", "nous", "elle", "elles", "leur", "leurs",
-              "comment", "combien", "est-ce", "peut", "peux", "faire", "avoir"}
+_STOPWORDS = {"quel", "quelle", "sont", "dans", "pour", "avec", "cette", "votre",
+              "vous", "nous", "elle", "leur", "comment", "combien", "peut", "peux",
+              "faire", "avoir", "est", "bien", "comme", "cela", "plus", "tres",
+              "aussi", "ainsi", "tout", "toute", "fait", "sans", "sous", "entre",
+              "vers", "chez", "donc", "alors", "apres", "avant", "depuis", "encore",
+              "deja", "meme", "autre", "quoi", "quand", "trouve", "existe"}
 
 
-def _couverture(question: str, texte: str) -> float:
-    """Part des termes informatifs de la question presents dans le passage.
-    Empeche de repondre avec des passages hors sujet quand l'information est
-    absente du corpus (exigence : reconnaitre l'absence d'information)."""
+def _pertinent(question: str, texte: str) -> bool:
+    """Le passage couvre-t-il vraiment la question ? Empeche de repondre avec
+    des passages hors sujet quand l'information est absente du corpus
+    (exigence : reconnaitre l'absence d'information).
+    Regle : couverture >= 2/3 des termes informatifs, OU au moins 2 termes
+    retrouves avec une couverture >= 40 %."""
     import unicodedata
 
     def norm(s):
         s = unicodedata.normalize("NFD", s.lower())
         s = "".join(c for c in s if unicodedata.category(c) != "Mn")
-        return {t.rstrip("s") for t in re.findall(r"[a-z0-9]{4,}", s)} - _STOPWORDS
+        tokens = {t.rstrip("s") for t in re.findall(r"[a-z0-9]{3,}", s)}
+        return {t for t in tokens if len(t) >= 3} - _STOPWORDS
 
     tq, tt = norm(question), norm(texte)
     if not tq:
-        return 1.0
-    return len(tq & tt) / len(tq)
+        return True
+    trouves = len(tq & tt)
+    couverture = trouves / len(tq)
+    return couverture >= 0.67 or (trouves >= 2 and couverture >= 0.4)
 
 
 # ------------------------------------------------- mode deterministe (secours)
@@ -103,7 +118,7 @@ def _mode_deterministe(question: str, profil: dict, appels: list) -> str:
         appels.append({"outil": nom, "entree": kwargs, "sortie": sortie})
         return sortie
 
-    q = question.lower()
+    q = _sans_accents(question.lower())
     sigles = [s.upper() for s in RE_SIGLES.findall(question)]
 
     # Provenance des donnees.
@@ -146,7 +161,7 @@ def _mode_deterministe(question: str, profil: dict, appels: list) -> str:
                 + f"- Rappel : {v['rappel']}")
 
     # Recommandation a partir du profil.
-    if re.search(r"recommande|conseille|correspond|oriente|quel(le)?s? (parcours|filiere)", q) or (
+    if re.search(r"recommande|conseille|correspond|oriente[sz]?[ -]moi|me convien", q) or (
             re.search(r"j'aime|je prefere|je suis (fort|bon)", q)):
         analyse = appel("analyser_profil_ml", profil=profil)
         if "erreur" in analyse:
@@ -170,10 +185,18 @@ def _mode_deterministe(question: str, profil: dict, appels: list) -> str:
                    "", f"_{MENTION}_"]
         return "\n".join(lignes)
 
+    # Question vague -> clarification plutot que reponse au hasard.
+    if re.search(r"\b(bons?|meilleures?|meilleurs?)\s+(metiers?|filieres?|parcours|travail)", q):
+        return ("Bonne question, mais elle depend de vous : il n'existe pas de « meilleure » filiere "
+                "dans l'absolu. Pour vous repondre serieusement, j'ai besoin de savoir : quelles sont "
+                "vos **matieres preferees** ? vos **centres d'interet** ? preferez-vous travailler en "
+                "bureau, sur le terrain, en laboratoire ou en atelier ? Renseignez le panneau Profil "
+                "et je vous proposerai un top 3 argumente.")
+
     # Question documentaire generale -> RAG.
     res = appel("rechercher_formation", question=question)
     passages = res["passages"]
-    if not passages or _couverture(question, passages[0]["texte"]) < 0.5:
+    if not passages or not _pertinent(question, passages[0]["texte"]):
         return ("**Cette information n'est pas disponible dans mes sources** (site officiel ISPM, "
                 "brochure). Je prefere le dire plutot que d'inventer. Pour une reponse officielle, "
                 "contactez l'administration : contact@ispm.education [src-accueil].")

@@ -21,9 +21,11 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def _normaliser(texte: str) -> list:
+    """Minuscules, sans accents, pluriels replies (banques -> banque) pour que
+    singulier et pluriel se retrouvent (pas de stemming lourd necessaire)."""
     texte = unicodedata.normalize("NFD", texte.lower())
     texte = "".join(c for c in texte if unicodedata.category(c) != "Mn")
-    return re.findall(r"[a-z0-9]+", texte)
+    return [t.rstrip("s") if len(t) > 3 else t for t in re.findall(r"[a-z0-9]+", texte)]
 
 
 def construire_chunks() -> list:
@@ -33,16 +35,21 @@ def construire_chunks() -> list:
     # 1. Fiches filieres depuis formations.json (les plus utiles, une par filiere).
     data = json.loads((ROOT / "data" / "formations.json").read_text(encoding="utf-8"))
     for f in data["filieres"]:
-        texte = (f"{f['sigle']} — {f['nom']} (departement {f['departement']}). "
-                 f"{f['description']} Prerequis de bac : {f['prerequis_bac']}. "
-                 f"Debouches : {', '.join(f['debouches'] or ['non precises'])}.")
+        texte = (f"La filiere {f['sigle']} — {f['nom']} — appartient au departement "
+                 f"{f['departement']}. {f['description']} Prerequis de bac : {f['prerequis_bac']}. "
+                 f"Cette filiere prepare aux debouches suivants : "
+                 f"{', '.join(f['debouches'] or ['non precises'])}.")
         chunks.append({"id": f"fiche-{f['sigle']}", "titre": f"Fiche {f['sigle']}",
                        "texte": texte, "sources": f["sources"]})
 
     acces = data["conditions_acces_premiere_annee"]
     chunks.append({"id": "fiche-acces", "titre": "Conditions d'acces en premiere annee",
-                   "texte": (f"{acces['modalite']} Documents : {'; '.join(acces['documents'])}. "
-                             f"Frais de selection de dossier : {acces['frais_selection_dossier']}. "
+                   "texte": ("Conditions d'acces et inscription en premiere annee a l'ISPM. "
+                             f"{acces['modalite']} Documents : {'; '.join(acces['documents'])}. "
+                             f"Frais de selection de dossier : {acces['frais_selection_dossier']}."),
+                   "sources": [acces["source"]]})
+    chunks.append({"id": "fiche-acces-series", "titre": "Series de bac exigees par departement",
+                   "texte": ("Series de bac permettant d'entrer dans chaque departement de l'ISPM. "
                              + " ".join(f"{k} : {v}." for k, v in acces["series_bac_par_departement"].items())),
                    "sources": [acces["source"]]})
     cursus = data["cursus"]

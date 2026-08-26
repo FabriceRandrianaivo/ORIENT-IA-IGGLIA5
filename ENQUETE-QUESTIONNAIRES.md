@@ -26,6 +26,9 @@ Deux formulaires distincts (étudiants / professionnels). Temps de réponse vis�
 
 ### Tronc commun (aligné sur les features du modèle ML)
 
+**A0. Quelle était ta série de bac ?** *(choix unique — obligatoire : variable du modèle et clé de vérification des prérequis)*
+A1 · A2 · C · D · S · L · Technique industrielle · Technique génie civil · Technique agricole
+
 **A1. Quelles étaient tes matières préférées au lycée ?** *(cases à cocher, 3 max)*
 Mathématiques · Physique-Chimie · SVT · Informatique / Technologie · Français / Littérature · Langues étrangères · Histoire-Géographie · Économie / Gestion · Arts · Sport
 
@@ -65,6 +68,7 @@ Oui · Non · Pas sûr(e)
 
 *(Le tronc commun est reformulé au passé : « avant vos études supérieures ».)*
 
+**B0.** Quelle était votre série de bac ? *(mêmes options que A0)*
 **B1.** Quelles étaient vos matières préférées au lycée ? *(mêmes options que A1)*
 **B2.** Votre niveau dans ces domaines à la fin du lycée ? *(même grille que A2)*
 **B3.** Quelles compétences aviez-vous déjà avant vos études supérieures ? *(mêmes options que A3)*

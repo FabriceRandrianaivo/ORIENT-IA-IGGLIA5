@@ -7,6 +7,8 @@ progressive) ; l'assistant n'infere rien. Chaque reponse expose ses traces
 permanence (exigences du sujet).
 """
 
+import csv
+import re
 import sys
 from pathlib import Path
 
@@ -103,16 +105,52 @@ st.markdown("""
   .carte-filiere .pct { font-family: 'Outfit'; font-weight: 700; color: #1e6b45; font-size: .95rem; margin-top: 4px; }
 
   [data-testid="stChatMessage"] {
-    border-radius: 14px; padding: 14px 17px; margin-bottom: 11px;
+    border-radius: 18px; padding: 15px 18px; margin-bottom: 12px;
     border: 1px solid #e2eae4; background: #ffffff;
-    box-shadow: 0 2px 10px rgba(31, 60, 43, .05);
+    box-shadow: 0 3px 14px rgba(31, 60, 43, .06);
   }
 
-  [data-testid="stSidebar"] { background: linear-gradient(180deg, #eef4f0 0%, #e6efe9 100%); }
-  [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2 { color: #145032; font-family: 'Outfit'; }
-  [data-testid="stSidebar"] [data-testid="stExpander"] {
-    background: #ffffff; border-radius: 10px; border: 1px solid #dbe7de;
+  /* --- Barre laterale sombre (inspiration myAuxilium, en vert ISPM) --- */
+  [data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #0a2b19 0%, #10402a 70%, #14603a 100%);
   }
+  [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 {
+    color: #ffffff; font-family: 'Outfit';
+  }
+  [data-testid="stSidebar"] label p,
+  [data-testid="stSidebar"] .stMarkdown p,
+  [data-testid="stSidebar"] [data-testid="stCaptionContainer"],
+  [data-testid="stSidebar"] [data-testid="stCaptionContainer"] p,
+  [data-testid="stSidebar"] [data-testid="stWidgetLabel"] p {
+    color: #d9e8de !important;
+  }
+  [data-testid="stSidebar"] [data-testid="stExpander"] {
+    background: rgba(255, 255, 255, .07); border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, .18);
+  }
+  [data-testid="stSidebar"] [data-testid="stExpander"] summary p,
+  [data-testid="stSidebar"] [data-testid="stExpander"] summary span {
+    color: #e8f2ec !important;
+  }
+  [data-testid="stSidebar"] hr { border-color: rgba(255,255,255,.2); }
+  span[data-baseweb="tag"] { background: #1e6b45 !important; border-radius: 999px; }
+  [data-testid="stSidebar"] .stButton button {
+    background: rgba(255,255,255,.10); color: #eaf6ef; border-color: rgba(255,255,255,.35);
+  }
+  [data-testid="stSidebar"] .stButton button:hover:enabled {
+    background: #ffffff; color: #14321f; border-color: #ffffff;
+  }
+  [data-testid="stSidebar"] .stButton button[kind="primary"],
+  [data-testid="stSidebar"] .stButton button[data-testid="stBaseButton-primary"] {
+    background: #2e8a5c; color: #ffffff; border-color: #2e8a5c;
+  }
+
+  /* Zone de saisie facon pill */
+  [data-testid="stChatInput"] {
+    border-radius: 999px; border: 1.5px solid #d3e4d9;
+    box-shadow: 0 4px 16px rgba(31, 60, 43, .08);
+  }
+  [data-testid="stChatInput"]:focus-within { border-color: #1e6b45; }
 
   .stButton button {
     border: 1.5px solid #1e6b45; color: #145032; background: #ffffff;
@@ -138,6 +176,61 @@ st.markdown("""
 # ------------------------------------------------------------------- etat
 if "messages" not in st.session_state:
     st.session_state.messages = []
+
+
+@st.cache_data
+def _registre_sources() -> dict:
+    chemin = Path(__file__).resolve().parents[1] / "data" / "registre_sources.csv"
+    with open(chemin, encoding="utf-8") as fh:
+        return {r["id"]: r for r in csv.DictReader(fh)}
+
+
+def afficher_sources(texte: str):
+    """Panneau Sources : détail du registre pour chaque [src-…] cité."""
+    cites = sorted(set(re.findall(r"src-[a-z0-9-]+", texte)))
+    if not cites:
+        return
+    registre = _registre_sources()
+    with st.expander(f"📚 Sources citées ({len(cites)}) — registre officiel"):
+        for sid in cites:
+            r = registre.get(sid)
+            if r:
+                st.markdown(f"**[{sid}] {r['titre']}** · statut : {r['statut']} · "
+                            f"consulté le {r['date_consultation']}\n\n"
+                            f"<small>{r['origine_url']} — limites : {r['limites']}</small>",
+                            unsafe_allow_html=True)
+            else:
+                st.markdown(f"**[{sid}]** — voir data/registre_sources.csv")
+
+
+def questions_suivantes(meta) -> list:
+    """Questions exploratoires contextuelles proposées après chaque réponse."""
+    outils = [a["outil"] for a in meta["outils"]] if meta else []
+    if meta and meta.get("refus"):
+        return ["Quels parcours me correspondent ?",
+                "Cette recommandation repose-t-elle sur des données réelles ou générées ?"]
+    for a in (meta["outils"] if meta else []):
+        if a["outil"] == "analyser_profil_ml" and "top3" in a.get("sortie", {}):
+            s = [t["sigle"] for t in a["sortie"]["top3"]]
+            return [f"Pourquoi ton modèle recommande-t-il ce parcours ?",
+                    f"Compare {s[0]} et {s[1]}",
+                    f"Quels sont les prérequis de bac pour {s[0]} ?"]
+        if a["outil"] == "comparer_parcours":
+            comp = a["sortie"].get("comparaison", [])
+            if len(comp) == 2:
+                return [f"Quels sont les prérequis de bac pour {comp[0]['sigle']} ?",
+                        f"Quels sont les débouchés de la filière {comp[1]['sigle']} ?",
+                        "Quels parcours me correspondent ?"]
+        if a["outil"] == "verifier_prerequis":
+            sigle = a["sortie"].get("filiere", "")
+            return [f"Présente-moi la filière {sigle}",
+                    f"Quels sont les débouchés de la filière {sigle} ?",
+                    "Quels parcours me correspondent ?"]
+    if "rechercher_formation" in outils:
+        return ["Quels parcours me correspondent ?",
+                "Quelles sont les conditions d'accès en première année ?",
+                "Compare ISAIA et IGGLIA"]
+    return []
 
 
 def traiter(question: str):
@@ -260,6 +353,7 @@ for m in st.session_state.messages:
             cartes_top3(m["meta"])
         st.markdown(m["contenu"])
         if m.get("meta"):
+            afficher_sources(m["contenu"])
             meta = m["meta"]
             etiquette = f"🔍 Traces — {meta['latence_ms']} ms · mode {meta['mode']}"
             if meta["refus"]:
@@ -272,12 +366,26 @@ for m in st.session_state.messages:
                     st.caption("Aucun outil appelé (refus de sécurité ou réponse directe).")
                 st.caption("Trace complète : dossier traces/ (JSONL).")
 
-# Suggestions toujours disponibles.
-colonnes = st.columns(len(SUGGESTIONS))
-for col, s in zip(colonnes, SUGGESTIONS):
-    if col.button(s, key=f"sugg-{s[:14]}", use_container_width=True):
-        traiter(s.split(" ", 1)[1])
-        st.rerun()
+# Questions exploratoires contextuelles apres la derniere reponse,
+# sinon suggestions de depart.
+dernier = st.session_state.messages[-1] if st.session_state.messages else None
+suivantes = questions_suivantes(dernier["meta"]) if dernier and dernier.get("meta") else []
+if suivantes:
+    st.caption("💡 Pour continuer :")
+    colonnes = st.columns(len(suivantes))
+    for i, (col, q) in enumerate(zip(colonnes, suivantes)):
+        if col.button(q, key=f"suiv-{len(st.session_state.messages)}-{i}",
+                      use_container_width=True):
+            with st.spinner("Analyse en cours…"):
+                traiter(q)
+            st.rerun()
+else:
+    colonnes = st.columns(len(SUGGESTIONS))
+    for col, s in zip(colonnes, SUGGESTIONS):
+        if col.button(s, key=f"sugg-{s[:14]}", use_container_width=True):
+            with st.spinner("Analyse en cours…"):
+                traiter(s.split(" ", 1)[1])
+            st.rerun()
 
 if question := st.chat_input("Posez votre question sur les filières, prérequis, débouchés…"):
     with st.spinner("Analyse en cours…"):

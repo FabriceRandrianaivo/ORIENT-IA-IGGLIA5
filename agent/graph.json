@@ -1,0 +1,587 @@
+{
+ "_source": "data/formations.json (voir registre_sources.csv)",
+ "relations": [
+  "appartientA",
+  "necessite",
+  "enseigne",
+  "developpe",
+  "prepareA"
+ ],
+ "aretes": [
+  [
+   "IGGLIA",
+   "appartientA",
+   "Informatique et Télécommunication"
+  ],
+  [
+   "IGGLIA",
+   "necessite",
+   "Bacc C, D, S et Techniques industrielles"
+  ],
+  [
+   "IGGLIA",
+   "developpe",
+   "Techniques informatiques appliquées à la gestion des entreprises"
+  ],
+  [
+   "IGGLIA",
+   "prepareA",
+   "Informatique de gestion dans les entreprises publiques et privées"
+  ],
+  [
+   "IGGLIA",
+   "prepareA",
+   "Génie logiciel"
+  ],
+  [
+   "IGGLIA",
+   "prepareA",
+   "Intelligence artificielle"
+  ],
+  [
+   "ESIIA",
+   "appartientA",
+   "Informatique et Télécommunication"
+  ],
+  [
+   "ESIIA",
+   "necessite",
+   "Bacc C, D, S et Techniques industrielles"
+  ],
+  [
+   "ESIIA",
+   "developpe",
+   "Électronique"
+  ],
+  [
+   "ESIIA",
+   "developpe",
+   "Architecture des ordinateurs"
+  ],
+  [
+   "ESIIA",
+   "developpe",
+   "Applications fondamentales de l'informatique"
+  ],
+  [
+   "ESIIA",
+   "prepareA",
+   "Électronique"
+  ],
+  [
+   "ESIIA",
+   "prepareA",
+   "Systèmes informatiques"
+  ],
+  [
+   "ESIIA",
+   "prepareA",
+   "Télécommunications"
+  ],
+  [
+   "IMTICIA",
+   "appartientA",
+   "Informatique et Télécommunication"
+  ],
+  [
+   "IMTICIA",
+   "necessite",
+   "Bacc C, D, S et Techniques industrielles"
+  ],
+  [
+   "IMTICIA",
+   "developpe",
+   "Informatique multimédia"
+  ],
+  [
+   "IMTICIA",
+   "developpe",
+   "Technologies de l'information et de la communication"
+  ],
+  [
+   "IMTICIA",
+   "prepareA",
+   "Multimédia"
+  ],
+  [
+   "IMTICIA",
+   "prepareA",
+   "Télécommunications"
+  ],
+  [
+   "IMTICIA",
+   "prepareA",
+   "Nouvelles technologies de l'information et de la communication"
+  ],
+  [
+   "ISAIA",
+   "appartientA",
+   "Informatique et Télécommunication"
+  ],
+  [
+   "ISAIA",
+   "necessite",
+   "Bacc C, D, S et Techniques industrielles"
+  ],
+  [
+   "ISAIA",
+   "enseigne",
+   "Mathématiques"
+  ],
+  [
+   "ISAIA",
+   "enseigne",
+   "Statistique appliquée"
+  ],
+  [
+   "ISAIA",
+   "enseigne",
+   "Informatique"
+  ],
+  [
+   "ISAIA",
+   "developpe",
+   "Méthodes statistiques"
+  ],
+  [
+   "ISAIA",
+   "developpe",
+   "Méthodes informatiques appliquées à l'économie"
+  ],
+  [
+   "ISAIA",
+   "prepareA",
+   "Banques"
+  ],
+  [
+   "ISAIA",
+   "prepareA",
+   "Entreprises industrielles"
+  ],
+  [
+   "ISAIA",
+   "prepareA",
+   "Entreprises commerciales"
+  ],
+  [
+   "CAA",
+   "appartientA",
+   "Techniques des Affaires"
+  ],
+  [
+   "CAA",
+   "necessite",
+   "Bacc toute série"
+  ],
+  [
+   "CAA",
+   "enseigne",
+   "Marketing"
+  ],
+  [
+   "CAA",
+   "enseigne",
+   "Techniques commerciales"
+  ],
+  [
+   "CAA",
+   "enseigne",
+   "Organisation et management"
+  ],
+  [
+   "CAA",
+   "developpe",
+   "Techniques commerciales"
+  ],
+  [
+   "CAA",
+   "developpe",
+   "Management et organisation des entreprises"
+  ],
+  [
+   "CAA",
+   "prepareA",
+   "Commerce"
+  ],
+  [
+   "CAA",
+   "prepareA",
+   "Marketing"
+  ],
+  [
+   "CAA",
+   "prepareA",
+   "Management des entreprises"
+  ],
+  [
+   "FIC",
+   "appartientA",
+   "Techniques des Affaires"
+  ],
+  [
+   "FIC",
+   "necessite",
+   "Bacc toute série"
+  ],
+  [
+   "FIC",
+   "enseigne",
+   "Finances"
+  ],
+  [
+   "FIC",
+   "enseigne",
+   "Comptabilité"
+  ],
+  [
+   "FIC",
+   "enseigne",
+   "Techniques quantitatives de gestion"
+  ],
+  [
+   "FIC",
+   "developpe",
+   "Techniques quantitatives de gestion"
+  ],
+  [
+   "FIC",
+   "developpe",
+   "Finance d'entreprise"
+  ],
+  [
+   "FIC",
+   "developpe",
+   "Comptabilité"
+  ],
+  [
+   "FIC",
+   "prepareA",
+   "Services financiers et comptables des entreprises publiques et privées"
+  ],
+  [
+   "DTJA",
+   "appartientA",
+   "Techniques des Affaires"
+  ],
+  [
+   "DTJA",
+   "necessite",
+   "Bacc toute série"
+  ],
+  [
+   "DTJA",
+   "enseigne",
+   "Droit national et international"
+  ],
+  [
+   "DTJA",
+   "enseigne",
+   "Techniques juridiques des affaires"
+  ],
+  [
+   "DTJA",
+   "enseigne",
+   "Outil informatique"
+  ],
+  [
+   "DTJA",
+   "developpe",
+   "Techniques juridiques nationales et internationales"
+  ],
+  [
+   "DTJA",
+   "developpe",
+   "Usage professionnel de l'informatique"
+  ],
+  [
+   "DTJA",
+   "prepareA",
+   "Administration publique"
+  ],
+  [
+   "DTJA",
+   "prepareA",
+   "Entreprises privées"
+  ],
+  [
+   "EMP",
+   "appartientA",
+   "Techniques des Affaires"
+  ],
+  [
+   "EMP",
+   "necessite",
+   "Bacc toute série"
+  ],
+  [
+   "EMP",
+   "enseigne",
+   "Analyse économique"
+  ],
+  [
+   "EMP",
+   "enseigne",
+   "Management de projet"
+  ],
+  [
+   "EMP",
+   "developpe",
+   "Analyse économique"
+  ],
+  [
+   "EMP",
+   "developpe",
+   "Application aux réalités des entreprises"
+  ],
+  [
+   "EMP",
+   "prepareA",
+   "Administration publique"
+  ],
+  [
+   "EMP",
+   "prepareA",
+   "Entreprises privées"
+  ],
+  [
+   "EMP",
+   "prepareA",
+   "Management de projet"
+  ],
+  [
+   "IAA",
+   "appartientA",
+   "Biotechnologie et Agronomie"
+  ],
+  [
+   "IAA",
+   "necessite",
+   "Bacc C, D, S, Techniques agricoles et A2 avec note de mathématiques >= 12"
+  ],
+  [
+   "IAA",
+   "prepareA",
+   "Industries agroalimentaires"
+  ],
+  [
+   "PIP",
+   "appartientA",
+   "Biotechnologie et Agronomie"
+  ],
+  [
+   "PIP",
+   "necessite",
+   "Bacc C, D, S, Techniques agricoles et A2 avec note de mathématiques >= 12"
+  ],
+  [
+   "PIP",
+   "prepareA",
+   "Industries pharmaceutiques"
+  ],
+  [
+   "PIP",
+   "prepareA",
+   "Recherche sur les plantes médicinales"
+  ],
+  [
+   "AEE",
+   "appartientA",
+   "Biotechnologie et Agronomie"
+  ],
+  [
+   "AEE",
+   "necessite",
+   "Bacc C, D, S, Techniques agricoles et A2 avec note de mathématiques >= 12"
+  ],
+  [
+   "AEE",
+   "developpe",
+   "Techniques et technologies agricoles modernes"
+  ],
+  [
+   "AEE",
+   "developpe",
+   "Agri-business"
+  ],
+  [
+   "AEE",
+   "prepareA",
+   "Secteur agricole et élevage"
+  ],
+  [
+   "AEE",
+   "prepareA",
+   "Agri-business"
+  ],
+  [
+   "AEE",
+   "prepareA",
+   "Développement rural"
+  ],
+  [
+   "EMII",
+   "appartientA",
+   "Génie Industriel et Génie Civil"
+  ],
+  [
+   "EMII",
+   "necessite",
+   "Bacc C, D, S et Techniques industrielles"
+  ],
+  [
+   "EMII",
+   "enseigne",
+   "Mécanique"
+  ],
+  [
+   "EMII",
+   "enseigne",
+   "Technologies industrielles"
+  ],
+  [
+   "EMII",
+   "enseigne",
+   "Informatique industrielle"
+  ],
+  [
+   "EMII",
+   "developpe",
+   "Maîtrise des technologies industrielles"
+  ],
+  [
+   "EMII",
+   "developpe",
+   "Informatique industrielle"
+  ],
+  [
+   "EMII",
+   "prepareA",
+   "Industrie"
+  ],
+  [
+   "EMII",
+   "prepareA",
+   "Électromécanique"
+  ],
+  [
+   "EMII",
+   "prepareA",
+   "Informatique industrielle"
+  ],
+  [
+   "GCA",
+   "appartientA",
+   "Génie Industriel et Génie Civil"
+  ],
+  [
+   "GCA",
+   "necessite",
+   "Bacc C, D, S et Techniques du génie civil"
+  ],
+  [
+   "GCA",
+   "prepareA",
+   "Construction d'infrastructures"
+  ],
+  [
+   "GCA",
+   "prepareA",
+   "Aménagement urbain et rural"
+  ],
+  [
+   "GCA",
+   "prepareA",
+   "Architecture"
+  ],
+  [
+   "ICMP",
+   "appartientA",
+   "Génie Industriel et Génie Civil"
+  ],
+  [
+   "ICMP",
+   "necessite",
+   "Bacc C, D, S et Techniques industrielles"
+  ],
+  [
+   "ICMP",
+   "prepareA",
+   "Industries chimiques"
+  ],
+  [
+   "ICMP",
+   "prepareA",
+   "Industries minières"
+  ],
+  [
+   "ICMP",
+   "prepareA",
+   "Industries pétrolières"
+  ],
+  [
+   "TEE",
+   "appartientA",
+   "Techniques du Tourisme"
+  ],
+  [
+   "TEE",
+   "necessite",
+   "Bacc toute série"
+  ],
+  [
+   "TEE",
+   "developpe",
+   "Connaissance de l'environnement et de la civilisation malgache"
+  ],
+  [
+   "TEE",
+   "prepareA",
+   "Secteur du tourisme"
+  ],
+  [
+   "TEE",
+   "prepareA",
+   "Écotourisme et environnement"
+  ],
+  [
+   "TEH",
+   "appartientA",
+   "Techniques du Tourisme"
+  ],
+  [
+   "TEH",
+   "necessite",
+   "Bacc toute série"
+  ],
+  [
+   "TEH",
+   "enseigne",
+   "Art culinaire national et international"
+  ],
+  [
+   "TEH",
+   "developpe",
+   "Techniques de l'art culinaire"
+  ],
+  [
+   "TEH",
+   "developpe",
+   "Accueil et hôtellerie"
+  ],
+  [
+   "TEH",
+   "prepareA",
+   "Tourisme"
+  ],
+  [
+   "TEH",
+   "prepareA",
+   "Hôtellerie"
+  ],
+  [
+   "TEH",
+   "prepareA",
+   "Restauration et art culinaire"
+  ]
+ ]
+}

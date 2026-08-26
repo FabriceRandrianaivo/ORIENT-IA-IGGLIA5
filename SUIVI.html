@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suivi ORIENT'IA</title>
+<style>
+  :root {
+    --bg: #f6f7f4; --surface: #ffffff; --ink: #20261f; --muted: #5b6459;
+    --accent: #1e6b45; --accent-soft: rgba(30,107,69,.10);
+    --warn: #a85d1c; --warn-soft: rgba(168,93,28,.12);
+    --line: #dfe3dc; --done: #1e6b45; --encours: #a85d1c; --todo: #8a938a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141915; --surface: #1b221d; --ink: #e5eae3; --muted: #9aa596;
+      --accent: #58b385; --accent-soft: rgba(88,179,133,.14);
+      --warn: #d9995b; --warn-soft: rgba(217,153,91,.14);
+      --line: #2b342c; --done: #58b385; --encours: #d9995b; --todo: #6f7a6f;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0 18px 70px; background: var(--bg); color: var(--ink);
+    font: 15px/1.6 "Segoe UI", system-ui, sans-serif;
+  }
+  main { max-width: 52rem; margin: 0 auto; }
+  header { padding: 40px 0 14px; border-bottom: 3px solid var(--accent); }
+  h1 { font-size: 1.7rem; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0; }
+  .bar-zone { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; margin: 18px 0 6px; }
+  .countdown {
+    background: var(--warn-soft); color: var(--warn); font-weight: 600;
+    padding: 8px 16px; border-radius: 8px; white-space: nowrap;
+  }
+  .global { flex: 1; min-width: 240px; }
+  .global .lbl { display: flex; justify-content: space-between; font-size: .85rem; color: var(--muted); }
+  .track { height: 10px; background: var(--line); border-radius: 99px; overflow: hidden; margin-top: 4px; }
+  .fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width .3s; }
+
+  .hint {
+    margin: 16px 0 0; font-size: .85rem; color: var(--muted);
+    background: var(--surface); border: 1px dashed var(--line); border-radius: 8px; padding: 8px 14px;
+  }
+  .next {
+    margin: 16px 0 0; padding: 12px 16px; border-left: 4px solid var(--warn);
+    background: var(--warn-soft); border-radius: 0 8px 8px 0; font-weight: 600;
+  }
+
+  section.phase {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    margin: 22px 0; padding: 18px 20px 10px;
+  }
+  .phase-head { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: baseline; margin-bottom: 4px; }
+  .phase-head h2 { font-size: 1.12rem; margin: 0; }
+  .phase-head .pts { font-size: .78rem; color: var(--muted); }
+  .phase-head .pct { margin-left: auto; font-size: .85rem; font-weight: 600; color: var(--accent); }
+  .minitrack { height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; margin-bottom: 10px; }
+  .minitrack .fill { height: 100%; }
+
+  ul.tasks { list-style: none; margin: 0; padding: 0; }
+  ul.tasks li {
+    display: flex; gap: 10px; align-items: flex-start; padding: 8px 6px;
+    border-top: 1px solid var(--line); cursor: pointer; border-radius: 6px;
+  }
+  ul.tasks li:hover { background: var(--accent-soft); }
+  .badge {
+    flex: none; font-size: .68rem; font-weight: 700; letter-spacing: .05em;
+    padding: 2px 9px; border-radius: 99px; margin-top: 3px; min-width: 66px; text-align: center;
+  }
+  li[data-state="done"]   .badge { background: var(--done); color: var(--bg); }
+  li[data-state="encours"] .badge { background: var(--encours); color: var(--bg); }
+  li[data-state="todo"]   .badge { background: none; color: var(--todo); border: 1px solid var(--todo); }
+  li[data-state="done"] .txt { color: var(--muted); text-decoration: line-through; text-decoration-color: rgba(128,128,128,.5); }
+  .txt strong { font-weight: 600; }
+  .txt small { display: block; color: var(--muted); font-size: .82rem; }
+  .crit { color: var(--warn); font-weight: 700; }
+
+  footer { margin-top: 40px; font-size: .8rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <h1>Suivi ORIENT'IA</h1>
+  <p class="sub">Examen de fin d'études ISPM M2 · dépôt <b>ORIENT-IA-IGGLIA5</b> · flux : main ← develop ← phase*</p>
+  <div class="bar-zone">
+    <div class="countdown" id="countdown">…</div>
+    <div class="global">
+      <div class="lbl"><span>Avancement global</span><span id="globalpct">0 %</span></div>
+      <div class="track"><div class="fill" id="globalfill" style="width:0%"></div></div>
+    </div>
+  </div>
+  <p class="next" id="nextaction">⚠️ Prochaine action critique : LANCER L'ENQUÊTE (Google Forms) — le sujet impose le gel à la fin du jour 1.</p>
+  <p class="hint">Clique sur une tâche pour changer son état : <b>à faire → en cours → fait</b>. Tes changements sont enregistrés dans ce navigateur.</p>
+</header>
+
+<section class="phase" data-phase="p0">
+  <div class="phase-head"><h2>Cadrage &amp; dépôt</h2><span class="pts">qualité du dépôt : 5 pts</span><span class="pct"></span></div>
+  <div class="minitrack"><div class="fill"></div></div>
+  <ul class="tasks">
+    <li data-id="p0-sujet" data-state="done"><span class="badge"></span><span class="txt"><strong>Sujet analysé, plan de bataille rédigé</strong><small>PLAN-ORIENTIA.md — barème décodé, plan heure par heure</small></span></li>
+    <li data-id="p0-repo" data-state="done"><span class="badge"></span><span class="txt"><strong>Repo GitHub + arborescence + branches</strong><small>main, develop, phase1-donnees, phase2-ml, phase3-agent, phase4-eval</small></span></li>
+    <li data-id="p0-collab" data-state="todo"><span class="badge"></span><span class="txt"><strong>Inviter chaque membre comme collaborateur + 1er commit individuel</strong><small>Le jury évalue les contributions via l'historique Git</small></span></li>
+    <li data-id="p0-prive" data-state="todo"><span class="badge"></span><span class="txt"><strong>Vérifier que le repo est privé</strong><small>Settings → General</small></span></li>
+  </ul>
+</section>
+
+<section class="phase" data-phase="p1">
+  <div class="phase-head"><h2>Phase 1 — Données</h2><span class="pts">acquisition 12 pts + démarche 10 pts</span><span class="pct"></span></div>
+  <div class="minitrack"><div class="fill"></div></div>
+  <ul class="tasks">
+    <li data-id="p1-quest" data-state="done"><span class="badge"></span><span class="txt"><strong>Questionnaires d'enquête rédigés (étudiants + pros)</strong><small>ENQUETE-QUESTIONNAIRES.md — consentement, liste officielle des 16 filières incluse</small></span></li>
+    <li data-id="p1-lancer" data-state="todo"><span class="badge"></span><span class="txt"><strong class="crit">Créer les 2 Google Forms et DIFFUSER l'enquête</strong><small>CRITIQUE — sans réponses réelles, pas de mesure de transfert (notée). Ne pas collecter les e-mails !</small></span></li>
+    <li data-id="p1-scrape" data-state="done"><span class="badge"></span><span class="txt"><strong>Scraper reproductible du site ISPM</strong><small>data/scrape_ispm.py — 4 pages + brochure PDF, encodage réparé</small></span></li>
+    <li data-id="p1-registre" data-state="done"><span class="badge"></span><span class="txt"><strong>Registre des sources</strong><small>data/registre_sources.csv — statuts, limites, contradiction concours/dossier documentée</small></span></li>
+    <li data-id="p1-formations" data-state="done"><span class="badge"></span><span class="txt"><strong>Base structurée des 16 filières</strong><small>data/formations.json — prérequis bac officiels, débouchés, null si non publié (jamais inventé)</small></span></li>
+    <li data-id="p1-synth" data-state="done"><span class="badge"></span><span class="txt"><strong>Générateur de profils synthétiques + dataset 3 000</strong><small>data/synthetic/ — seed fixe, éligibilité bac respectée, bruit d'étiquette softmax</small></span></li>
+    <li data-id="p1-docsynth" data-state="done"><span class="badge"></span><span class="txt"><strong>Documentation méthode / hypothèses / biais / contrôles</strong><small>data/synthetic/DONNEES-SYNTHETIQUES.md (exigence section 5)</small></span></li>
+    <li data-id="p1-gel" data-state="todo"><span class="badge"></span><span class="txt"><strong>Geler l'enquête fin jour 1 + export CSV</strong><small>Puis anonymisation et nettoyage</small></span></li>
+    <li data-id="p1-regcollecte" data-state="todo"><span class="badge"></span><span class="txt"><strong>Registre de collecte de l'enquête</strong><small>Reçues / retenues / écartées, répartition, biais constatés, texte de consentement</small></span></li>
+    <li data-id="p1-recodage" data-state="todo"><span class="badge"></span><span class="txt"><strong>Recodage des réponses réelles au format du dataset</strong><small>Champs « Autre » → vocabulaire fermé ; devient le jeu de validation/test</small></span></li>
+  </ul>
+</section>
+
+<section class="phase" data-phase="p2">
+  <div class="phase-head"><h2>Phase 2 — Machine Learning</h2><span class="pts">ML 18 pts + intégration 10 pts</span><span class="pct"></span></div>
+  <div class="minitrack"><div class="fill"></div></div>
+  <ul class="tasks">
+    <li data-id="p2-eda" data-state="todo"><span class="badge"></span><span class="txt"><strong>Notebook EDA</strong><small>notebooks/01_eda.ipynb — distributions, équilibre des classes, corrélations</small></span></li>
+    <li data-id="p2-baseline" data-state="todo"><span class="badge"></span><span class="txt"><strong>Baseline : classe majoritaire + régression logistique</strong><small>Référence exigée par le sujet</small></span></li>
+    <li data-id="p2-challenger" data-state="todo"><span class="badge"></span><span class="txt"><strong>Challenger : Random Forest / Gradient Boosting</strong><small>≥ 2 approches comparées, pondération de classes (IAA rare)</small></span></li>
+    <li data-id="p2-metriques" data-state="todo"><span class="badge"></span><span class="txt"><strong>Métriques complètes</strong><small>Top-1/top-3, F1 macro, matrice de confusion, MRR, calibration — jamais l'accuracy seule</small></span></li>
+    <li data-id="p2-transfert" data-state="todo"><span class="badge"></span><span class="txt"><strong class="crit">Transfert synthétique → réponses réelles</strong><small>LA mesure mise en avant par le sujet — notebooks/03_transfert_reel.ipynb</small></span></li>
+    <li data-id="p2-erreurs" data-state="todo"><span class="badge"></span><span class="txt"><strong>Analyse d'erreurs + biais + stabilité</strong><small>Parcours confondus commentés ; perturbations du profil → top-3 stable</small></span></li>
+    <li data-id="p2-save" data-state="todo"><span class="badge"></span><span class="txt"><strong>Modèle sauvegardé + script reproductible</strong><small>models/train.py (seed fixée) + model.joblib</small></span></li>
+  </ul>
+</section>
+
+<section class="phase" data-phase="p3">
+  <div class="phase-head"><h2>Phase 3 — Agent &amp; RAG</h2><span class="pts">RAG 12 pts + agent 12 pts</span><span class="pct"></span></div>
+  <div class="minitrack"><div class="fill"></div></div>
+  <ul class="tasks">
+    <li data-id="p3-index" data-state="todo"><span class="badge"></span><span class="txt"><strong>Index hybride (vecteurs + BM25) sur le corpus</strong><small>rag/ingest.py — chunking, embeddings, ChromaDB + rank_bm25</small></span></li>
+    <li data-id="p3-outil1" data-state="todo"><span class="badge"></span><span class="txt"><strong>Outil 1 : rechercher_formation</strong><small>Passages + scores + identifiants de sources → citations vérifiables</small></span></li>
+    <li data-id="p3-outil2" data-state="todo"><span class="badge"></span><span class="txt"><strong>Outil 2 : analyser_profil_ml</strong><small>Charge model.joblib → top-3 + probabilités + facteurs</small></span></li>
+    <li data-id="p3-outil3" data-state="todo"><span class="badge"></span><span class="txt"><strong>Outil 3 : verifier_prerequis</strong><small>Règles officielles de série de bac (formations.json / graphe)</small></span></li>
+    <li data-id="p3-outils45" data-state="todo"><span class="badge"></span><span class="txt"><strong>Outils 4-5 : comparer_parcours, calculer_score_adequation</strong><small>Bonus solide pour la rubrique agent</small></span></li>
+    <li data-id="p3-graphe" data-state="todo"><span class="badge"></span><span class="txt"><strong>Graphe de connaissances (extension symbolique)</strong><small>agent/graph.json — apport à démontrer sur 2-3 cas d'évaluation</small></span></li>
+    <li data-id="p3-guardrails" data-state="todo"><span class="badge"></span><span class="txt"><strong>System prompt + guardrails</strong><small>Refus d'inventer, refus profilage psy, refus critères discriminatoires, renvoi administration</small></span></li>
+    <li data-id="p3-traces" data-state="todo"><span class="badge"></span><span class="txt"><strong>Traces JSONL par interaction</strong><small>Question, profil, passages+scores, outils E/S, réponse, latence, refus</small></span></li>
+    <li data-id="p3-ui" data-state="todo"><span class="badge"></span><span class="txt"><strong>Interface Streamlit + mention obligatoire affichée</strong><small>« ORIENT'IA constitue un outil d'aide à l'orientation… » en permanence</small></span></li>
+  </ul>
+</section>
+
+<section class="phase" data-phase="p4">
+  <div class="phase-head"><h2>Phase 4 — Évaluation</h2><span class="pts">évaluation 14 pts + sécurité 7 pts</span><span class="pct"></span></div>
+  <div class="minitrack"><div class="fill"></div></div>
+  <ul class="tasks">
+    <li data-id="p4-cas" data-state="todo"><span class="badge"></span><span class="txt"><strong>Rédiger les 32+ cas de test (9 catégories imposées)</strong><small>eval/eval_cases.jsonl — peut commencer AVANT que le code existe</small></span></li>
+    <li data-id="p4-harnais" data-state="todo"><span class="badge"></span><span class="txt"><strong>Harnais de rejeu automatique</strong><small>eval/run_eval.py → eval_results.csv</small></span></li>
+    <li data-id="p4-campagne" data-state="todo"><span class="badge"></span><span class="txt"><strong>Campagne complète + corrections + re-run</strong><small>Sécurité d'abord (injection, biais, profilage psy) ; mesurer la latence</small></span></li>
+    <li data-id="p4-resultats" data-state="todo"><span class="badge"></span><span class="txt"><strong>Figer les résultats par catégorie</strong><small>Tableau réussite/échec + commentaires — preuve mesurée, pas affirmation</small></span></li>
+  </ul>
+</section>
+
+<section class="phase" data-phase="p5">
+  <div class="phase-head"><h2>Livraison — jeudi 27/08, 17 h 00</h2><span class="pts">démo + vidéo + dépôt : 5 pts</span><span class="pct"></span></div>
+  <div class="minitrack"><div class="fill"></div></div>
+  <ul class="tasks">
+    <li data-id="p5-readme" data-state="todo"><span class="badge"></span><span class="txt"><strong>README final testé sur machine vierge</strong><small>Installation + exécution pas à pas</small></span></li>
+    <li data-id="p5-archi" data-state="todo"><span class="badge"></span><span class="txt"><strong>Schéma d'architecture</strong><small>docs/architecture.png</small></span></li>
+    <li data-id="p5-limites" data-state="todo"><span class="badge"></span><span class="txt"><strong>Note limites / biais / risques</strong><small>docs/limites_biais_risques.md — réutiliser DONNEES-SYNTHETIQUES.md et le registre</small></span></li>
+    <li data-id="p5-video" data-state="todo"><span class="badge"></span><span class="txt"><strong>Vidéo 3–5 min du système en fonctionnement</strong><small>Reco argumentée + appel ML visible + un refus + un « je ne sais pas » — PAS de slides</small></span></li>
+    <li data-id="p5-check" data-state="todo"><span class="badge"></span><span class="txt"><strong>Vérifier les 14 livrables + merge develop → main</strong><small>Checklist dans PLAN-ORIENTIA.md section 13</small></span></li>
+    <li data-id="p5-demo" data-state="todo"><span class="badge"></span><span class="txt"><strong>Répéter les 9 questions types du jury</strong><small>Liste et comportements attendus : PLAN-ORIENTIA.md section 14</small></span></li>
+    <li data-id="p5-remise" data-state="todo"><span class="badge"></span><span class="txt"><strong class="crit">REMISE — viser 16 h 00 pour garder une marge</strong><small>Deadline stricte : jeudi 27 août 2026, 17 h 00</small></span></li>
+  </ul>
+</section>
+
+<footer>Suivi local de l'équipe — états des tâches sauvegardés dans le navigateur (localStorage). Références : PLAN-ORIENTIA.md · ENQUETE-QUESTIONNAIRES.md · Sujet officiel PDF.</footer>
+</main>
+
+<script>
+(function () {
+  var KEY = "orientia-suivi-v1";
+  var ORDER = ["todo", "encours", "done"];
+  var LABEL = { todo: "À FAIRE", encours: "EN COURS", done: "FAIT" };
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) {}
+
+  var items = document.querySelectorAll("ul.tasks li");
+  items.forEach(function (li) {
+    var id = li.getAttribute("data-id");
+    if (saved[id]) li.setAttribute("data-state", saved[id]);
+    li.addEventListener("click", function () {
+      var cur = li.getAttribute("data-state");
+      var next = ORDER[(ORDER.indexOf(cur) + 1) % ORDER.length];
+      li.setAttribute("data-state", next);
+      saved[id] = next;
+      try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {}
+      refresh();
+    });
+  });
+
+  function refresh() {
+    var allDone = 0, allTotal = 0;
+    document.querySelectorAll("section.phase").forEach(function (sec) {
+      var lis = sec.querySelectorAll("li");
+      var done = 0;
+      lis.forEach(function (li) {
+        li.querySelector(".badge").textContent = LABEL[li.getAttribute("data-state")];
+        if (li.getAttribute("data-state") === "done") done++;
+      });
+      allDone += done; allTotal += lis.length;
+      var pct = lis.length ? Math.round(100 * done / lis.length) : 0;
+      sec.querySelector(".pct").textContent = done + "/" + lis.length + " · " + pct + " %";
+      sec.querySelector(".minitrack .fill").style.width = pct + "%";
+    });
+    var g = allTotal ? Math.round(100 * allDone / allTotal) : 0;
+    document.getElementById("globalpct").textContent = g + " %";
+    document.getElementById("globalfill").style.width = g + "%";
+
+    var enq = document.querySelector('[data-id="p1-lancer"]');
+    var next = document.getElementById("nextaction");
+    if (enq && enq.getAttribute("data-state") === "done") {
+      next.textContent = "Prochaine étape : Phase 2 (EDA + entraînement) et rédaction des 32 cas de test en parallèle.";
+      next.style.borderLeftColor = "var(--accent)";
+      next.style.background = "var(--accent-soft)";
+    }
+  }
+
+  function countdown() {
+    var deadline = new Date(2026, 7, 27, 17, 0, 0);
+    var ms = deadline - new Date();
+    var el = document.getElementById("countdown");
+    if (ms <= 0) { el.textContent = "⏰ Deadline dépassée (27/08 17 h)"; return; }
+    var h = Math.floor(ms / 3600000), m = Math.floor(ms % 3600000 / 60000);
+    el.textContent = "⏳ Remise dans " + h + " h " + (m < 10 ? "0" : "") + m + " min (jeu. 27/08, 17 h)";
+  }
+
+  refresh(); countdown(); setInterval(countdown, 30000);
+})();
+</script>
+</body>
+</html>

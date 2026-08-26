@@ -2,9 +2,12 @@
   "_meta": {
     "description": "Base structurée des formations de l'ISPM, construite exclusivement à partir des sources officielles listées dans registre_sources.csv. Toute donnée absente des sources est marquée null : elle ne doit jamais être inventée par l'assistant.",
     "date_construction": "2026-08-26",
-    "sources": ["src-accueil", "src-presentation", "src-filieres", "src-inscription", "src-brochure"],
+    "sources": ["src-accueil", "src-presentation", "src-filieres", "src-inscription", "src-brochure", "src-brochure-papier"],
     "contradictions_connues": [
-      "La brochure (src-brochure) mentionne un 'concours d'entrée' après le baccalauréat ; la page inscription (src-inscription) décrit une 'sélection de dossier'. La page inscription semble plus récente et fait foi, mais l'assistant doit signaler l'incertitude et renvoyer vers l'administration."
+      "Mode d'admission — trois versions selon les sources : 'concours d'entrée' (src-brochure, ancienne), 'sélection de dossier' (src-inscription), 'dossier de candidature + entretien programmé si besoin' (src-brochure-papier, la plus récente, postérieure à 2025). La version brochure papier fait foi avec réserve ; signaler l'incertitude et renvoyer vers l'administration.",
+      "Frais d'inscription à la sélection (L1) : 30 000 Ar selon src-inscription, 40 000 Ar selon src-brochure-papier (plus récente). Citer les deux montants avec leurs sources et renvoyer vers l'administration pour confirmation.",
+      "Cursus : la vieille brochure PDF (src-brochure) décrit un cursus pré-LMD (Technicien Supérieur BAC+2, Ingéniorat BAC+5) ; depuis l'habilitation LMD de 2015 (src-brochure-papier), l'ISPM délivre les diplômes de Licence et de Master pour tous les parcours.",
+      "Condition bac A2 en Biotechnologie : src-inscription précise 'A2 avec note de mathématiques >= 12' ; src-brochure-papier mentionne A2 sans la condition de note. La règle détaillée du site est conservée par prudence."
     ]
   },
   "etablissement": {
@@ -14,28 +17,47 @@
     "email": "contact@ispm.education",
     "devise": "Fahaizana - Fampandrosoana - Fihavanana",
     "faits_notables": [
+      "Créé le 23 janvier 1993 à Ambatomaro-Antsobolo ; agrément ministériel en 1994, homologation en 1998, habilitation LMD (Licence et Master) en 2015 (src-brochure-papier).",
       "Classé parmi les dix meilleures universités de Madagascar selon le classement cité sur le site (src-accueil).",
-      "La brochure indique un taux d'embauche de 95% des diplômés, les 5% restants poursuivant leurs études (src-brochure ; document non daté, chiffre à présenter avec prudence)."
+      "Environ 4 000 ingénieurs formés depuis 1993 ; se présente comme la seule école polytechnique privée de l'Océan Indien (src-brochure-papier).",
+      "La brochure ancienne indique un taux d'embauche de 95% des diplômés, les 5% restants poursuivant leurs études (src-brochure ; document non daté, chiffre à présenter avec prudence).",
+      "Infrastructures : 70 salles de cours, amphithéâtre plein air de 3 000 places, laboratoires (2 informatique, électronique, langues, chimie, biologie-pharmacologie, son/audiovisuel), atelier de fabrication mécanique, atelier culinaire (src-brochure-papier)."
     ],
-    "sources": ["src-accueil", "src-brochure"]
+    "sources": ["src-accueil", "src-brochure", "src-brochure-papier"]
   },
   "cursus": {
+    "systeme": "LMD depuis l'habilitation de 2015 : l'ISPM est habilité à délivrer les diplômes de Licence et de Master pour tous les parcours qu'il offre. Les diplômes sont reconnus par le Ministère de la Fonction Publique.",
     "diplomes": [
-      { "nom": "Technicien Supérieur", "niveau": "BAC+2", "cycle": "premier cycle" },
-      { "nom": "Licence", "niveau": "BAC+3", "cycle": "premier cycle" },
-      { "nom": "Ingéniorat", "niveau": "BAC+5", "cycle": "second cycle" },
-      { "nom": "DEA, Doctorat", "niveau": "BAC+5 et plus", "cycle": "troisième cycle" }
+      { "nom": "Licence", "niveau": "BAC+3 (L1 à L3)", "source": "src-brochure-papier" },
+      { "nom": "Master", "niveau": "BAC+5 (M1, M2)", "source": "src-brochure-papier" }
     ],
-    "source": "src-brochure"
+    "cursus_pre_lmd_obsolete": "L'ancienne brochure (src-brochure, non datée, antérieure au LMD) décrivait Technicien Supérieur (BAC+2), Ingéniorat (BAC+5) et un troisième cycle DEA/Doctorat — conservé pour mémoire, ne plus le présenter comme l'offre actuelle.",
+    "source": "src-brochure-papier"
   },
   "conditions_acces_premiere_annee": {
-    "modalite": "Sélection de dossier des candidats titulaires du baccalauréat (src-inscription). La brochure, plus ancienne, mentionne un concours d'entrée : en cas de question, signaler la contradiction et renvoyer vers l'administration.",
+    "modalite": "Dépôt d'un dossier de candidature complet ; après présélection, entretien programmé si besoin (src-brochure-papier, source la plus récente). Sources plus anciennes : 'sélection de dossier' (src-inscription) et 'concours d'entrée' (src-brochure) — signaler l'évolution et renvoyer vers l'administration pour confirmation.",
     "documents": [
-      "Diplôme, attestation ou relevé de notes du baccalauréat",
-      "Au moins un bulletin de classe de première ou terminale",
-      "Lettre de motivation adressée au Recteur de l'ISPM"
+      "Photocopie légalisée de l'attestation du bac ou du relevé de notes du bac",
+      "Bulletin de naissance",
+      "Une photo d'identité récente",
+      "Fiche d'inscription à remplir sur place",
+      "Lettre de motivation adressée au Recteur de l'ISPM",
+      "Relevés de notes de seconde, première et terminale (facultatif)"
     ],
-    "frais_selection_dossier": "30 000 Ar",
+    "frais_selection_dossier": "40 000 Ar selon la brochure récente (src-brochure-papier) ; 30 000 Ar selon le site (src-inscription) — contradiction à signaler",
+    "transferts_L2_L3_M1": {
+      "documents": [
+        "Bulletin de naissance",
+        "Lettre de motivation adressée au Recteur de l'ISPM",
+        "Curriculum Vitae",
+        "Une photo d'identité récente",
+        "Photocopie légalisée du relevé de notes du baccalauréat",
+        "Relevés de notes des niveaux antérieurs",
+        "Photocopie légalisée du diplôme ou certificat (si possédé)"
+      ],
+      "frais_demande_transfert": "60 000 Ar",
+      "source": "src-brochure-papier"
+    },
     "series_bac_par_departement": {
       "Informatique et Télécommunication": "Bacc C, D, S et Techniques industrielles",
       "Génie Civil et Architecture": "Bacc C, D, S et Techniques du génie civil",
@@ -53,6 +75,18 @@
     "Génie Industriel et Génie Civil",
     "Techniques du Tourisme"
   ],
+  "mentions_lmd": {
+    "note": "Structure officielle LMD selon la brochure récente (src-brochure-papier) : 6 mentions. Le site (src-filieres) groupe en 5 départements — les 16 parcours sont identiques dans les deux structures.",
+    "mentions": {
+      "Informatique et Télécommunication": ["IGGLIA", "ESIIA", "IMTICIA", "ISAIA"],
+      "Droit et Techniques des Affaires": ["CAA", "DTJA", "FIC", "EMP"],
+      "Biotechnologie et Agronomie": ["IAA", "PIP", "AEE"],
+      "Génie Industriel": ["EMII", "ICMP"],
+      "Génie Civil et Architecture": ["GCA"],
+      "Techniques du Tourisme": ["TEE", "TEH"]
+    },
+    "source": "src-brochure-papier"
+  },
   "filieres": [
     {
       "sigle": "IGGLIA",

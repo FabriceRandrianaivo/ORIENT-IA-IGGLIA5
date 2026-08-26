@@ -54,8 +54,8 @@ def construire_chunks() -> list:
                    "sources": [acces["source"]]})
     cursus = data["cursus"]
     chunks.append({"id": "fiche-cursus", "titre": "Cursus et diplomes",
-                   "texte": "Diplomes delivres : " + " ; ".join(
-                       f"{d['nom']} ({d['niveau']}, {d['cycle']})" for d in cursus["diplomes"]),
+                   "texte": (cursus.get("systeme", "") + " Diplomes delivres : "
+                             + " ; ".join(f"{d['nom']} ({d['niveau']})" for d in cursus["diplomes"]) + "."),
                    "sources": [cursus["source"]]})
 
     # 2. Pages du site en texte, decoupees en blocs de paragraphes (~600 caracteres).

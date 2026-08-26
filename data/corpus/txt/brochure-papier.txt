@@ -1,0 +1,41 @@
+BROCHURE OFFICIELLE ISPM (edition papier, posterieure a 2025)
+Transcription fournie par l'equipe le 26/08/2026. Source : src-brochure-papier.
+
+LES MENTIONS ET LEURS PARCOURS (structure LMD officielle)
+L'offre de formation de l'ISPM est organisee en six mentions.
+Mention Informatique et Telecommunication : parcours Informatique de Gestion, Genie Logiciel et Intelligence Artificielle (IGGLIA) ; Electronique, Systemes Informatiques et Intelligence Artificielle (ESIIA) ; Informatique, Multimedia, Technologie de l'Information, de la Communication et Intelligence Artificielle (IMTICIA) ; Informatique, Statistiques Appliquees et Intelligence Artificielle (ISAIA).
+Mention Droit et Techniques des Affaires : parcours Commerce et Administration des Affaires (CAA) ; Droit et Techniques Juridiques des Affaires (DTJA) ; Finances et Comptabilites (FIC) ; Economie et Management de Projet (EMP).
+Mention Biotechnologie et Agronomie : parcours Industries Agro-alimentaires (IAA) ; Pharmacologie et Industries Pharmaceutiques (PIP) ; Agriculture et Elevage (AEE).
+Mention Genie Industriel : parcours Electromecanique et Informatique Industrielle (EMII) ; Industries Chimiques Minieres et Petrolieres (ICMP).
+Mention Genie Civil et Architecture : parcours Genie Civil et Architecture (GCA).
+Mention Techniques du Tourisme : parcours Tourisme et Environnement (TEE) ; Tourisme et Hotellerie (TEH).
+
+MODE D'ADMISSION ET DE SELECTION
+Pour integrer l'ISPM, deposer un dossier de candidature complet ; une fois preselectionne, le candidat est invite a un entretien programme si besoin est.
+
+Pieces a fournir pour le dossier de candidature des bacheliers (entree en L1) :
+photocopie legalisee de l'attestation du bac ou du releve de notes du bac ; bulletin de naissance ; une photo d'identite recente ; fiche d'inscription a remplir sur place ; lettre de motivation adressee a Monsieur le Recteur de l'ISPM ; releves de notes des classes de seconde, premiere et terminale (facultatif).
+Frais d'inscription pour la selection : 40.000 Ar (quarante mille ariary).
+
+Pieces a fournir pour les transferts (entree en L2, L3 et M1) :
+bulletin de naissance ; lettre de motivation adressee a Monsieur le Recteur de l'ISPM ; curriculum vitae (CV) ; une photo d'identite recente ; photocopie legalisee du releve de notes du baccalaureat ; releves de notes des niveaux anterieurs ; photocopie legalisee du diplome ou du certificat si le candidat en possede.
+Frais de demande de transfert : 60.000 Ar (soixante mille ariary).
+
+CONDITIONS D'ADMISSION A LA SELECTION PAR MENTION (series de bac) :
+Mention Informatique et Telecommunication : Bac C, D, S, Technique.
+Mention Genie Industriel, Genie Civil et Architecture : Bac C, D, S, Technique.
+Mention Biotechnologie et Agronomie : Bac C, D, S, Technique, A2.
+Mention Techniques des Affaires : Bac toutes series.
+Mention Techniques du Tourisme : Bac toutes series.
+
+HISTORIQUE DE L'ISPM
+L'ISPM est une institution d'enseignement et de recherche habilitee par le Ministere de l'Enseignement Superieur et de la Recherche Scientifique. Situe a Ambatomaro-Antsobolo, l'ISPM a ete cree le 23 janvier 1993. En 1994, il a recu l'agrement du Ministere de l'Enseignement Superieur et de la Recherche Scientifique. En 1998, il a recu l'homologation. En 2015, dans l'optique du basculement vers le systeme LMD, l'ISPM a recu l'habilitation du Ministere de l'Enseignement Superieur et de la Recherche Scientifique a delivrer les diplomes de Licence et de Master pour tous les parcours qu'il offre. Les diplomes delivres par l'ISPM sont reconnus par le Ministere de la Fonction Publique. L'ISPM a brevete le rechaud a ethanol a l'OMAPI.
+
+L'ISPM EN BREF (infrastructures et chiffres)
+L'ISPM se presente comme la seule ecole polytechnique privee dans l'Ocean Indien, avec une existence depuis 1993 et environ 4.000 ingenieurs deja formes et operationnels, toutes disciplines confondues. Le campus compte : soixante-dix salles de cours ; deux grandes salles pouvant contenir jusqu'a 1.500 etudiants ; un amphitheatre en plein air de 3.000 places ; des bureaux pour l'administration ; deux laboratoires d'informatique ; un laboratoire d'electronique ; un laboratoire de langues ; un laboratoire de chimie ; un laboratoire de biologie et de pharmacologie ; un atelier de fabrication mecanique ; un laboratoire de son et d'audio-visuel ; un atelier culinaire ; deux cafeterias ; deux salles de soutenance de memoire ; un terrain de basket-ball ; un terrain de mini-foot ; un terrain de volley-ball ; un terrain de petanque.
+
+VIE ETUDIANTE ET PERFORMANCES
+Performances sportives et culturelles : champion de la competition inter-universitaire Let's Dance en 2025 ; champion Interfac 2018 et vice-champion Interfac 2019 en football hommes.
+
+RECHERCHE ET PUBLICATIONS SCIENTIFIQUES (extraits)
+Les enseignants-chercheurs de l'ISPM publient au niveau international et national. Exemples de publications internationales : Green Design of Plant Based Pharmaceutical Drugs (Journal of Bioresource Management, 2024) ; Mathematical Analysis of Marketing Management (IORST, 2017) ; travaux presentes a IEEE AFRICON 2015 et 2017 (systemes experts de bio-informatique, e-learning, jeu de Fanorona) ; Essential Oil Composition of four Croton species from Madagascar (Biochemical Systematics and Ecology, 2006) ; Moving Averages and Price Dynamics (International Applied Finance, 2002) ; Mean-field solution of the randomizing model (Physical Review E, 1996). Exemples de publications nationales : traitement automatique de la langue malagasy, traduction automatique malgache-francais (LATEC 2008), prototypes presentes aux Forums de la recherche (alarme via GSM 2005, logiciel de gestion communale 2008, Intelligent House 2012, Smart Plan Managing 2012).

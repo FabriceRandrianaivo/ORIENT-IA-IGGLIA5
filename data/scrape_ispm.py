@@ -112,6 +112,21 @@ def main() -> None:
     except (urllib.error.URLError, OSError) as exc:
         print(f"[INFO] brochure indisponible : {exc}")
 
+    # Source hors-ligne : brochure papier fournie par l'equipe (transcrite dans
+    # corpus/txt/brochure-papier.txt). Plus recente que le site (mentionne 2025).
+    registre_rows.append(["src-brochure-papier",
+                          "Brochure officielle ISPM (edition papier, posterieure a 2025)",
+                          "document imprime fourni par l'equipe (pas d'URL)", "2026-08-26",
+                          "officiel",
+                          "mentions et parcours (structure LMD, 6 mentions), mode d'admission "
+                          "(dossier + entretien eventuel), pieces et frais L1 (40.000 Ar) et "
+                          "transferts L2/L3/M1 (60.000 Ar), conditions de bac par mention, "
+                          "historique (LMD 2015, Licence et Master), infrastructures, publications",
+                          "transcription manuelle (coquilles OCR possibles) ; contredit le site sur "
+                          "les frais (30.000 Ar sur inscription.php) et precise le mode d'admission ; "
+                          "etant plus recente, elle fait foi avec reserve — a confirmer aupres de "
+                          "l'administration"])
+
     with REGISTRE.open("w", newline="", encoding="utf-8") as fh:
         writer = csv.writer(fh)
         writer.writerow(["id", "titre", "origine_url", "date_consultation",

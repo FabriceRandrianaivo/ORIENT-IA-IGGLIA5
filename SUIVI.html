@@ -110,16 +110,16 @@
   <div class="phase-head"><h2>Phase 1 — Données</h2><span class="pts">acquisition 12 pts + démarche 10 pts</span><span class="pct"></span></div>
   <div class="minitrack"><div class="fill"></div></div>
   <ul class="tasks">
-    <li data-id="p1-quest" data-state="done"><span class="badge"></span><span class="txt"><strong>Questionnaires d'enquête rédigés (étudiants + pros)</strong><small>ENQUETE-QUESTIONNAIRES.md — consentement, liste officielle des 16 filières incluse</small></span></li>
-    <li data-id="p1-lancer" data-state="todo"><span class="badge"></span><span class="txt"><strong class="crit">Créer les 2 Google Forms et DIFFUSER l'enquête</strong><small>CRITIQUE — sans réponses réelles, pas de mesure de transfert (notée). Ne pas collecter les e-mails !</small></span></li>
+    <li data-id="p1-quest" data-state="done"><span class="badge"></span><span class="txt"><strong>Questionnaires d'enquête créés et VALIDÉS (v2)</strong><small>16 filières, série de bac, anonymes — vérifiés conformes le 26/08</small></span></li>
+    <li data-id="p1-lancer" data-state="encours"><span class="badge"></span><span class="txt"><strong class="crit">DIFFUSER l'enquête (promos, anciens, LinkedIn, famille)</strong><small>CRITIQUE — sans réponses réelles, pas de mesure de transfert (notée). Noter l'heure de lancement au registre.</small></span></li>
     <li data-id="p1-scrape" data-state="done"><span class="badge"></span><span class="txt"><strong>Scraper reproductible du site ISPM</strong><small>data/scrape_ispm.py — 4 pages + brochure PDF, encodage réparé</small></span></li>
     <li data-id="p1-registre" data-state="done"><span class="badge"></span><span class="txt"><strong>Registre des sources</strong><small>data/registre_sources.csv — statuts, limites, contradiction concours/dossier documentée</small></span></li>
     <li data-id="p1-formations" data-state="done"><span class="badge"></span><span class="txt"><strong>Base structurée des 16 filières</strong><small>data/formations.json — prérequis bac officiels, débouchés, null si non publié (jamais inventé)</small></span></li>
     <li data-id="p1-synth" data-state="done"><span class="badge"></span><span class="txt"><strong>Générateur de profils synthétiques + dataset 3 000</strong><small>data/synthetic/ — seed fixe, éligibilité bac respectée, bruit d'étiquette softmax</small></span></li>
     <li data-id="p1-docsynth" data-state="done"><span class="badge"></span><span class="txt"><strong>Documentation méthode / hypothèses / biais / contrôles</strong><small>data/synthetic/DONNEES-SYNTHETIQUES.md (exigence section 5)</small></span></li>
     <li data-id="p1-gel" data-state="todo"><span class="badge"></span><span class="txt"><strong>Geler l'enquête fin jour 1 + export CSV</strong><small>Puis anonymisation et nettoyage</small></span></li>
-    <li data-id="p1-regcollecte" data-state="todo"><span class="badge"></span><span class="txt"><strong>Registre de collecte de l'enquête</strong><small>Reçues / retenues / écartées, répartition, biais constatés, texte de consentement</small></span></li>
-    <li data-id="p1-recodage" data-state="todo"><span class="badge"></span><span class="txt"><strong>Recodage des réponses réelles au format du dataset</strong><small>Champs « Autre » → vocabulaire fermé ; devient le jeu de validation/test</small></span></li>
+    <li data-id="p1-regcollecte" data-state="encours"><span class="badge"></span><span class="txt"><strong>Registre de collecte de l'enquête</strong><small>Modèle créé (data/enquete/registre_collecte.csv) — compléter au lancement puis au gel</small></span></li>
+    <li data-id="p1-recodage" data-state="todo"><span class="badge"></span><span class="txt"><strong>Recodage des réponses réelles</strong><small>Script prêt : recoder_reponses.py — à exécuter après le gel (10 min)</small></span></li>
   </ul>
 </section>
 
@@ -127,13 +127,13 @@
   <div class="phase-head"><h2>Phase 2 — Machine Learning</h2><span class="pts">ML 18 pts + intégration 10 pts</span><span class="pct"></span></div>
   <div class="minitrack"><div class="fill"></div></div>
   <ul class="tasks">
-    <li data-id="p2-eda" data-state="todo"><span class="badge"></span><span class="txt"><strong>Notebook EDA</strong><small>notebooks/01_eda.ipynb — distributions, équilibre des classes, corrélations</small></span></li>
-    <li data-id="p2-baseline" data-state="todo"><span class="badge"></span><span class="txt"><strong>Baseline : classe majoritaire + régression logistique</strong><small>Référence exigée par le sujet</small></span></li>
-    <li data-id="p2-challenger" data-state="todo"><span class="badge"></span><span class="txt"><strong>Challenger : Random Forest / Gradient Boosting</strong><small>≥ 2 approches comparées, pondération de classes (IAA rare)</small></span></li>
-    <li data-id="p2-metriques" data-state="todo"><span class="badge"></span><span class="txt"><strong>Métriques complètes</strong><small>Top-1/top-3, F1 macro, matrice de confusion, MRR, calibration — jamais l'accuracy seule</small></span></li>
-    <li data-id="p2-transfert" data-state="todo"><span class="badge"></span><span class="txt"><strong class="crit">Transfert synthétique → réponses réelles</strong><small>LA mesure mise en avant par le sujet — notebooks/03_transfert_reel.ipynb</small></span></li>
-    <li data-id="p2-erreurs" data-state="todo"><span class="badge"></span><span class="txt"><strong>Analyse d'erreurs + biais + stabilité</strong><small>Parcours confondus commentés ; perturbations du profil → top-3 stable</small></span></li>
-    <li data-id="p2-save" data-state="todo"><span class="badge"></span><span class="txt"><strong>Modèle sauvegardé + script reproductible</strong><small>models/train.py (seed fixée) + model.joblib</small></span></li>
+    <li data-id="p2-eda" data-state="done"><span class="badge"></span><span class="txt"><strong>Notebook EDA</strong><small>notebooks/01_eda.ipynb — distributions, équilibre des classes, corrélations</small></span></li>
+    <li data-id="p2-baseline" data-state="done"><span class="badge"></span><span class="txt"><strong>Baseline : classe majoritaire + régression logistique</strong><small>Référence exigée par le sujet</small></span></li>
+    <li data-id="p2-challenger" data-state="done"><span class="badge"></span><span class="txt"><strong>Challenger : Random Forest / Gradient Boosting</strong><small>≥ 2 approches comparées, pondération de classes (IAA rare)</small></span></li>
+    <li data-id="p2-metriques" data-state="done"><span class="badge"></span><span class="txt"><strong>Métriques complètes</strong><small>Top-1/top-3, F1 macro, matrice de confusion, MRR, calibration — jamais l'accuracy seule</small></span></li>
+    <li data-id="p2-transfert" data-state="todo"><span class="badge"></span><span class="txt"><strong class="crit">Transfert synthétique → réponses réelles</strong><small>Script transfert_reel.py PRET — attend le gel de l'enquete ce soir</small></span></li>
+    <li data-id="p2-erreurs" data-state="done"><span class="badge"></span><span class="txt"><strong>Analyse d'erreurs + biais + stabilité</strong><small>Parcours confondus commentés ; perturbations du profil → top-3 stable</small></span></li>
+    <li data-id="p2-save" data-state="done"><span class="badge"></span><span class="txt"><strong>Modèle sauvegardé + script reproductible</strong><small>models/train.py (seed fixée) + model.joblib</small></span></li>
   </ul>
 </section>
 
@@ -141,15 +141,15 @@
   <div class="phase-head"><h2>Phase 3 — Agent &amp; RAG</h2><span class="pts">RAG 12 pts + agent 12 pts</span><span class="pct"></span></div>
   <div class="minitrack"><div class="fill"></div></div>
   <ul class="tasks">
-    <li data-id="p3-index" data-state="todo"><span class="badge"></span><span class="txt"><strong>Index hybride (vecteurs + BM25) sur le corpus</strong><small>rag/ingest.py — chunking, embeddings, ChromaDB + rank_bm25</small></span></li>
-    <li data-id="p3-outil1" data-state="todo"><span class="badge"></span><span class="txt"><strong>Outil 1 : rechercher_formation</strong><small>Passages + scores + identifiants de sources → citations vérifiables</small></span></li>
-    <li data-id="p3-outil2" data-state="todo"><span class="badge"></span><span class="txt"><strong>Outil 2 : analyser_profil_ml</strong><small>Charge model.joblib → top-3 + probabilités + facteurs</small></span></li>
-    <li data-id="p3-outil3" data-state="todo"><span class="badge"></span><span class="txt"><strong>Outil 3 : verifier_prerequis</strong><small>Règles officielles de série de bac (formations.json / graphe)</small></span></li>
-    <li data-id="p3-outils45" data-state="todo"><span class="badge"></span><span class="txt"><strong>Outils 4-5 : comparer_parcours, calculer_score_adequation</strong><small>Bonus solide pour la rubrique agent</small></span></li>
-    <li data-id="p3-graphe" data-state="todo"><span class="badge"></span><span class="txt"><strong>Graphe de connaissances (extension symbolique)</strong><small>agent/graph.json — apport à démontrer sur 2-3 cas d'évaluation</small></span></li>
-    <li data-id="p3-guardrails" data-state="todo"><span class="badge"></span><span class="txt"><strong>System prompt + guardrails</strong><small>Refus d'inventer, refus profilage psy, refus critères discriminatoires, renvoi administration</small></span></li>
-    <li data-id="p3-traces" data-state="todo"><span class="badge"></span><span class="txt"><strong>Traces JSONL par interaction</strong><small>Question, profil, passages+scores, outils E/S, réponse, latence, refus</small></span></li>
-    <li data-id="p3-ui" data-state="todo"><span class="badge"></span><span class="txt"><strong>Interface Streamlit + mention obligatoire affichée</strong><small>« ORIENT'IA constitue un outil d'aide à l'orientation… » en permanence</small></span></li>
+    <li data-id="p3-index" data-state="done"><span class="badge"></span><span class="txt"><strong>Index hybride (vecteurs + BM25) sur le corpus</strong><small>rag/ingest.py — chunking, embeddings, ChromaDB + rank_bm25</small></span></li>
+    <li data-id="p3-outil1" data-state="done"><span class="badge"></span><span class="txt"><strong>Outil 1 : rechercher_formation</strong><small>Passages + scores + identifiants de sources → citations vérifiables</small></span></li>
+    <li data-id="p3-outil2" data-state="done"><span class="badge"></span><span class="txt"><strong>Outil 2 : analyser_profil_ml</strong><small>Charge model.joblib → top-3 + probabilités + facteurs</small></span></li>
+    <li data-id="p3-outil3" data-state="done"><span class="badge"></span><span class="txt"><strong>Outil 3 : verifier_prerequis</strong><small>Règles officielles de série de bac (formations.json / graphe)</small></span></li>
+    <li data-id="p3-outils45" data-state="done"><span class="badge"></span><span class="txt"><strong>Outils 4-5 : comparer_parcours, calculer_score_adequation</strong><small>Bonus solide pour la rubrique agent</small></span></li>
+    <li data-id="p3-graphe" data-state="done"><span class="badge"></span><span class="txt"><strong>Graphe de connaissances (extension symbolique)</strong><small>agent/graph.json — apport à démontrer sur 2-3 cas d'évaluation</small></span></li>
+    <li data-id="p3-guardrails" data-state="done"><span class="badge"></span><span class="txt"><strong>System prompt + guardrails</strong><small>Refus d'inventer, refus profilage psy, refus critères discriminatoires, renvoi administration</small></span></li>
+    <li data-id="p3-traces" data-state="done"><span class="badge"></span><span class="txt"><strong>Traces JSONL par interaction</strong><small>Question, profil, passages+scores, outils E/S, réponse, latence, refus</small></span></li>
+    <li data-id="p3-ui" data-state="done"><span class="badge"></span><span class="txt"><strong>Interface Streamlit + mention obligatoire affichée</strong><small>« ORIENT'IA constitue un outil d'aide à l'orientation… » en permanence</small></span></li>
   </ul>
 </section>
 
@@ -157,10 +157,10 @@
   <div class="phase-head"><h2>Phase 4 — Évaluation</h2><span class="pts">évaluation 14 pts + sécurité 7 pts</span><span class="pct"></span></div>
   <div class="minitrack"><div class="fill"></div></div>
   <ul class="tasks">
-    <li data-id="p4-cas" data-state="todo"><span class="badge"></span><span class="txt"><strong>Rédiger les 32+ cas de test (9 catégories imposées)</strong><small>eval/eval_cases.jsonl — peut commencer AVANT que le code existe</small></span></li>
-    <li data-id="p4-harnais" data-state="todo"><span class="badge"></span><span class="txt"><strong>Harnais de rejeu automatique</strong><small>eval/run_eval.py → eval_results.csv</small></span></li>
-    <li data-id="p4-campagne" data-state="todo"><span class="badge"></span><span class="txt"><strong>Campagne complète + corrections + re-run</strong><small>Sécurité d'abord (injection, biais, profilage psy) ; mesurer la latence</small></span></li>
-    <li data-id="p4-resultats" data-state="todo"><span class="badge"></span><span class="txt"><strong>Figer les résultats par catégorie</strong><small>Tableau réussite/échec + commentaires — preuve mesurée, pas affirmation</small></span></li>
+    <li data-id="p4-cas" data-state="done"><span class="badge"></span><span class="txt"><strong>Rédiger les 32+ cas de test (9 catégories imposées)</strong><small>eval/eval_cases.jsonl — peut commencer AVANT que le code existe</small></span></li>
+    <li data-id="p4-harnais" data-state="done"><span class="badge"></span><span class="txt"><strong>Harnais de rejeu automatique</strong><small>eval/run_eval.py → eval_results.csv</small></span></li>
+    <li data-id="p4-campagne" data-state="done"><span class="badge"></span><span class="txt"><strong>Campagne complète + corrections + re-run</strong><small>Sécurité d'abord (injection, biais, profilage psy) ; mesurer la latence</small></span></li>
+    <li data-id="p4-resultats" data-state="done"><span class="badge"></span><span class="txt"><strong>Figer les résultats par catégorie</strong><small>Tableau réussite/échec + commentaires — preuve mesurée, pas affirmation</small></span></li>
   </ul>
 </section>
 
@@ -168,10 +168,10 @@
   <div class="phase-head"><h2>Livraison — jeudi 27/08, 17 h 00</h2><span class="pts">démo + vidéo + dépôt : 5 pts</span><span class="pct"></span></div>
   <div class="minitrack"><div class="fill"></div></div>
   <ul class="tasks">
-    <li data-id="p5-readme" data-state="todo"><span class="badge"></span><span class="txt"><strong>README final testé sur machine vierge</strong><small>Installation + exécution pas à pas</small></span></li>
-    <li data-id="p5-archi" data-state="todo"><span class="badge"></span><span class="txt"><strong>Schéma d'architecture</strong><small>docs/architecture.png</small></span></li>
-    <li data-id="p5-limites" data-state="todo"><span class="badge"></span><span class="txt"><strong>Note limites / biais / risques</strong><small>docs/limites_biais_risques.md — réutiliser DONNEES-SYNTHETIQUES.md et le registre</small></span></li>
-    <li data-id="p5-video" data-state="todo"><span class="badge"></span><span class="txt"><strong>Vidéo 3–5 min du système en fonctionnement</strong><small>Reco argumentée + appel ML visible + un refus + un « je ne sais pas » — PAS de slides</small></span></li>
+    <li data-id="p5-readme" data-state="done"><span class="badge"></span><span class="txt"><strong>README final testé sur machine vierge</strong><small>Installation + exécution pas à pas</small></span></li>
+    <li data-id="p5-archi" data-state="done"><span class="badge"></span><span class="txt"><strong>Schéma d'architecture</strong><small>docs/architecture.png</small></span></li>
+    <li data-id="p5-limites" data-state="done"><span class="badge"></span><span class="txt"><strong>Note limites / biais / risques</strong><small>docs/limites_biais_risques.md — réutiliser DONNEES-SYNTHETIQUES.md et le registre</small></span></li>
+    <li data-id="p5-video" data-state="todo"><span class="badge"></span><span class="txt"><strong>Vidéo 3–5 min du système en fonctionnement</strong><small>Scénario minute par minute prêt : docs/scenario_video.md — tourner avec OBS</small></span></li>
     <li data-id="p5-check" data-state="todo"><span class="badge"></span><span class="txt"><strong>Vérifier les 14 livrables + merge develop → main</strong><small>Checklist dans PLAN-ORIENTIA.md section 13</small></span></li>
     <li data-id="p5-demo" data-state="todo"><span class="badge"></span><span class="txt"><strong>Répéter les 9 questions types du jury</strong><small>Liste et comportements attendus : PLAN-ORIENTIA.md section 14</small></span></li>
     <li data-id="p5-remise" data-state="todo"><span class="badge"></span><span class="txt"><strong class="crit">REMISE — viser 16 h 00 pour garder une marge</strong><small>Deadline stricte : jeudi 27 août 2026, 17 h 00</small></span></li>
@@ -183,7 +183,7 @@
 
 <script>
 (function () {
-  var KEY = "orientia-suivi-v1";
+  var KEY = "orientia-suivi-v2";
   var ORDER = ["todo", "encours", "done"];
   var LABEL = { todo: "À FAIRE", encours: "EN COURS", done: "FAIT" };
   var saved = {};

@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Secrets — ne jamais committer de clés API
+.env
+
+# Index vectoriel reconstruit par rag/ingest.py
+rag/index/
+
+# Système
+Thumbs.db
+.DS_Store

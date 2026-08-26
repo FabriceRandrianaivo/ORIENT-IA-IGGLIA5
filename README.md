@@ -16,6 +16,7 @@ ORIENT'IA produit une orientation personnalisée et argumentée vers les **16 fi
 | | Stabilité du top-3 sous perturbation | 0,82 |
 | Évaluation de bout en bout | 32 cas / 9 catégories imposées | **32/32 réussis** |
 | Latence de l'agent (mode déterministe) | médiane | < 10 ms |
+| Coût de fonctionnement | mode déterministe / mode Gemini | 0 Ar (aucune API) / quota gratuit Google AI Studio |
 
 Détails : [models/RAPPORT-ML.md](models/RAPPORT-ML.md) · [eval/RESULTATS.md](eval/RESULTATS.md) · limites et biais : [docs/limites_biais_risques.md](docs/limites_biais_risques.md)
 

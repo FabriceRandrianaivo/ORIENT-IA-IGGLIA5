@@ -6,8 +6,9 @@ Livrable 12 du sujet. Principe directeur : nommer les limites plutôt que les ma
 
 **Corpus documentaire.** Le corpus provient exclusivement du site officiel de l'ISPM (4 pages + brochure PDF, voir `data/registre_sources.csv`). Conséquences :
 - Les **maquettes détaillées** (listes de matières par année, volumes horaires) ne sont pas publiées : `formations.json` marque ces champs `null` et l'assistant répond « information non disponible » — jamais d'invention.
-- La **brochure n'est pas datée** (prix listés jusqu'en 2009) : son contenu est potentiellement obsolète, il est cité avec cette réserve.
-- **Contradiction entre sources** : la brochure mentionne un « concours d'entrée », la page inscription une « sélection de dossier ». L'assistant signale la contradiction et renvoie vers l'administration.
+- Deux brochures coexistent : l'ancienne (PDF du site, non datée, prix jusqu'en 2009, cursus pré-LMD) et la **brochure papier d'août 2025** (structure LMD, frais actualisés) — la plus récente fait foi, avec les divergences documentées dans `formations.json` (contradictions_connues).
+- **Contradictions entre sources** signalées à l'utilisateur : mode d'admission (concours / sélection de dossier / dossier + entretien), frais L1 (30 000 vs 40 000 Ar), condition A2 en biotechnologie.
+- **Passerelles internes entre parcours ISPM : non publiées** par les sources — l'assistant le déclare ; seuls les transferts inter-établissements (L2/L3/M1) sont documentés.
 - Le site mélange deux encodages (UTF-8 / Windows-1252) — corrigé par le script de collecte, documenté ici car c'est une fragilité de la source.
 
 **Données synthétiques** (détail complet : `data/synthetic/DONNEES-SYNTHETIQUES.md`) :
@@ -15,7 +16,10 @@ Livrable 12 du sujet. Principe directeur : nommer les limites plutôt que les ma
 - Déséquilibre de classes (CAA ~14 % → IAA ~1,6 %) : compensé par pondération de classes, mais les classes rares restent moins bien apprises (voir F1 par classe dans `models/metrics.json`).
 - Bruit d'étiquette volontaire (tirage softmax) : plafonne le top-1 vers ~0,5 par construction — c'est un choix documenté, pas un défaut caché.
 
+**Choix de variables assumé** : les « activités ou projets déjà réalisés » sont collectés par l'enquête (champ libre) mais ne servent pas de variable au modèle — un texte libre n'est pas exploitable sans traitement NLP dédié, hors du périmètre des 2 jours. Le champ est conservé dans les réponses livrées pour une exploitation future.
+
 **Enquête réelle** (les trois limites du sujet, assumées) :
+- **Lancement en début d'après-midi du jour 1** (et non littéralement « dès la première heure ») : le temps de collecte a été réduit d'une demi-journée — assumé au registre de collecte ; le volume atteint (≈100 réponses) reste dans la fourchette annoncée par le sujet.
 - **Volume** : quelques dizaines à centaines de réponses au mieux → intervalles de confiance larges, annoncés comme tels dans `models/transfert_reel.py`.
 - **Auto-sélection** : les répondants sur-représentent nos réseaux (promo, filières informatiques probablement) — constaté et chiffré dans le registre de collecte après gel.
 - **Nature de l'étiquette** : chez un étudiant, le parcours *choisi* n'est pas forcément celui qui *convenait* ; le jugement rétrospectif des professionnels corrige en partie, au prix d'un biais de reconstruction mémorielle et d'un décalage temporel (l'offre de formation a changé).

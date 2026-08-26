@@ -52,6 +52,20 @@ def construire_chunks() -> list:
                    "texte": ("Series de bac permettant d'entrer dans chaque departement de l'ISPM. "
                              + " ".join(f"{k} : {v}." for k, v in acces["series_bac_par_departement"].items())),
                    "sources": [acces["source"]]})
+    etab = data["etablissement"]
+    chunks.append({"id": "fiche-etablissement", "titre": "L'etablissement ISPM",
+                   "texte": (f"{etab['nom']}. Adresse : {etab['adresse']}. "
+                             f"Telephones : {', '.join(etab['telephones'])}. Email : {etab['email']}. "
+                             f"Site web : {etab.get('site_web', '')}. {etab.get('reconnaissance', '')} "
+                             f"Devise : {etab['devise']}. " + " ".join(etab["faits_notables"])),
+                   "sources": etab["sources"]})
+
+    pas = data.get("passerelles", {})
+    if pas:
+        chunks.append({"id": "fiche-passerelles", "titre": "Passerelles et transferts entre formations",
+                       "texte": "Passerelles entre formations et transferts : " + pas["note"],
+                       "sources": [pas["source"]]})
+
     cursus = data["cursus"]
     chunks.append({"id": "fiche-cursus", "titre": "Cursus et diplomes",
                    "texte": (cursus.get("systeme", "") + " Diplomes delivres : "

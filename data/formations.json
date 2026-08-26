@@ -72,6 +72,11 @@
     },
     "source": "src-inscription"
   },
+  "passerelles": {
+    "internes_ispm": null,
+    "note": "Les passerelles entre parcours au sein de l'ISPM ne sont pas publiées par les sources collectées : l'assistant doit le déclarer et renvoyer vers l'administration. En revanche, les transferts depuis un autre établissement vers la L2, la L3 ou le M1 sont documentés (dossier de demande de transfert, frais 60 000 Ar) — voir conditions_acces_premiere_annee.transferts_L2_L3_M1.",
+    "source": "src-brochure-papier"
+  },
   "departements": [
     "Informatique et Télécommunication",
     "Techniques des Affaires",

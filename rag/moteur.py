@@ -54,7 +54,9 @@ def construire_chunks() -> list:
                    "sources": [acces["source"]]})
     etab = data["etablissement"]
     chunks.append({"id": "fiche-etablissement", "titre": "L'etablissement ISPM",
-                   "texte": (f"{etab['nom']}. Adresse : {etab['adresse']}. "
+                   "texte": (f"Informations generales et presentation de l'institut : {etab['nom']}. "
+                             f"Recteur : {etab.get('recteur', 'non precise')}. "
+                             f"Adresse : {etab['adresse']}. "
                              f"Telephones : {', '.join(etab['telephones'])}. Email : {etab['email']}. "
                              f"Site web : {etab.get('site_web', '')}. {etab.get('reconnaissance', '')} "
                              f"Devise : {etab['devise']}. " + " ".join(etab["faits_notables"])),

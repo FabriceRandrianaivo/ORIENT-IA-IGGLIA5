@@ -106,7 +106,8 @@ _STOPWORDS = {"quel", "quelle", "sont", "dans", "pour", "avec", "cette", "votre"
               # tournures conversationnelles : ne portent pas d'information de recherche
               "bonjour", "bonsoir", "salut", "merci", "svp", "voudrais", "veux",
               "aimerais", "souhaite", "souhaiterais", "connaitre", "savoir",
-              "dire", "dites", "parle", "parlez", "peu", "petit"}
+              "dire", "dites", "parle", "parlez", "peu", "petit",
+              "sur", "une", "qui", "etre", "ils", "situe"}
 
 
 def _pertinent(question: str, texte: str) -> bool:
@@ -129,6 +130,21 @@ def _pertinent(question: str, texte: str) -> bool:
     trouves = len(tq & tt)
     couverture = trouves / len(tq)
     return couverture >= 0.67 or (trouves >= 2 and couverture >= 0.4)
+
+
+def _termes_inconnus(question: str, texte: str) -> list:
+    """Termes informatifs de la question absents du texte (prefixe 5 lettres,
+    pour tolerer les flexions delivre/delivrer). Sert a avouer honnetement ce
+    qu'une reponse ne couvre pas."""
+    import unicodedata
+
+    def n(s):
+        s = unicodedata.normalize("NFD", s.lower())
+        return "".join(c for c in s if unicodedata.category(c) != "Mn")
+
+    tq = {t.rstrip("s") for t in re.findall(r"[a-z0-9]{3,}", n(question))} - _STOPWORDS
+    corps = n(texte)
+    return sorted(t for t in tq if len(t) >= 3 and t[:5] not in corps)
 
 
 # ------------------------------------------------- mode deterministe (secours)
@@ -204,6 +220,36 @@ def _mode_deterministe(question: str, profil: dict, appels: list) -> str:
                    f"**Incertitude declaree** : {analyse['avertissement']}",
                    "", f"_{MENTION}_"]
         return "\n".join(lignes)
+
+    # Question institutionnelle (l'ISPM lui-meme) -> fiche etablissement structuree,
+    # plus fiable que le classement lexical quand "ISPM" apparait partout.
+    if not sigles and re.search(r"\b(ispm|institut|etablissement|ecole|recteur|rectorat|"
+                                r"histoire|historique|campus|adresse|contact|telephone|"
+                                r"presentation|presente)\b", q):
+        etab = tools._FORMATIONS["etablissement"]
+        cursus = tools._FORMATIONS["cursus"]
+        appels.append({"outil": "rechercher_formation", "entree": {"question": question},
+                       "sortie": {"passages": [{"id": "fiche-etablissement", "score": 1.0,
+                                                "sources": etab["sources"],
+                                                "texte": "fiche etablissement structuree"}],
+                                  "note": "branche institutionnelle"}})
+        lignes = [f"**{etab['nom']}** _[{', '.join(etab['sources'])}]_", "",
+                  f"- **Recteur** : {etab.get('recteur', 'non precise')}",
+                  f"- **Adresse** : {etab['adresse']}",
+                  f"- **Contact** : {etab['email']} · {', '.join(etab['telephones'])}",
+                  f"- **Reconnaissance** : {etab.get('reconnaissance', 'n/d')}",
+                  f"- **Cursus** : {cursus['systeme']}",
+                  f"- **Devise** : {etab['devise']}", "", "**À savoir :**"]
+        lignes += [f"- {fait}" for fait in etab["faits_notables"]]
+        lignes += ["", "_Posez-moi une question sur une filière précise, ou remplissez votre "
+                   "profil pour une recommandation personnalisée._"]
+        carte = "\n".join(lignes)
+        inconnus = _termes_inconnus(question, carte)
+        if inconnus:
+            carte = (f"**Cette information précise n'est pas disponible dans mes sources** "
+                     f"(aucune mention de : {', '.join(inconnus)}). Voici en revanche ce que "
+                     f"les sources officielles disent de l'ISPM :\n\n" + carte)
+        return carte
 
     # Question vague -> clarification plutot que reponse au hasard.
     if re.search(r"\b(bons?|meilleures?|meilleurs?)\s+(metiers?|filieres?|parcours|travail)", q):
@@ -309,9 +355,11 @@ def _mode_gemini(question: str, profil: dict, appels: list) -> str:
             resultat = json.loads(rep.read().decode("utf-8"))
         texte = "".join(p.get("text", "")
                         for p in resultat["candidates"][0]["content"]["parts"])
-        return texte.strip() or brouillon
+        if texte.strip():
+            return texte.strip(), False
+        return brouillon, True
     except Exception:  # noqa: BLE001 — degradation volontaire vers le brouillon
-        return brouillon
+        return brouillon, True
 
 
 # ---------------------------------------------------- mode Groq (LLM gratuit)
@@ -346,10 +394,12 @@ def _mode_groq(question: str, profil: dict, appels: list) -> str:
             headers={"Content-Type": "application/json", "Authorization": f"Bearer {cle}"})
         with urllib.request.urlopen(req, timeout=30) as rep:
             resultat = json.loads(rep.read().decode("utf-8"))
-        texte = resultat["choices"][0]["message"]["content"]
-        return (texte or "").strip() or brouillon
+        texte = (resultat["choices"][0]["message"]["content"] or "").strip()
+        if texte:
+            return texte, False
+        return brouillon, True
     except Exception:  # noqa: BLE001 — degradation volontaire vers le brouillon
-        return brouillon
+        return brouillon, True
 
 
 # ------------------------------------------------------------------- entree
@@ -367,6 +417,7 @@ def repondre(question: str, profil: dict, historique: list = None) -> dict:
     else:
         mode = "deterministe"
 
+    repli_llm = False
     if refus:
         reponse = REFUS[refus]
     else:
@@ -374,9 +425,9 @@ def repondre(question: str, profil: dict, historique: list = None) -> dict:
             if mode == "llm":
                 reponse = _mode_llm(question, profil, historique or [], appels)
             elif mode == "gemini":
-                reponse = _mode_gemini(question, profil, appels)
+                reponse, repli_llm = _mode_gemini(question, profil, appels)
             elif mode == "groq":
-                reponse = _mode_groq(question, profil, appels)
+                reponse, repli_llm = _mode_groq(question, profil, appels)
             else:
                 reponse = _mode_deterministe(question, profil, appels)
         except Exception as exc:  # noqa: BLE001 — trace puis message honnete
@@ -388,13 +439,14 @@ def repondre(question: str, profil: dict, historique: list = None) -> dict:
     passages = [{"id": p["id"], "score": p["score"], "sources": p["sources"]}
                 for a in appels if a["outil"] == "rechercher_formation"
                 for p in a["sortie"].get("passages", [])]
-    trace = {"ts": datetime.now().isoformat(timespec="seconds"), "mode": mode,
+    mode_effectif = f"{mode} (repli deterministe)" if repli_llm else mode
+    trace = {"ts": datetime.now().isoformat(timespec="seconds"), "mode": mode_effectif,
              "question": question, "profil": profil, "outils": appels,
              "passages_scores": passages, "reponse": reponse,
              "latence_ms": latence, "refus": refus, "erreurs": erreurs}
     _tracer(trace)
     return {"reponse": reponse, "refus": refus, "outils": appels,
-            "latence_ms": latence, "mode": mode, "erreurs": erreurs}
+            "latence_ms": latence, "mode": mode_effectif, "erreurs": erreurs}
 
 
 if __name__ == "__main__":

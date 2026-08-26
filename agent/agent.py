@@ -25,6 +25,22 @@ from prompts import SYSTEM
 ROOT = Path(__file__).resolve().parents[1]
 TRACES = ROOT / "traces"
 
+
+def _charger_env():
+    """Charge les cles API depuis ROOT/.env si present (jamais commite, voir
+    .gitignore). Format : une ligne CLE=valeur par cle, # pour commenter."""
+    fichier = ROOT / ".env"
+    if not fichier.exists():
+        return
+    for ligne in fichier.read_text(encoding="utf-8").splitlines():
+        ligne = ligne.strip()
+        if ligne and not ligne.startswith("#") and "=" in ligne:
+            cle, _, valeur = ligne.partition("=")
+            os.environ.setdefault(cle.strip(), valeur.strip().strip('"').strip("'"))
+
+
+_charger_env()
+
 MENTION = ("ORIENT'IA constitue un outil d'aide a l'orientation. Ses recommandations ne "
            "remplacent ni l'avis d'un conseiller pedagogique ni une decision officielle d'admission.")
 
@@ -293,6 +309,44 @@ def _mode_gemini(question: str, profil: dict, appels: list) -> str:
         return brouillon
 
 
+# ---------------------------------------------------- mode Groq (LLM gratuit)
+def _mode_groq(question: str, profil: dict, appels: list) -> str:
+    """Meme principe que le mode Gemini : les outils deterministes decident,
+    Groq (API OpenAI-compatible, quota gratuit) reformule. Repli automatique
+    sur le brouillon deterministe en cas d'echec."""
+    brouillon = _mode_deterministe(question, profil, appels)
+    try:
+        import urllib.request
+        cle = os.environ["GROQ_API_KEY"]
+        modele = os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile")
+        donnees = json.dumps([{"outil": a["outil"], "sortie": a["sortie"]} for a in appels],
+                             ensure_ascii=False, default=str)[:8000]
+        consigne = (
+            "Reformule le brouillon ci-dessous en une reponse claire et naturelle en francais.\n"
+            "REGLES STRICTES : conserver tous les identifiants de sources [src-...] ; conserver "
+            "les probabilites et chiffres exacts ; ne rien affirmer qui ne figure pas dans les "
+            "donnees d'outils ; garder la distinction entre resultat du modele ML, informations "
+            "documentaires et regles officielles ; garder les avertissements d'incertitude.\n\n"
+            f"Question de l'utilisateur : {question}\n"
+            f"Profil declare : {json.dumps(profil, ensure_ascii=False)}\n"
+            f"Resultats des outils (JSON) : {donnees}\n\n"
+            f"Brouillon a reformuler :\n{brouillon}")
+        corps = json.dumps({
+            "model": modele, "max_tokens": 1200, "temperature": 0.3,
+            "messages": [{"role": "system", "content": SYSTEM},
+                         {"role": "user", "content": consigne}],
+        }).encode("utf-8")
+        req = urllib.request.Request(
+            "https://api.groq.com/openai/v1/chat/completions", data=corps,
+            headers={"Content-Type": "application/json", "Authorization": f"Bearer {cle}"})
+        with urllib.request.urlopen(req, timeout=30) as rep:
+            resultat = json.loads(rep.read().decode("utf-8"))
+        texte = resultat["choices"][0]["message"]["content"]
+        return (texte or "").strip() or brouillon
+    except Exception:  # noqa: BLE001 — degradation volontaire vers le brouillon
+        return brouillon
+
+
 # ------------------------------------------------------------------- entree
 def repondre(question: str, profil: dict, historique: list = None) -> dict:
     """Point d'entree unique. Renvoie reponse + trace complete."""
@@ -303,6 +357,8 @@ def repondre(question: str, profil: dict, historique: list = None) -> dict:
         mode = "llm"
     elif os.environ.get("GEMINI_API_KEY"):
         mode = "gemini"
+    elif os.environ.get("GROQ_API_KEY"):
+        mode = "groq"
     else:
         mode = "deterministe"
 
@@ -314,6 +370,8 @@ def repondre(question: str, profil: dict, historique: list = None) -> dict:
                 reponse = _mode_llm(question, profil, historique or [], appels)
             elif mode == "gemini":
                 reponse = _mode_gemini(question, profil, appels)
+            elif mode == "groq":
+                reponse = _mode_groq(question, profil, appels)
             else:
                 reponse = _mode_deterministe(question, profil, appels)
         except Exception as exc:  # noqa: BLE001 — trace puis message honnete

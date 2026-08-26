@@ -192,6 +192,8 @@ with st.sidebar:
         st.caption("Mode agent : 🔑 LLM Anthropic")
     elif agent.os.environ.get("GEMINI_API_KEY"):
         st.caption("Mode agent : 🔑 LLM Gemini (gratuit)")
+    elif agent.os.environ.get("GROQ_API_KEY"):
+        st.caption("Mode agent : 🔑 LLM Groq (gratuit)")
     else:
         st.caption("Mode agent : ⚙️ Déterministe · 100 % local")
 

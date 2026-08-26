@@ -62,10 +62,11 @@ L'interface s'ouvre dans le navigateur : renseigner son profil dans la barre lat
 | Mode | Condition | Description |
 |---|---|---|
 | Déterministe | par défaut | 100 % local et hors-ligne : routeur d'intentions + outils. C'est le mode évalué 32/32. |
-| Gemini | variable d'env. `GEMINI_API_KEY` (gratuite sur Google AI Studio) | Les mêmes outils décident, Gemini reformule — il ne peut pas ajouter de faits ; retombe sur le mode déterministe en cas d'échec réseau. |
-| Anthropic | variable d'env. `ANTHROPIC_API_KEY` | Boucle d'appels d'outils pilotée par le LLM. |
+| Gemini | `GEMINI_API_KEY` (gratuite sur Google AI Studio) | Les mêmes outils décident, Gemini reformule — il ne peut pas ajouter de faits ; retombe sur le mode déterministe en cas d'échec réseau. |
+| Groq | `GROQ_API_KEY` (gratuite sur console.groq.com) | Même principe que Gemini (API OpenAI-compatible, très rapide). |
+| Anthropic | `ANTHROPIC_API_KEY` | Boucle d'appels d'outils pilotée par le LLM. |
 
-Les clés se mettent dans l'environnement (jamais dans le code ; `.env` est ignoré par Git).
+Les clés se mettent dans un fichier **`.env`** à la racine (copier `.env.example`, remplir — jamais commité, ignoré par Git) ou en variables d'environnement.
 
 ## Reproduire tout le pipeline
 

@@ -1,0 +1,234 @@
+{
+  "_meta": {
+    "description": "Base structurée des formations de l'ISPM, construite exclusivement à partir des sources officielles listées dans registre_sources.csv. Toute donnée absente des sources est marquée null : elle ne doit jamais être inventée par l'assistant.",
+    "date_construction": "2026-08-26",
+    "sources": ["src-accueil", "src-presentation", "src-filieres", "src-inscription", "src-brochure"],
+    "contradictions_connues": [
+      "La brochure (src-brochure) mentionne un 'concours d'entrée' après le baccalauréat ; la page inscription (src-inscription) décrit une 'sélection de dossier'. La page inscription semble plus récente et fait foi, mais l'assistant doit signaler l'incertitude et renvoyer vers l'administration."
+    ]
+  },
+  "etablissement": {
+    "nom": "Institut Supérieur Polytechnique de Madagascar (ISPM)",
+    "adresse": "Ambatomaro Antsobolo, Antananarivo, Madagascar",
+    "telephones": ["+261 33 12 171 60", "+261 34 20 874 28", "+261 32 02 544 72"],
+    "email": "contact@ispm.education",
+    "devise": "Fahaizana - Fampandrosoana - Fihavanana",
+    "faits_notables": [
+      "Classé parmi les dix meilleures universités de Madagascar selon le classement cité sur le site (src-accueil).",
+      "La brochure indique un taux d'embauche de 95% des diplômés, les 5% restants poursuivant leurs études (src-brochure ; document non daté, chiffre à présenter avec prudence)."
+    ],
+    "sources": ["src-accueil", "src-brochure"]
+  },
+  "cursus": {
+    "diplomes": [
+      { "nom": "Technicien Supérieur", "niveau": "BAC+2", "cycle": "premier cycle" },
+      { "nom": "Licence", "niveau": "BAC+3", "cycle": "premier cycle" },
+      { "nom": "Ingéniorat", "niveau": "BAC+5", "cycle": "second cycle" },
+      { "nom": "DEA, Doctorat", "niveau": "BAC+5 et plus", "cycle": "troisième cycle" }
+    ],
+    "source": "src-brochure"
+  },
+  "conditions_acces_premiere_annee": {
+    "modalite": "Sélection de dossier des candidats titulaires du baccalauréat (src-inscription). La brochure, plus ancienne, mentionne un concours d'entrée : en cas de question, signaler la contradiction et renvoyer vers l'administration.",
+    "documents": [
+      "Diplôme, attestation ou relevé de notes du baccalauréat",
+      "Au moins un bulletin de classe de première ou terminale",
+      "Lettre de motivation adressée au Recteur de l'ISPM"
+    ],
+    "frais_selection_dossier": "30 000 Ar",
+    "series_bac_par_departement": {
+      "Informatique et Télécommunication": "Bacc C, D, S et Techniques industrielles",
+      "Génie Civil et Architecture": "Bacc C, D, S et Techniques du génie civil",
+      "Biotechnologie et Agronomie": "Bacc C, D, S, Techniques agricoles et A2 avec note de mathématiques >= 12",
+      "Techniques des Affaires": "Bacc toute série",
+      "Génie Industriel": "Bacc C, D, S et Techniques industrielles",
+      "Techniques du Tourisme": "Bacc toute série"
+    },
+    "source": "src-inscription"
+  },
+  "departements": [
+    "Informatique et Télécommunication",
+    "Techniques des Affaires",
+    "Biotechnologie et Agronomie",
+    "Génie Industriel et Génie Civil",
+    "Techniques du Tourisme"
+  ],
+  "filieres": [
+    {
+      "sigle": "IGGLIA",
+      "nom": "Informatique de Gestion, Génie Logiciel et Intelligence Artificielle",
+      "departement": "Informatique et Télécommunication",
+      "description": "Formation d'ingénieurs et de techniciens supérieurs capables de maîtriser toutes les techniques informatiques relatives à la gestion des entreprises.",
+      "prerequis_bac": "Bacc C, D, S et Techniques industrielles",
+      "debouches": ["Informatique de gestion dans les entreprises publiques et privées", "Génie logiciel", "Intelligence artificielle"],
+      "matieres_principales": null,
+      "competences_developpees": ["Techniques informatiques appliquées à la gestion des entreprises"],
+      "sources": ["src-filieres", "src-inscription"]
+    },
+    {
+      "sigle": "ESIIA",
+      "nom": "Électronique, Systèmes Informatiques et Intelligence Artificielle",
+      "departement": "Informatique et Télécommunication",
+      "description": "Formation d'ingénieurs et de techniciens supérieurs capables de maîtriser à la fois l'électronique, la structure des ordinateurs et les applications fondamentales de l'informatique. L'électronique est présentée comme l'origine de l'informatique et de la technologie des télécommunications.",
+      "prerequis_bac": "Bacc C, D, S et Techniques industrielles",
+      "debouches": ["Électronique", "Systèmes informatiques", "Télécommunications"],
+      "matieres_principales": null,
+      "competences_developpees": ["Électronique", "Architecture des ordinateurs", "Applications fondamentales de l'informatique"],
+      "sources": ["src-filieres", "src-inscription"]
+    },
+    {
+      "sigle": "IMTICIA",
+      "nom": "Informatique, Multimédia, Technologies de l'Information et de la Communication et Intelligence Artificielle",
+      "departement": "Informatique et Télécommunication",
+      "description": "Formation dans l'informatique multimédia, la télécommunication et, de manière générale, les nouvelles technologies de l'information et de la communication.",
+      "prerequis_bac": "Bacc C, D, S et Techniques industrielles",
+      "debouches": ["Multimédia", "Télécommunications", "Nouvelles technologies de l'information et de la communication"],
+      "matieres_principales": null,
+      "competences_developpees": ["Informatique multimédia", "Technologies de l'information et de la communication"],
+      "sources": ["src-filieres", "src-inscription"]
+    },
+    {
+      "sigle": "ISAIA",
+      "nom": "Informatique, Statistique Appliquée et Intelligence Artificielle",
+      "departement": "Informatique et Télécommunication",
+      "description": "Application des méthodes statistiques combinées aux méthodes informatiques dans les divers domaines de l'économie. Cursus fondé sur un solide apprentissage des mathématiques avec les éléments informatiques nécessaires.",
+      "prerequis_bac": "Bacc C, D, S et Techniques industrielles",
+      "debouches": ["Banques", "Entreprises industrielles", "Entreprises commerciales"],
+      "matieres_principales": ["Mathématiques", "Statistique appliquée", "Informatique"],
+      "competences_developpees": ["Méthodes statistiques", "Méthodes informatiques appliquées à l'économie"],
+      "sources": ["src-filieres", "src-inscription"]
+    },
+    {
+      "sigle": "CAA",
+      "nom": "Commerce et Administration des Affaires",
+      "departement": "Techniques des Affaires",
+      "description": "Formation fondée sur le marketing et les différentes techniques commerciales ainsi que les techniques d'organisation et de management des entreprises, dans le contexte d'économie libérale et de mondialisation.",
+      "prerequis_bac": "Bacc toute série",
+      "debouches": ["Commerce", "Marketing", "Management des entreprises"],
+      "matieres_principales": ["Marketing", "Techniques commerciales", "Organisation et management"],
+      "competences_developpees": ["Techniques commerciales", "Management et organisation des entreprises"],
+      "sources": ["src-filieres", "src-inscription"]
+    },
+    {
+      "sigle": "FIC",
+      "nom": "Finances et Comptabilités",
+      "departement": "Techniques des Affaires",
+      "description": "Formation aux différentes techniques quantitatives de la gestion des entreprises telles que les finances et la comptabilité, présentées comme les départements clés d'une entreprise.",
+      "prerequis_bac": "Bacc toute série",
+      "debouches": ["Services financiers et comptables des entreprises publiques et privées"],
+      "matieres_principales": ["Finances", "Comptabilité", "Techniques quantitatives de gestion"],
+      "competences_developpees": ["Techniques quantitatives de gestion", "Finance d'entreprise", "Comptabilité"],
+      "sources": ["src-filieres", "src-inscription"]
+    },
+    {
+      "sigle": "DTJA",
+      "nom": "Droit et Techniques Juridiques des Affaires",
+      "departement": "Techniques des Affaires",
+      "description": "Formation de juristes capables de maîtriser les techniques juridiques nationales et internationales. Originalité de la filière : l'utilisation de l'outil informatique.",
+      "prerequis_bac": "Bacc toute série",
+      "debouches": ["Administration publique", "Entreprises privées"],
+      "matieres_principales": ["Droit national et international", "Techniques juridiques des affaires", "Outil informatique"],
+      "competences_developpees": ["Techniques juridiques nationales et internationales", "Usage professionnel de l'informatique"],
+      "sources": ["src-filieres", "src-inscription"]
+    },
+    {
+      "sigle": "EMP",
+      "nom": "Économie et Management de Projet",
+      "departement": "Techniques des Affaires",
+      "description": "Formation d'économistes capables de faire des analyses économiques objectives et relationnelles et de les appliquer aux réalités des entreprises et de l'administration publique.",
+      "prerequis_bac": "Bacc toute série",
+      "debouches": ["Administration publique", "Entreprises privées", "Management de projet"],
+      "matieres_principales": ["Analyse économique", "Management de projet"],
+      "competences_developpees": ["Analyse économique", "Application aux réalités des entreprises"],
+      "sources": ["src-filieres", "src-inscription"]
+    },
+    {
+      "sigle": "IAA",
+      "nom": "Industries Agroalimentaires",
+      "departement": "Biotechnologie et Agronomie",
+      "description": "Formation de cadres de qualité pour les industries agroalimentaires, qui occupent une place importante dans l'économie malgache.",
+      "prerequis_bac": "Bacc C, D, S, Techniques agricoles et A2 avec note de mathématiques >= 12",
+      "debouches": ["Industries agroalimentaires"],
+      "matieres_principales": null,
+      "competences_developpees": null,
+      "sources": ["src-filieres", "src-inscription"]
+    },
+    {
+      "sigle": "PIP",
+      "nom": "Pharmacologie et Industries Pharmaceutiques",
+      "departement": "Biotechnologie et Agronomie",
+      "description": "Mise en valeur scientifique des propriétés thérapeutiques des plantes médicinales endémiques de Madagascar.",
+      "prerequis_bac": "Bacc C, D, S, Techniques agricoles et A2 avec note de mathématiques >= 12",
+      "debouches": ["Industries pharmaceutiques", "Recherche sur les plantes médicinales"],
+      "matieres_principales": null,
+      "competences_developpees": null,
+      "sources": ["src-filieres", "src-inscription"]
+    },
+    {
+      "sigle": "AEE",
+      "nom": "Agriculture et Élevage",
+      "departement": "Biotechnologie et Agronomie",
+      "description": "Formation de jeunes capables d'appliquer les techniques et technologies modernes dans le monde rural, avec une formation au concept d'agri-business. Plus de 80% des Malgaches vivent et travaillent dans le monde rural.",
+      "prerequis_bac": "Bacc C, D, S, Techniques agricoles et A2 avec note de mathématiques >= 12",
+      "debouches": ["Secteur agricole et élevage", "Agri-business", "Développement rural"],
+      "matieres_principales": null,
+      "competences_developpees": ["Techniques et technologies agricoles modernes", "Agri-business"],
+      "sources": ["src-filieres", "src-inscription"]
+    },
+    {
+      "sigle": "EMII",
+      "nom": "Électromécanique et Informatique Industrielle",
+      "departement": "Génie Industriel et Génie Civil",
+      "description": "Formation de jeunes capables de maîtriser la mécanique, les technologies industrielles, l'informatique et l'informatique industrielle, pour participer au développement industriel de Madagascar.",
+      "prerequis_bac": "Bacc C, D, S et Techniques industrielles",
+      "debouches": ["Industrie", "Électromécanique", "Informatique industrielle"],
+      "matieres_principales": ["Mécanique", "Technologies industrielles", "Informatique industrielle"],
+      "competences_developpees": ["Maîtrise des technologies industrielles", "Informatique industrielle"],
+      "sources": ["src-filieres", "src-inscription"]
+    },
+    {
+      "sigle": "GCA",
+      "nom": "Génie Civil et Architecture",
+      "departement": "Génie Industriel et Génie Civil",
+      "description": "Formation de jeunes qui vont améliorer les infrastructures et participer à l'aménagement urbain et rural.",
+      "prerequis_bac": "Bacc C, D, S et Techniques du génie civil",
+      "debouches": ["Construction d'infrastructures", "Aménagement urbain et rural", "Architecture"],
+      "matieres_principales": null,
+      "competences_developpees": null,
+      "sources": ["src-filieres", "src-inscription"]
+    },
+    {
+      "sigle": "ICMP",
+      "nom": "Industries Chimiques, Minières et Pétrolières",
+      "departement": "Génie Industriel et Génie Civil",
+      "description": "Formation de jeunes capables de maîtriser les différents domaines des industries chimiques, minières et pétrolières.",
+      "prerequis_bac": "Bacc C, D, S et Techniques industrielles",
+      "debouches": ["Industries chimiques", "Industries minières", "Industries pétrolières"],
+      "matieres_principales": null,
+      "competences_developpees": null,
+      "sources": ["src-filieres", "src-inscription"]
+    },
+    {
+      "sigle": "TEE",
+      "nom": "Tourisme et Environnement",
+      "departement": "Techniques du Tourisme",
+      "description": "Enseignement de la richesse de l'environnement (faune et flore uniques et endémiques de Madagascar) et de la civilisation malgache, pour former les futurs professionnels du secteur tourisme.",
+      "prerequis_bac": "Bacc toute série",
+      "debouches": ["Secteur du tourisme", "Écotourisme et environnement"],
+      "matieres_principales": null,
+      "competences_developpees": ["Connaissance de l'environnement et de la civilisation malgache"],
+      "sources": ["src-filieres", "src-inscription"]
+    },
+    {
+      "sigle": "TEH",
+      "nom": "Tourisme et Hôtellerie",
+      "departement": "Techniques du Tourisme",
+      "description": "Enseignement de la richesse de la civilisation malgache et maîtrise des différentes techniques de l'art culinaire national et international.",
+      "prerequis_bac": "Bacc toute série",
+      "debouches": ["Tourisme", "Hôtellerie", "Restauration et art culinaire"],
+      "matieres_principales": ["Art culinaire national et international"],
+      "competences_developpees": ["Techniques de l'art culinaire", "Accueil et hôtellerie"],
+      "sources": ["src-filieres", "src-inscription"]
+    }
+  ]
+}

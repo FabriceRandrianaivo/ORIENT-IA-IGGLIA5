@@ -1,48 +1,142 @@
 /**
- * Générateur automatique des 2 formulaires d'enquête ORIENT'IA — VERSION CORRIGÉE
- * (Formulaire A - Étudiants / Formulaire B - Professionnels)
+ * Générateur du formulaire d'enquête ORIENT'IA — v3 : FORMULAIRE UNIQUE
  *
- * Corrections apportées par rapport à la v1 :
- *   1. PARCOURS_ISPM : liste officielle complète des 16 filières (source :
- *      site ISPM, voir data/registre_sources.csv — src-filieres)
- *   2. Nouvelle question tronc commun : série de bac (variable du modèle ML
- *      et clé de vérification des prérequis officiels)
- *   3. Centres d'intérêt : ajout de « Droit / justice » (nécessaire pour la
- *      filière DTJA, aligné sur le générateur de données synthétiques)
+ * Un seul lien à diffuser. Le répondant choisit « Étudiant » ou « Professionnel »
+ * et Google Forms l'aiguille automatiquement vers la bonne section finale.
+ * Le tronc commun est formulé au passé (« au moment de choisir vos études ») :
+ * valable pour les deux publics, et méthodologiquement plus juste (on mesure
+ * le profil au moment du choix d'orientation).
  *
  * Utilisation :
- * 1. Aller sur https://script.google.com → Nouveau projet
- * 2. Coller ce script (remplacer tout le contenu)
- * 3. Dans le menu déroulant à côté de Exécuter ▶, sélectionner
- *    "creerTousLesFormulaires", puis cliquer sur Exécuter
- * 4. Autoriser les permissions (Forms/Drive)
- * 5. Les liens s'affichent dans les journaux d'exécution (Ctrl+Entrée)
- * 6. Vérifier dans Paramètres de chaque formulaire : pas de collecte d'e-mail,
+ * 1. https://script.google.com → Nouveau projet → coller ce script
+ * 2. Menu déroulant à côté de Exécuter ▶ : sélectionner "creerFormulaireUnique"
+ * 3. Exécuter ▶ puis autoriser les permissions (Forms/Drive)
+ * 4. Le lien de diffusion s'affiche dans les journaux (Ctrl+Entrée)
+ * 5. Vérifier dans le formulaire : Paramètres → pas de collecte d'e-mail,
  *    pas de restriction à l'organisation
  *
- * NB : si les formulaires v1 sont déjà DIFFUSÉS, ne pas régénérer — modifier
- * les formulaires existants à la main (mêmes corrections) pour garder les liens.
+ * Recodage après gel : exporter le CSV des réponses puis
+ *   python data/enquete/recoder_reponses.py --unique export.csv
  */
 
-function creerTousLesFormulaires() {
-  const formA = creerFormulaireEtudiants();
-  const formB = creerFormulaireProfessionnels();
+function creerFormulaireUnique() {
+  const form = FormApp.create("ORIENT'IA — Enquête orientation");
+  form.setDescription('Merci de répondre en moins de 5 minutes. Ce questionnaire est anonyme.');
+  form.setCollectEmail(false);
+  form.setConfirmationMessage('Merci pour votre participation !');
 
-  Logger.log('=== FORMULAIRE A — Étudiants ===');
-  Logger.log('Lien de réponse (à diffuser) : ' + formA.getPublishedUrl());
-  Logger.log("Lien d'édition : " + formA.getEditUrl());
+  // ---------- Section 1 : consentement + tronc commun + aiguillage ----------
+  form.addSectionHeaderItem().setTitle('Consentement');
+  form.addParagraphTextItem().setTitle(TEXTE_CONSENTEMENT).setRequired(false);
+  form.addCheckboxItem()
+    .setTitle('Consentement (obligatoire)')
+    .setChoiceValues(["J'ai lu ce qui précède et j'accepte que mes réponses anonymes soient utilisées dans le cadre de ce projet académique."])
+    .setRequired(true);
 
-  Logger.log('=== FORMULAIRE B — Professionnels ===');
-  Logger.log('Lien de réponse (à diffuser) : ' + formB.getPublishedUrl());
-  Logger.log("Lien d'édition : " + formB.getEditUrl());
+  form.addSectionHeaderItem().setTitle('Votre profil au moment de choisir vos études');
 
-  Logger.log('\nRappel : vérifiez dans Paramètres > Général de chaque formulaire que ' +
-    '"Restreindre à [votre organisation]" est décoché.');
+  form.addMultipleChoiceItem()
+    .setTitle('Quelle était votre série de bac ?')
+    .setChoiceValues(OPT_SERIES_BAC).setRequired(true);
 
-  return {
-    etudiants: { reponse: formA.getPublishedUrl(), edition: formA.getEditUrl() },
-    professionnels: { reponse: formB.getPublishedUrl(), edition: formB.getEditUrl() }
-  };
+  form.addCheckboxItem()
+    .setTitle('Quelles étaient vos matières préférées au lycée ? (3 max)')
+    .setChoiceValues(OPT_MATIERES).setRequired(true);
+
+  form.addGridItem()
+    .setTitle('Votre niveau dans ces domaines à la fin du lycée ? (1 = faible → 5 = excellent)')
+    .setRows(['Mathématiques', 'Sciences expérimentales', 'Langues et communication', 'Économie-gestion'])
+    .setColumns(['1', '2', '3', '4', '5'])
+    .setRequired(true);
+
+  form.addCheckboxItem()
+    .setTitle('Quelles compétences aviez-vous au moment de choisir vos études supérieures ?')
+    .setChoiceValues(OPT_COMPETENCES).setRequired(true);
+
+  form.addCheckboxItem()
+    .setTitle("Quels étaient vos centres d'intérêt à cette époque ? (4 max)")
+    .setChoiceValues(OPT_INTERETS).setRequired(true);
+
+  form.addParagraphTextItem()
+    .setTitle('Aviez-vous déjà réalisé des projets ou activités marquants (club, association, petit business, compétition…) ?')
+    .setRequired(false);
+
+  form.addMultipleChoiceItem()
+    .setTitle('Quel environnement de travail recherchiez-vous ?')
+    .setChoiceValues(OPT_ENVIRONNEMENT).setRequired(true);
+
+  form.addCheckboxItem()
+    .setTitle('Quel type de métier visiez-vous ? (2 max)')
+    .setChoiceValues(OPT_METIERS).setRequired(true);
+
+  // Question d'aiguillage — les choix sont reliés aux sections plus bas.
+  const aiguillage = form.addMultipleChoiceItem()
+    .setTitle('Aujourd\'hui, vous êtes… ?')
+    .setRequired(true);
+
+  // ---------- Section 2 : étudiants (se termine par Envoyer) ----------
+  const pageEtudiants = form.addPageBreakItem().setTitle('Vous êtes étudiant(e)');
+
+  const choixParcours = PARCOURS_ISPM.concat(['Autre établissement — précisez la filière : ___']);
+  form.addMultipleChoiceItem()
+    .setTitle('Quelle filière / quel parcours suivez-vous actuellement ?')
+    .setChoiceValues(choixParcours).setRequired(true);
+
+  form.addMultipleChoiceItem()
+    .setTitle("En quelle année d'étude êtes-vous ?")
+    .setChoiceValues(['L1', 'L2', 'L3', 'M1', 'M2', 'Diplômé(e) depuis moins de 3 ans'])
+    .setRequired(true);
+
+  form.addScaleItem()
+    .setTitle('À quel point êtes-vous satisfait(e) de votre choix de filière ?')
+    .setBounds(1, 5).setLabels('Pas du tout', 'Très satisfait')
+    .setRequired(true);
+
+  form.addMultipleChoiceItem()
+    .setTitle("Si c'était à refaire, choisiriez-vous la même filière ?")
+    .setChoiceValues(['Oui', 'Non', 'Pas sûr(e)'])
+    .setRequired(true);
+
+  // ---------- Section 3 : professionnels ----------
+  const pagePros = form.addPageBreakItem().setTitle('Vous êtes professionnel(le)');
+
+  form.addTextItem()
+    .setTitle("Quelle filière / quel domaine d'études avez-vous suivi ?")
+    .setRequired(true);
+
+  form.addTextItem()
+    .setTitle("Quel métier exercez-vous aujourd'hui ?")
+    .setRequired(true);
+
+  form.addMultipleChoiceItem()
+    .setTitle("Depuis combien d'années travaillez-vous ?")
+    .setChoiceValues(['Moins de 3 ans', '3 à 7 ans', '8 à 15 ans', 'Plus de 15 ans'])
+    .setRequired(true);
+
+  form.addScaleItem()
+    .setTitle('Avec le recul, votre formation était-elle adaptée au métier que vous exercez ?')
+    .setBounds(1, 5).setLabels('Pas du tout', 'Parfaitement')
+    .setRequired(true);
+
+  form.addMultipleChoiceItem()
+    .setTitle('Avec le recul, auriez-vous choisi une autre filière ?')
+    .setChoiceValues(['Non, le même choix', 'Oui — laquelle : ___', 'Pas sûr(e)'])
+    .setRequired(true);
+
+  // ---------- Câblage de l'aiguillage ----------
+  aiguillage.setChoices([
+    aiguillage.createChoice('Étudiant(e) — ou diplômé(e) depuis peu', pageEtudiants),
+    aiguillage.createChoice('Professionnel(le) en activité', pagePros),
+  ]);
+  // Après la section étudiants, on soumet (on ne continue pas vers la section pros).
+  pagePros.setGoToPage(FormApp.PageNavigationType.SUBMIT);
+
+  Logger.log('=== FORMULAIRE UNIQUE ORIENT\'IA ===');
+  Logger.log('Lien de diffusion : ' + form.getPublishedUrl());
+  Logger.log("Lien d'édition : " + form.getEditUrl());
+  Logger.log('\nRappel : Paramètres > vérifier que la collecte d\'e-mail est désactivée et ' +
+    'que le formulaire n\'est pas restreint à une organisation.');
+  return form;
 }
 
 // Liste officielle des 16 filières ISPM (src-filieres, consulté le 26/08/2026)
@@ -87,124 +181,3 @@ const OPT_INTERETS = ['Technologie / informatique', 'Sciences', 'Entrepreneuriat
 const OPT_ENVIRONNEMENT = ['Bureau', 'Terrain / extérieur', 'Laboratoire', 'Atelier / usine', 'Mixte / peu importe'];
 const OPT_METIERS = ['Technique / ingénierie', 'Gestion / management', 'Création / design',
   'Commerce / relation client', 'Recherche / enseignement', 'Entrepreneur / indépendant', 'Je ne sais pas encore'];
-
-function ajouterConsentement(form) {
-  form.addSectionHeaderItem().setTitle('Consentement');
-  form.addParagraphTextItem().setTitle(TEXTE_CONSENTEMENT).setRequired(false);
-  form.addCheckboxItem()
-    .setTitle('Consentement (obligatoire)')
-    .setChoiceValues(["J'ai lu ce qui précède et j'accepte que mes réponses anonymes soient utilisées dans le cadre de ce projet académique."])
-    .setRequired(true);
-}
-
-function ajouterTroncCommun(form, auPasse) {
-  const v = auPasse ? {
-    q0: 'Quelle était votre série de bac ?',
-    q1: 'Quelles étaient vos matières préférées au lycée ?',
-    q2: 'Votre niveau dans ces domaines à la fin du lycée ?',
-    q3: 'Quelles compétences aviez-vous déjà avant vos études supérieures ?',
-    q4: "Quels étaient vos centres d'intérêt à l'époque ?",
-    q5: 'Aviez-vous réalisé des projets ou activités marquants avant vos études ?',
-    q6: 'Quel environnement de travail recherchiez-vous ?',
-    q7: "Quel type de métier visiez-vous à l'époque ?"
-  } : {
-    q0: 'Quelle était ta série de bac ?',
-    q1: 'Quelles étaient tes matières préférées au lycée ?',
-    q2: 'Comment évalues-tu ton niveau dans ces domaines à la fin du lycée ?',
-    q3: 'Quelles compétences estimes-tu avoir ?',
-    q4: "Quels sont tes centres d'intérêt ?",
-    q5: 'As-tu déjà réalisé des projets ou activités marquants (club, association, petit business, projet perso, compétition…) ?',
-    q6: 'Quel environnement de travail préfères-tu ?',
-    q7: 'Quel type de métier vises-tu ?'
-  };
-
-  form.addSectionHeaderItem().setTitle('Tronc commun');
-
-  // Série de bac : variable du modèle + clé des prérequis officiels
-  form.addMultipleChoiceItem().setTitle(v.q0).setChoiceValues(OPT_SERIES_BAC).setRequired(true);
-
-  form.addCheckboxItem().setTitle(v.q1 + ' (3 max)').setChoiceValues(OPT_MATIERES).setRequired(true);
-
-  form.addGridItem().setTitle(v.q2 + ' (1 = faible → 5 = excellent)')
-    .setRows(['Mathématiques', 'Sciences expérimentales', 'Langues et communication', 'Économie-gestion'])
-    .setColumns(['1', '2', '3', '4', '5'])
-    .setRequired(true);
-
-  form.addCheckboxItem().setTitle(v.q3).setChoiceValues(OPT_COMPETENCES).setRequired(true);
-  form.addCheckboxItem().setTitle(v.q4 + ' (4 max)').setChoiceValues(OPT_INTERETS).setRequired(true);
-  form.addParagraphTextItem().setTitle(v.q5).setRequired(false);
-  form.addMultipleChoiceItem().setTitle(v.q6).setChoiceValues(OPT_ENVIRONNEMENT).setRequired(true);
-  form.addCheckboxItem().setTitle(v.q7 + ' (2 max)').setChoiceValues(OPT_METIERS).setRequired(true);
-}
-
-function creerFormulaireEtudiants() {
-  const form = FormApp.create("ORIENT'IA — Enquête étudiants");
-  form.setDescription('Merci de répondre en moins de 5 minutes. Ce questionnaire est anonyme.');
-  form.setCollectEmail(false);
-  form.setConfirmationMessage('Merci pour ta participation !');
-
-  ajouterConsentement(form);
-  ajouterTroncCommun(form, false);
-
-  form.addSectionHeaderItem().setTitle('Spécifique étudiants');
-
-  const choixParcours = PARCOURS_ISPM.concat(['Autre établissement — précise la filière : ___']);
-  form.addMultipleChoiceItem()
-    .setTitle('Quelle filière / quel parcours suis-tu actuellement ?')
-    .setChoiceValues(choixParcours)
-    .setRequired(true);
-
-  form.addMultipleChoiceItem()
-    .setTitle("En quelle année d'étude es-tu ?")
-    .setChoiceValues(['L1', 'L2', 'L3', 'M1', 'M2', 'Diplômé(e) depuis moins de 3 ans'])
-    .setRequired(true);
-
-  form.addScaleItem()
-    .setTitle('À quel point es-tu satisfait(e) de ton choix de filière ?')
-    .setBounds(1, 5).setLabels('Pas du tout', 'Très satisfait')
-    .setRequired(true);
-
-  form.addMultipleChoiceItem()
-    .setTitle("Si c'était à refaire, choisirais-tu la même filière ?")
-    .setChoiceValues(['Oui', 'Non', 'Pas sûr(e)'])
-    .setRequired(true);
-
-  return form;
-}
-
-function creerFormulaireProfessionnels() {
-  const form = FormApp.create("ORIENT'IA — Enquête professionnels");
-  form.setDescription('Merci de répondre en moins de 5 minutes. Ce questionnaire est anonyme.');
-  form.setCollectEmail(false);
-  form.setConfirmationMessage('Merci pour votre participation !');
-
-  ajouterConsentement(form);
-  ajouterTroncCommun(form, true);
-
-  form.addSectionHeaderItem().setTitle('Spécifique professionnels');
-
-  form.addTextItem()
-    .setTitle("Quelle filière / quel domaine d'études avez-vous suivi ?")
-    .setRequired(true);
-
-  form.addTextItem()
-    .setTitle("Quel métier exercez-vous aujourd'hui ?")
-    .setRequired(true);
-
-  form.addMultipleChoiceItem()
-    .setTitle('Depuis combien d\'années travaillez-vous ?')
-    .setChoiceValues(['Moins de 3 ans', '3 à 7 ans', '8 à 15 ans', 'Plus de 15 ans'])
-    .setRequired(true);
-
-  form.addScaleItem()
-    .setTitle('Avec le recul, votre formation était-elle adaptée au métier que vous exercez ?')
-    .setBounds(1, 5).setLabels('Pas du tout', 'Parfaitement')
-    .setRequired(true);
-
-  form.addMultipleChoiceItem()
-    .setTitle('Avec le recul, auriez-vous choisi une autre filière ?')
-    .setChoiceValues(['Non, le même choix', 'Oui — laquelle : ___', 'Pas sûr(e)'])
-    .setRequired(true);
-
-  return form;
-}

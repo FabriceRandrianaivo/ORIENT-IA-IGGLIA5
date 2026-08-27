@@ -377,7 +377,7 @@ def _mode_llm(question: str, profil: dict, historique: list, appels: list) -> st
                                     f"Profil declare de l'utilisateur : {json.dumps(profil, ensure_ascii=False)}\n\n"
                                     f"Question : {question}"}]
     for _ in range(6):
-        rep = client.messages.create(model=os.environ["ORIENTIA_MODEL"]  # id du modele Anthropic, requis en mode llm,
+        rep = client.messages.create(model=os.environ["ORIENTIA_MODEL"],  # id du modele requis en mode llm
                                      max_tokens=1500, system=SYSTEM, tools=OUTILS_LLM, messages=messages)
         if rep.stop_reason != "tool_use":
             return "".join(b.text for b in rep.content if b.type == "text")

@@ -15,8 +15,6 @@ from pathlib import Path
 import streamlit as st
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import agent  # noqa: E402
-import tools  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -52,6 +50,15 @@ PAGES = [("profil", "👤", "Mon Profil"), ("echanges", "💬", "Mes Échanges")
 
 st.set_page_config(page_title="ORIENT'IA — Plateforme d'Orientation", page_icon="🎓",
                    layout="wide", initial_sidebar_state="expanded")
+
+# Chargement des modules lourds APRES le premier rendu : l'utilisateur voit un
+# indicateur au lieu d'un ecran blanc pendant l'init (modele ML + index RAG).
+_chargement = st.empty()
+with _chargement.container():
+    with st.spinner("⏳ Chargement d'ORIENT'IA — modèle ML et index documentaire…"):
+        import agent  # noqa: E402
+        import tools  # noqa: E402
+_chargement.empty()
 
 # ------------------------------------------------------------------- etat
 st.session_state.setdefault("messages", [])
@@ -438,7 +445,8 @@ with st.sidebar:
         st.divider()
         if st.button("🧭 Obtenir ma recommandation", type="primary",
                      use_container_width=True, disabled=not pret):
-            traiter("Quels parcours me correspondent ?")
+            with st.spinner("🤔 Analyse de votre profil par le modèle…"):
+                traiter("Quels parcours me correspondent ?")
             st.rerun()
         if st.button("＋ Nouvelle Session", type="secondary", use_container_width=True):
             st.session_state.messages = []
@@ -463,7 +471,8 @@ with st.sidebar:
 
 # Mini-formulaire du chat valide -> recommandation immediate.
 if st.session_state.pop("auto_reco", False):
-    traiter("Quels parcours me correspondent ?")
+    with st.spinner("🤔 Analyse de votre profil par le modèle…"):
+        traiter("Quels parcours me correspondent ?")
 
 page = st.session_state.page
 

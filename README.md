@@ -113,12 +113,12 @@ La démonstration de référence est locale. Pour un accès partagé : configura
 
 | Membre | Rôle | Contributions principales |
 |---|---|---|
-| *(à compléter)* | Enquête & données réelles | |
-| *(à compléter)* | Corpus & sources | |
-| *(à compléter)* | Machine Learning | |
-| *(à compléter)* | Analyse & biais | |
-| *(à compléter)* | Agent & RAG | |
-| *(à compléter)* | Évaluation & sécurité | |
-| *(à compléter)* | Coordination, docs & démo | |
+| **Fabrice Randrianaivo** ([@FabriceRandrianaivo](https://github.com/FabriceRandrianaivo)) | Chef de projet · Architecture & développement | Corpus & scraping, pipeline ML, agent & outils, interface, déploiement, coordination |
+| [@nyanjaraandria](https://github.com/nyanjaraandria) | Évaluation & démonstration | Cas de test, campagne d'évaluation, co-pilotage de la vidéo |
+| [@AndrianandrasanaFy](https://github.com/AndrianandrasanaFy) | Enquête & données réelles | Diffusion de l'enquête, suivi du registre de collecte |
+| [@ninih-sama](https://github.com/ninih-sama) | Machine Learning | Exécution des notebooks EDA/entraînement, analyse des résultats |
+| [@AinaAnjaratiana](https://github.com/AinaAnjaratiana) | Corpus & sources | Relecture de formations.json et du registre des sources |
+| [@mampiona](https://github.com/mampiona) | Analyse & biais | Note limites/biais, relecture de la documentation |
+| **Liantsoa Nombana** ([@nombanaANDRIANJOHANY](https://github.com/nombanaANDRIANJOHANY)) | RAG & ressources | Corpus documentaire, brochures institutionnelles |
 
-Répartition détaillée : [EQUIPE-TACHES.md](EQUIPE-TACHES.md). L'historique Git reflète les contributions individuelles.
+Répartition détaillée : [EQUIPE-TACHES.md](EQUIPE-TACHES.md). Les contributions individuelles sont vérifiables dans l'historique Git du dépôt.

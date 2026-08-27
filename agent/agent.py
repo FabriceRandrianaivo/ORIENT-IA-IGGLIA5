@@ -107,7 +107,9 @@ _STOPWORDS = {"quel", "quelle", "sont", "dans", "pour", "avec", "cette", "votre"
               "bonjour", "bonsoir", "salut", "merci", "svp", "voudrais", "veux",
               "aimerais", "souhaite", "souhaiterais", "connaitre", "savoir",
               "dire", "dites", "parle", "parlez", "peu", "petit",
-              "sur", "une", "qui", "etre", "ils", "situe"}
+              "sur", "une", "qui", "etre", "ils", "situe",
+              "gagne", "gagner", "remporte", "obtenu", "obtient", "obtenir",
+              "possede", "dispose"}
 
 
 def _pertinent(question: str, texte: str) -> bool:

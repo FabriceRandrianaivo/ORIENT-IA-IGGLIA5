@@ -251,6 +251,40 @@ st.markdown(f"""
     text-align: center; color: var(--gris); font-size: .7rem;
     margin-top: 22px; padding-top: 12px; border-top: 1px solid var(--ligne);
   }}
+
+  /* ------------------------------ responsive (telephone) ------------------ */
+  @media (max-width: 740px) {{
+    .block-container {{ padding-left: .6rem; padding-right: .6rem; }}
+    .topnav {{ padding: 10px 14px; border-radius: 0 0 10px 10px; }}
+    .topnav .links a {{ margin-left: 10px; font-size: .68rem; }}
+    .hero {{ padding: 16px 16px; border-radius: 14px; }}
+    .hero h1 {{ font-size: 1.35rem; }}
+    .hero .cap {{ font-size: 1.2rem; }}
+    .hero .tagline {{ font-size: .78rem; margin: 4px 0 10px; }}
+    .hero::after {{ display: none; }}
+    .hero .chips span {{ font-size: .58rem; padding: 3px 9px; margin: 0 5px 5px 0; display: inline-block; }}
+    .stepper {{ padding: 10px 10px; }}
+    .step {{ min-width: 84px; }}
+    .step .dot {{ width: 24px; height: 24px; font-size: .72rem; }}
+    .step .lbl {{ font-size: .6rem; }}
+    .step .sub {{ display: none; }}
+    .lien {{ margin: 0 4px 14px; }}
+    .mention {{ font-size: .68rem; padding: 8px 12px; }}
+    .page-titre h2 {{ font-size: 1.35rem; }}
+    .page-titre p {{ font-size: .76rem; }}
+    .carte {{ padding: 12px 13px; }}
+    .carte-filiere .sigle {{ font-size: 1rem; }}
+    .carte-filiere .nom {{ font-size: .62rem; min-height: 0; }}
+    .carte-filiere .rang {{ font-size: .52rem; }}
+    [data-testid="stChatMessage"] {{ padding: 11px 12px; border-radius: 12px; }}
+    .route-carte {{ padding: 9px 11px; }}
+    .route-carte .det {{ font-size: .68rem; }}
+  }}
+  /* empilement des colonnes (cartes top-3, suggestions, pages 2 colonnes) */
+  @media (max-width: 640px) {{
+    div[data-testid="stHorizontalBlock"] {{ flex-direction: column; gap: .5rem; }}
+    div[data-testid="stHorizontalBlock"] > div {{ width: 100% !important; min-width: 100% !important; }}
+  }}
 </style>
 """, unsafe_allow_html=True)
 

@@ -43,3 +43,27 @@ Intervalle de confiance à 95 % sur le top-3 global : **± 10 points** (n = 79).
   deviner (ex. « Informatique » seul, ambigu entre 4 parcours ISPM).
 
 Reproduire : `python models/transfert_reel.py [--population etudiant|professionnel]`
+
+## Représentativité de l'échantillon vs effectifs réels (ajout du 27/08)
+
+Un enseignant de l'ISPM nous a communiqué les proportions approximatives d'effectifs
+par filière (base IGGLIA = 100, source `src-effectifs-enseignant`, **non vérifiée par
+document officiel**). Comparaison avec notre échantillon d'enquête (79 retenues) :
+
+| Filière | Effectifs réels (~%) | Échantillon (%) | Lecture |
+|---|---|---|---|
+| IGGLIA | ~23 % | 25,3 % | **Remarquablement représentatif** |
+| GCA | ~13 % | 6,3 % | Sous-représenté |
+| ESIIA | ~11 % | 8,9 % | Correct |
+| EMII | ~8 % | 1,3 % | Sous-représenté |
+| FIC | ~8 % | 3,8 % | Sous-représenté |
+| IAA | ~6 % | 15,2 % | **Sur-représenté** (réseau de l'équipe) |
+| AEE | ~5 % | 10,1 % | Sur-représenté |
+
+Enseignements : (1) la sur-représentation de notre réseau proche (IAA, AEE) et la
+sous-représentation des filières industrielles (EMII, GCA) quantifient précisément le
+biais d'auto-sélection annoncé ; (2) le prior du générateur synthétique (CAA ~14 %)
+diverge des effectifs réels (CAA ~5 %) — **piste d'amélioration documentée** :
+recalibrer les probabilités de base du générateur sur ces proportions ; non appliqué
+avant la remise pour ne pas invalider les mesures déjà produites, et parce que la
+source reste non vérifiée.

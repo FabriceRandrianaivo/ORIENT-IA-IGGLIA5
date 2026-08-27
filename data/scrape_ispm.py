@@ -128,6 +128,16 @@ def main() -> None:
                           "etant plus recente, elle fait foi avec reserve — a confirmer aupres de "
                           "l'administration"])
 
+    registre_rows.append(["src-effectifs-enseignant",
+                          "Proportions d'effectifs par filiere (communication orale d'un enseignant ISPM)",
+                          "communication orale, pas d'URL", "2026-08-27",
+                          "institutionnel non verifie",
+                          "proportions relatives d'etudiants par filiere (base IGGLIA=100) : IGGLIA "
+                          "premiere filiere (~23%), GCA ~13%, ESIIA ~11%, ICMP la plus petite (~2%)",
+                          "ordres de grandeur approximatifs non verifies par document officiel ; sigles "
+                          "ENII et ENA rapproches de EMII et EMP avec incertitude ; DTJA et TEH non "
+                          "communiquees ; a citer avec ces reserves et renvoyer vers l'administration"])
+
     with REGISTRE.open("w", newline="", encoding="utf-8") as fh:
         writer = csv.writer(fh)
         writer.writerow(["id", "titre", "origine_url", "date_consultation",

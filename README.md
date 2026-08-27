@@ -9,7 +9,8 @@ ORIENT'IA produit une orientation personnalisée et argumentée vers les **16 fi
 ## 🎬 Vidéo de démonstration (3-5 min)
 
 **[▶️ Voir la vidéo — le système en fonctionnement](https://drive.google.com/file/d/1arOm7BNF0K1_94Y8ZcGuzWYXvfBbA-T3/view?usp=sharing)**
-*(hébergée sur Google Drive — le fichier vidéo dépasse la limite de 100 Mo de GitHub ; copie locale : `docs/video-demo.mp4`)*
+· [📁 Dossier Drive de la remise](https://drive.google.com/drive/folders/1dSuI9ZfgJYegHZZ2CWDsUJqf1GM4bx1q?usp=sharing)
+*(le fichier vidéo dépasse la limite de 100 Mo de GitHub ; copie locale : `docs/video-demo.mp4`)*
 
 ## Résultats mesurés
 

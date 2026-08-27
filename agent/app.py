@@ -127,10 +127,10 @@ st.markdown(f"""
     border-radius: 18px; padding: 24px 30px; color: #fff; margin-bottom: 14px;
     box-shadow: 0 10px 28px rgba(11, 61, 43, .25);
   }}
-  .hero::after {{
-    content: ""; position: absolute; right: 26px; top: 50%; transform: translateY(-50%);
-    width: 140px; height: 140px; border-radius: 50%;
-    background: linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.05));
+  .hero-logo {{
+    position: absolute; right: 26px; top: 50%; transform: translateY(-50%);
+    width: 140px; height: 140px; border-radius: 50%; background: #ffffff;
+    padding: 14px; object-fit: contain; box-shadow: 0 6px 20px rgba(0,0,0,.28);
   }}
   .hero h1 {{ color: #fff; font-size: 2rem; font-weight: 800; margin: 0; display: inline; vertical-align: middle; }}
   .hero .cap {{ font-size: 1.6rem; vertical-align: middle; margin-right: 8px; }}
@@ -281,7 +281,7 @@ st.markdown(f"""
     .hero h1 {{ font-size: 1.35rem; }}
     .hero .cap {{ font-size: 1.2rem; }}
     .hero .tagline {{ font-size: .78rem; margin: 4px 0 10px; }}
-    .hero::after {{ display: none; }}
+    .hero-logo {{ display: none; }}
     .hero .chips span {{ font-size: .58rem; padding: 3px 9px; margin: 0 5px 5px 0; display: inline-block; }}
     .stepper {{ padding: 10px 10px; }}
     .step {{ min-width: 84px; }}
@@ -310,6 +310,16 @@ st.markdown(f"""
 
 
 # ---------------------------------------------------------------- helpers
+@st.cache_data
+def _logo64() -> str:
+    """Logo officiel ISPM (agent/assets/logo_ispm.png) encode pour l'HTML."""
+    import base64
+    chemin = Path(__file__).resolve().parent / "assets" / "logo_ispm.png"
+    if chemin.exists():
+        return base64.b64encode(chemin.read_bytes()).decode()
+    return ""
+
+
 @st.cache_data
 def _registre_sources() -> dict:
     with open(ROOT / "data" / "registre_sources.csv", encoding="utf-8") as fh:
@@ -412,8 +422,11 @@ def topnav():
 
 # ----------------------------------------------------------- barre laterale
 with st.sidebar:
-    st.markdown("""
-    <div class="logo-bloc"><div class="rond">🎓</div>
+    _l64s = _logo64()
+    _rond = (f'<img src="data:image/png;base64,{_l64s}" alt="ISPM" '
+             f'style="width:46px;height:46px;object-fit:contain;">') if _l64s else "🎓"
+    st.markdown(f"""
+    <div class="logo-bloc"><div class="rond">{_rond}</div>
       <div class="titre">ORIENT'IA</div><div class="sous">Plateforme d'Orientation</div></div>
     """, unsafe_allow_html=True)
 
@@ -496,8 +509,11 @@ if page == "profil":
                                                  for o in m["meta"]["outils"])
                            for m in st.session_state.messages if m.get("meta"))
     topnav()
+    _l64 = _logo64()
+    _img_logo = (f'<img class="hero-logo" src="data:image/png;base64,{_l64}" '
+                 f'alt="Logo ISPM">') if _l64 else ""
     st.markdown(f"""
-    <div class="hero"><span class="cap">🎓</span><h1>ORIENT'IA</h1>
+    <div class="hero">{_img_logo}<span class="cap">🎓</span><h1>ORIENT'IA</h1>
       <p class="tagline">Assistant intelligent d'orientation — 16 filières</p>
       <div class="chips"><span>◉ Sources officielles citées</span><span>☑ 38/38 tests</span>
       <span>◈ Modèle ML expliqué</span></div></div>

@@ -19,7 +19,12 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "rag"))
+
 import tools
+from moteur import etendre
 from prompts import SYSTEM
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -109,7 +114,10 @@ _STOPWORDS = {"quel", "quelle", "sont", "dans", "pour", "avec", "cette", "votre"
               "dire", "dites", "parle", "parlez", "peu", "petit",
               "sur", "une", "qui", "etre", "ils", "situe",
               "gagne", "gagner", "remporte", "obtenu", "obtient", "obtenir",
-              "possede", "dispose"}
+              "possede", "dispose", "sais", "sait", "connais", "possible",
+              "final", "finaux", "serait", "serais", "donne", "donnez", "montre"}
+# Les tokens sont compares apres repli du s final : les mots vides aussi.
+_STOPWORDS = _STOPWORDS | {w.rstrip("s") for w in _STOPWORDS}
 
 
 def _pertinent(question: str, texte: str) -> bool:
@@ -202,7 +210,8 @@ def _mode_deterministe(question: str, profil: dict, appels: list) -> str:
     # verbes explicites, gouts declares, ou question personnelle sur son orientation
     # (« quel serait mon parcours ideal », « quelle filiere choisir pour moi »...).
     personnel = re.search(r"\b(je|j'|me|moi|mon|ma|mes)\b", q)
-    objet_orientation = re.search(r"parcours|filiere|formation|orientation|etude", q)
+    # Radicaux tolerants aux fautes de frappe courantes (parcous, filliere...).
+    objet_orientation = re.search(r"parcou|fil+ier|formation|orientation|etude|carriere", q)
     mot_choix = re.search(r"ideal|convien|correspond|adapte|choisir|choix|recommand"
                           r"|conseil|fait[e]? pour|devrais|irait", q)
     if (re.search(r"recommande|conseille|correspond|oriente[sz]?[ -]moi|me convien", q)
@@ -230,11 +239,27 @@ def _mode_deterministe(question: str, profil: dict, appels: list) -> str:
                    "", f"_{MENTION}_"]
         return "\n".join(lignes)
 
+    # Liste complete de l'offre de formation -> reponse structuree depuis
+    # formations.json (les 6 mentions et 16 parcours), pas un tirage de passages.
+    if not sigles and (re.search(r"(liste|toutes?|quelle?s? sont)\b.{0,30}(fil+ier|parcou|formation|mention)", q)
+                       or re.search(r"(fil+ier|parcour)s? (dispo|existant|propose|offert)", q)):
+        mentions = tools._FORMATIONS["mentions_lmd"]["mentions"]
+        lignes = ["**L'offre de formation de l'ISPM — 6 mentions, 16 parcours** "
+                  "_[src-filieres, src-brochure-papier]_ :", ""]
+        for mention, sigles_m in mentions.items():
+            lignes.append(f"**{mention}**")
+            for s in sigles_m:
+                lignes.append(f"- {s} — {tools._PAR_SIGLE[s]['nom']}")
+            lignes.append("")
+        lignes.append("_Demandez-moi le detail d'une filiere (« Presente-moi IGGLIA »), une "
+                      "comparaison, ou remplissez votre profil pour une recommandation._")
+        return "\n".join(lignes)
+
     # Question institutionnelle (l'ISPM lui-meme) -> fiche etablissement structuree,
     # plus fiable que le classement lexical quand "ISPM" apparait partout.
-    if not sigles and re.search(r"\b(ispm|institut|etablissement|ecole|recteur|rectorat|"
-                                r"histoire|historique|campus|adresse|contact|telephone|"
-                                r"presentation|presente)\b", q):
+    if not sigles and re.search(r"\b(ispm|institut|universit|etablissement|ecole|recteur|"
+                                r"rectorat|histoire|historique|campus|adresse|contact|"
+                                r"telephone|presentation|presente)", q):
         etab = tools._FORMATIONS["etablissement"]
         cursus = tools._FORMATIONS["cursus"]
         appels.append({"outil": "rechercher_formation", "entree": {"question": question},
@@ -268,10 +293,13 @@ def _mode_deterministe(question: str, profil: dict, appels: list) -> str:
                 "bureau, sur le terrain, en laboratoire ou en atelier ? Renseignez le panneau Profil "
                 "et je vous proposerai un top 3 argumente.")
 
-    # Question documentaire generale -> RAG.
+    # Question documentaire generale -> RAG. On ne garde que les passages
+    # pertinents : le meilleur score lexical peut etre du bruit alors que le
+    # 2e ou 3e passage repond vraiment.
     res = appel("rechercher_formation", question=question)
-    passages = res["passages"]
-    if not passages or not _pertinent(question, passages[0]["texte"]):
+    q_etendue = etendre(question)
+    passages = [p for p in res["passages"] if _pertinent(q_etendue, p["texte"])]
+    if not passages:
         # Filet de securite : une question personnelle sur son orientation qui ne
         # matche aucun document est une demande de recommandation mal formulee,
         # pas une question documentaire -> demander le profil plutot qu'avouer
@@ -297,7 +325,7 @@ def _mode_deterministe(question: str, profil: dict, appels: list) -> str:
                 "contactez l'administration : contact@ispm.education [src-accueil].")
     lignes = ["**Reponse fondee sur les sources officielles :**", ""]
     for p in passages[:3]:
-        lignes.append(f"- {p['texte'][:400]} _[{', '.join(p['sources'])}, score {p['score']}]_")
+        lignes.append(f"- {p['texte'][:700]} _[{', '.join(p['sources'])}, score {p['score']}]_")
     lignes += ["", "_Sources : identifiants du registre data/registre_sources.csv._"]
     return "\n".join(lignes)
 
@@ -349,12 +377,13 @@ def _mode_llm(question: str, profil: dict, historique: list, appels: list) -> st
 
 
 # -------------------------------------------------- mode Gemini (LLM gratuit)
-def _mode_gemini(question: str, profil: dict, appels: list) -> str:
+def _mode_gemini(question: str, profil: dict, appels: list, brouillon: str = None) -> str:
     """Couche LLM gratuite (Google AI Studio) : le routeur deterministe appelle
     les outils, puis Gemini reformule la reponse sans pouvoir ajouter de faits.
     En cas d'echec reseau/quota, on renvoie le brouillon deterministe : la
     reponse reste toujours correcte et sourcee."""
-    brouillon = _mode_deterministe(question, profil, appels)
+    if brouillon is None:
+        brouillon = _mode_deterministe(question, profil, appels)
     try:
         import urllib.request
         cle = os.environ["GEMINI_API_KEY"]
@@ -392,11 +421,12 @@ def _mode_gemini(question: str, profil: dict, appels: list) -> str:
 
 
 # ---------------------------------------------------- mode Groq (LLM gratuit)
-def _mode_groq(question: str, profil: dict, appels: list) -> str:
+def _mode_groq(question: str, profil: dict, appels: list, brouillon: str = None) -> str:
     """Meme principe que le mode Gemini : les outils deterministes decident,
     Groq (API OpenAI-compatible, quota gratuit) reformule. Repli automatique
     sur le brouillon deterministe en cas d'echec."""
-    brouillon = _mode_deterministe(question, profil, appels)
+    if brouillon is None:
+        brouillon = _mode_deterministe(question, profil, appels)
     try:
         import urllib.request
         cle = os.environ["GROQ_API_KEY"]
@@ -453,10 +483,17 @@ def repondre(question: str, profil: dict, historique: list = None) -> dict:
         try:
             if mode == "llm":
                 reponse = _mode_llm(question, profil, historique or [], appels)
-            elif mode == "gemini":
-                reponse, repli_llm = _mode_gemini(question, profil, appels)
-            elif mode == "groq":
-                reponse, repli_llm = _mode_groq(question, profil, appels)
+            elif mode in ("gemini", "groq"):
+                # Chaine de reformulation : Gemini, puis Groq si quota epuise,
+                # puis brouillon deterministe. Les outils ne tournent qu'une fois.
+                brouillon = _mode_deterministe(question, profil, appels)
+                reponse, repli_llm = brouillon, True
+                if os.environ.get("GEMINI_API_KEY"):
+                    reponse, repli_llm = _mode_gemini(question, profil, appels, brouillon)
+                if repli_llm and os.environ.get("GROQ_API_KEY"):
+                    reponse, repli_llm = _mode_groq(question, profil, appels, brouillon)
+                    if not repli_llm:
+                        mode = "groq (secours)"
             else:
                 reponse = _mode_deterministe(question, profil, appels)
         except Exception as exc:  # noqa: BLE001 — trace puis message honnete

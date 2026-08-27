@@ -28,6 +28,22 @@ def _normaliser(texte: str) -> list:
     return [t.rstrip("s") if len(t) > 3 else t for t in re.findall(r"[a-z0-9]+", texte)]
 
 
+SYNONYMES = {"carriere": "debouches metiers", "job": "metier",
+             "emploi": "metier debouches", "travail": "metier",
+             "universite": "institut", "fac": "institut",
+             "cursus": "cursus diplomes", "professeur": "enseignant",
+             "matiere": "matieres enseigne"}
+
+
+def etendre(question: str) -> str:
+    """Expansion de synonymes : rapproche le vocabulaire de l'utilisateur
+    (carriere, job, universite) de celui du corpus (debouches, metier, institut)."""
+    for mot, expansion in SYNONYMES.items():
+        if re.search(rf"\b{mot}s?\b", question, re.I):
+            question = f"{question} {expansion}"
+    return question
+
+
 def construire_chunks() -> list:
     """Corpus = pages du site (paragraphes) + fiches filieres structurees."""
     chunks = []
@@ -37,7 +53,7 @@ def construire_chunks() -> list:
     for f in data["filieres"]:
         texte = (f"La filiere {f['sigle']} — {f['nom']} — appartient au departement "
                  f"{f['departement']}. {f['description']} Prerequis de bac : {f['prerequis_bac']}. "
-                 f"Cette filiere prepare aux debouches suivants : "
+                 f"Cette filiere prepare aux metiers et debouches suivants : "
                  f"{', '.join(f['debouches'] or ['non precises'])}.")
         chunks.append({"id": f"fiche-{f['sigle']}", "titre": f"Fiche {f['sigle']}",
                        "texte": texte, "sources": f["sources"]})
@@ -100,6 +116,7 @@ class Recherche:
         self.matrice = self.tfidf.fit_transform(c["texte"] for c in self.chunks)
 
     def rechercher(self, question: str, k: int = 5) -> list:
+        question = etendre(question)
         tokens = _normaliser(question)
         s_bm = self.bm25.get_scores(tokens)
         s_bm = s_bm / (s_bm.max() or 1.0)

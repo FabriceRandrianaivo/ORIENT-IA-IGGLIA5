@@ -245,10 +245,12 @@ with st.sidebar:
     st.header("👤 Étape 1 — Mon profil")
     st.caption("L'assistant n'utilise que ce que vous déclarez ici — jamais votre style d'écriture.")
 
-    serie = st.selectbox("🎯 Série de bac *", [""] + tools.SERIES,
+    serie = st.selectbox("🎯 Série de bac *", [""] + tools.SERIES, key="k_serie",
                          help="Obligatoire : détermine les filières accessibles")
-    matieres = st.multiselect("📚 Matières préférées * (max 3)", MATIERES, max_selections=3)
-    interets = st.multiselect("💡 Centres d'intérêt * (max 4)", INTERETS, max_selections=4)
+    matieres = st.multiselect("📚 Matières préférées * (max 3)", MATIERES,
+                              max_selections=3, key="k_matieres")
+    interets = st.multiselect("💡 Centres d'intérêt * (max 4)", INTERETS,
+                              max_selections=4, key="k_interets")
     with st.expander("📊 Mes niveaux (1 → 5)"):
         note_maths = st.slider("Mathématiques", 1, 5, 3)
         note_sciences = st.slider("Sciences", 1, 5, 3)
@@ -289,6 +291,11 @@ with st.sidebar:
         st.caption("Mode agent : 🔑 LLM Groq (gratuit)")
     else:
         st.caption("Mode agent : ⚙️ Déterministe · 100 % local")
+
+# Le mini-formulaire de profil integre au chat vient d'etre valide :
+# relancer la recommandation avec le profil mis a jour.
+if st.session_state.pop("auto_reco", False):
+    traiter("Quels parcours me correspondent ?")
 
 # ------------------------------------------------------------------- entete
 a_pose_question = any(m["role"] == "user" for m in st.session_state.messages)
@@ -368,6 +375,29 @@ for m in st.session_state.messages:
 
 # Questions exploratoires contextuelles apres la derniere reponse,
 # sinon suggestions de depart.
+# Collecte progressive DANS le chat (exigence « recueillir progressivement ») :
+# quand l'assistant demande le profil, un mini-formulaire apparait dans la
+# conversation — l'utilisateur repond a l'IA sans passer par la barre laterale.
+def _appliquer_profil_chat():
+    st.session_state.k_serie = st.session_state.kf_serie
+    st.session_state.k_matieres = st.session_state.kf_matieres
+    st.session_state.k_interets = st.session_state.kf_interets
+    st.session_state.auto_reco = True
+
+
+_dm = st.session_state.messages[-1] if st.session_state.messages else None
+if _dm and _dm["role"] == "assistant" and "il me manque" in _dm["contenu"]:
+    with st.chat_message("assistant", avatar="📋"):
+        st.markdown("**Complétez votre profil directement ici :**")
+        with st.form("profil_chat"):
+            st.selectbox("🎯 Série de bac", [""] + tools.SERIES, key="kf_serie")
+            st.multiselect("📚 Matières préférées (max 3)", MATIERES,
+                           max_selections=3, key="kf_matieres")
+            st.multiselect("💡 Centres d'intérêt (max 4)", INTERETS,
+                           max_selections=4, key="kf_interets")
+            st.form_submit_button("✅ Valider et obtenir ma recommandation",
+                                  type="primary", on_click=_appliquer_profil_chat)
+
 dernier = st.session_state.messages[-1] if st.session_state.messages else None
 suivantes = questions_suivantes(dernier["meta"]) if dernier and dernier.get("meta") else []
 if suivantes:

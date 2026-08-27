@@ -198,9 +198,16 @@ def _mode_deterministe(question: str, profil: dict, appels: list) -> str:
                 + (f"- {v['detail']}\n" if v["detail"] else "")
                 + f"- Rappel : {v['rappel']}")
 
-    # Recommandation a partir du profil.
-    if re.search(r"recommande|conseille|correspond|oriente[sz]?[ -]moi|me convien", q) or (
-            re.search(r"j'aime|je prefere|je suis (fort|bon)", q)):
+    # Recommandation a partir du profil. Trois familles de formulations :
+    # verbes explicites, gouts declares, ou question personnelle sur son orientation
+    # (« quel serait mon parcours ideal », « quelle filiere choisir pour moi »...).
+    personnel = re.search(r"\b(je|j'|me|moi|mon|ma|mes)\b", q)
+    objet_orientation = re.search(r"parcours|filiere|formation|orientation|etude", q)
+    mot_choix = re.search(r"ideal|convien|correspond|adapte|choisir|choix|recommand"
+                          r"|conseil|fait[e]? pour|devrais|irait", q)
+    if (re.search(r"recommande|conseille|correspond|oriente[sz]?[ -]moi|me convien", q)
+            or re.search(r"j'aime|je prefere|je suis (fort|bon)", q)
+            or (personnel and objet_orientation and mot_choix)):
         analyse = appel("analyser_profil_ml", profil=profil)
         if "erreur" in analyse:
             noms = {"serie_bac": "votre serie de bac", "matieres_preferees": "vos matieres preferees",
@@ -265,6 +272,26 @@ def _mode_deterministe(question: str, profil: dict, appels: list) -> str:
     res = appel("rechercher_formation", question=question)
     passages = res["passages"]
     if not passages or not _pertinent(question, passages[0]["texte"]):
+        # Filet de securite : une question personnelle sur son orientation qui ne
+        # matche aucun document est une demande de recommandation mal formulee,
+        # pas une question documentaire -> demander le profil plutot qu'avouer
+        # une fausse ignorance.
+        if personnel and objet_orientation:
+            analyse = appel("analyser_profil_ml", profil=profil)
+            if "erreur" in analyse:
+                noms = {"serie_bac": "votre serie de bac", "matieres_preferees": "vos matieres preferees",
+                        "interets": "vos centres d'interet"}
+                attendus = ", ".join(noms.get(c, c) for c in analyse["champs_manquants"])
+                return (f"Pour vous proposer un parcours, il me manque des informations importantes : "
+                        f"**{attendus}**. Renseignez-les dans le panneau Profil et je vous donnerai "
+                        f"un top 3 argumente.")
+            top = analyse["top3"]
+            lignes = ["**Recommandation (top 3 du modele ML)** :", ""]
+            for i, t in enumerate(top, 1):
+                lignes.append(f"{i}. **{t['sigle']}** — {t['nom']} · probabilite {t['probabilite']:.0%}")
+            lignes += ["", f"**Facteurs du modele** : {', '.join(analyse['facteurs_principaux']) or 'n/d'}",
+                       f"**Incertitude declaree** : {analyse['avertissement']}", "", f"_{MENTION}_"]
+            return "\n".join(lignes)
         return ("**Cette information n'est pas disponible dans mes sources** (site officiel ISPM, "
                 "brochure). Je prefere le dire plutot que d'inventer. Pour une reponse officielle, "
                 "contactez l'administration : contact@ispm.education [src-accueil].")

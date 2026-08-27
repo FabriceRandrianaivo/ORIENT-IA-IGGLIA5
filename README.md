@@ -6,6 +6,11 @@ ORIENT'IA produit une orientation personnalisée et argumentée vers les **16 fi
 
 > **ORIENT'IA constitue un outil d'aide à l'orientation. Ses recommandations ne remplacent ni l'avis d'un conseiller pédagogique ni une décision officielle d'admission.**
 
+## 🎬 Vidéo de démonstration (3-5 min)
+
+**[▶️ Voir la vidéo — le système en fonctionnement](https://drive.google.com/file/d/1arOm7BNF0K1_94Y8ZcGuzWYXvfBbA-T3/view?usp=sharing)**
+*(hébergée sur Google Drive — le fichier vidéo dépasse la limite de 100 Mo de GitHub ; copie locale : `docs/video-demo.mp4`)*
+
 ## Résultats mesurés
 
 | Composant | Mesure | Résultat |

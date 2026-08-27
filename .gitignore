@@ -14,3 +14,6 @@ rag/index/
 # Syst√®me
 Thumbs.db
 .DS_Store
+
+# Videos : jamais dans git (limite GitHub 100 Mo) ó la video finale se partage par lien
+*.mp4

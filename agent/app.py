@@ -657,7 +657,11 @@ elif page == "parcours":
              "habilitation LMD 2015.", False),
             ("Second cycle — Master / Ingénorat (M1, M2)", "2 années menant au Master (BAC+5), "
              "également appelé Ingénorat.", False),
-            ("Troisième cycle — Doctorat", "Années de recherche pour la préparation du doctorat.", False),
+            ("Troisième cycle — Doctorat", "Années de recherche pour la préparation du doctorat "
+             "(les activités professionnelles sont accessibles dès la Licence ou le Master).", False),
+            ("🎯 Débouchés professionnels — " + sigle,
+             ", ".join(f["debouches"] or ["non précisés par les sources officielles"])
+             + " [src-filieres]", False),
         ]
         st.markdown('<div class="carte"><h4>Feuille de Route</h4></div>', unsafe_allow_html=True)
         for i, (titre, det, fait) in enumerate(etapes, 1):

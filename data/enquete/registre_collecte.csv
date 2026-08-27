@@ -1,6 +1,8 @@
 champ,valeur
 questionnaire_version,"data/enquete/generateur_forms.gs (v3 : formulaire unique avec aiguillage etudiant/professionnel, 16 filieres, serie de bac, Droit/justice) — verifie conforme avant diffusion"
 lien_formulaire_diffuse,"https://docs.google.com/forms/d/e/1FAIpQLSfMY7qjgUf7p_GfZ29u204XjPTaK4TVR-Q17yo4CJNV8VQ9-w/viewform"
+lien_sheet_reponses,"https://docs.google.com/spreadsheets/d/1TEpF2fVeZjp3t0Ni179ZF-7LI_ss8CFuBYk1XglBQi8/edit"
+reponses_post_gel,"7 reponses recues apres le gel du 26/08 21h49 (le Sheet en comptait 105 au 27/08 midi, contre 98 dans l'export gele) — EXCLUES du jeu livre conformement au protocole de gel fin jour 1 exige par le sujet ; fermeture du formulaire effectuee le 27/08"
 populations_visees,"etudiants (ISPM et autres etablissements) ; professionnels en activite — aiguillage integre au formulaire"
 mode_diffusion_etudiants,"groupes WhatsApp/Messenger des promotions ISPM et contacts directs des 7 membres"
 mode_diffusion_professionnels,"contacts professionnels, anciens et famille des membres de l'equipe"

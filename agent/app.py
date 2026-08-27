@@ -1,10 +1,9 @@
-"""Interface ORIENT'IA (Streamlit).
+"""Interface ORIENT'IA (Streamlit) — design "Plateforme d'Orientation".
 
 Lancement :  streamlit run agent/app.py
-Le profil est DECLARE par l'utilisateur dans la barre laterale (collecte
-progressive) ; l'assistant n'infere rien. Chaque reponse expose ses traces
-(outils appeles, scores, latence) et la mention obligatoire est affichee en
-permanence (exigences du sujet).
+Le profil est DECLARE par l'utilisateur (barre laterale OU mini-formulaire dans
+le chat) ; l'assistant n'infere rien. Chaque reponse expose ses traces et la
+mention obligatoire est affichee en permanence (exigences du sujet).
 """
 
 import csv
@@ -44,131 +43,165 @@ SUGGESTIONS = [
     "🏫 Présente-moi la filière GCA",
 ]
 
-st.set_page_config(page_title="ORIENT'IA — ISPM", page_icon="🎓", layout="wide",
-                   initial_sidebar_state="expanded")
+st.set_page_config(page_title="ORIENT'IA — Dashboard d'Orientation", page_icon="🎓",
+                   layout="wide", initial_sidebar_state="expanded")
 
+# ------------------------------------------------------------------ styles
 st.markdown("""
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Public+Sans:wght@400;500;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Public+Sans:wght@400;500;600&display=swap');
 
+  :root {
+    --vert-nuit: #0b3d2b; --vert: #14603f; --vert-vif: #1e7a4f;
+    --menthe: #bff0d4; --fond: #eef2ee; --carte: #ffffff; --ligne: #dfe7e1;
+  }
   html, body, [class*="css"] { font-family: 'Public Sans', 'Segoe UI', sans-serif; }
-  h1, h2, h3 { font-family: 'Outfit', 'Segoe UI', sans-serif; }
-  .block-container { padding-top: 1.2rem; max-width: 62rem; }
+  h1, h2, h3 { font-family: 'Outfit', sans-serif; }
+  .stApp { background: var(--fond); }
+  .block-container { padding-top: 0.4rem; max-width: 64rem; }
   #MainMenu, footer, header[data-testid="stHeader"] { visibility: hidden; height: 0; }
 
-  .orientia-hero {
+  /* ---------- navbar superieure ---------- */
+  .topnav {
+    background: var(--vert-nuit); border-radius: 0 0 14px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 22px; margin: 0 0 14px;
+  }
+  .topnav .brand { color: #fff; font-family: 'Outfit'; font-weight: 800; font-size: 1.05rem; letter-spacing: .02em; }
+  .topnav .links a {
+    color: #cfe8d9; text-decoration: none; font-size: .78rem; font-weight: 600;
+    margin-left: 18px;
+  }
+  .topnav .links a:hover { color: #ffffff; }
+
+  /* ---------- hero ---------- */
+  .hero {
     position: relative; overflow: hidden;
-    background: linear-gradient(115deg, #0d3b23 0%, #1e6b45 55%, #2e8a5c 100%);
-    border-radius: 16px; padding: 22px 28px 18px; color: #ffffff;
-    box-shadow: 0 8px 26px rgba(13, 59, 35, .22);
+    background: linear-gradient(100deg, var(--vert-nuit) 0%, var(--vert) 80%);
+    border-radius: 18px; padding: 26px 30px; color: #fff; margin-bottom: 14px;
+    box-shadow: 0 10px 28px rgba(11, 61, 43, .25);
   }
-  .orientia-hero::before {
-    content: ""; position: absolute; right: -60px; top: -60px; width: 240px; height: 240px;
-    background: radial-gradient(circle, rgba(255,255,255,.14) 0%, transparent 65%);
+  .hero::after {
+    content: ""; position: absolute; right: 26px; top: 50%; transform: translateY(-50%);
+    width: 150px; height: 150px; border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.05));
   }
-  .orientia-hero h1 { color: #fff; font-size: 1.9rem; font-weight: 700; margin: 0; display: inline; }
-  .orientia-hero .tagline { color: #cfe8d9; margin: 4px 0 0; font-size: .9rem; }
+  .hero h1 { color: #fff; font-size: 2.1rem; font-weight: 800; margin: 0; display: inline; vertical-align: middle; }
+  .hero .cap { font-size: 1.7rem; vertical-align: middle; margin-right: 8px; }
+  .hero .tagline { color: #cfe8d9; margin: 6px 0 14px; font-size: .95rem; }
+  .hero .chips span {
+    background: rgba(255,255,255,.13); border: 1px solid rgba(255,255,255,.28);
+    color: #eaf6ef; font-size: .72rem; font-weight: 600; padding: 5px 14px;
+    border-radius: 999px; margin-right: 8px;
+  }
 
-  .etapes { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0 4px; }
-  .etape {
-    flex: 1; min-width: 180px; display: flex; align-items: center; gap: 10px;
-    background: #ffffff; border: 1.5px solid #dfe7e1; border-radius: 12px; padding: 10px 14px;
+  /* ---------- stepper ---------- */
+  .stepper {
+    background: var(--carte); border: 1px solid var(--ligne); border-radius: 16px;
+    display: flex; align-items: center; padding: 16px 26px; margin-bottom: 12px;
+    box-shadow: 0 3px 12px rgba(31, 60, 43, .05);
   }
-  .etape.ok { border-color: #1e6b45; background: #eaf3ed; }
-  .etape .num {
-    width: 26px; height: 26px; border-radius: 50%; flex: none;
-    display: flex; align-items: center; justify-content: center;
-    background: #dfe7e1; color: #5b6459; font-weight: 700; font-size: .85rem;
+  .step { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 130px; }
+  .step .dot {
+    width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-weight: 700; font-size: .85rem;
+    background: #e6ede8; color: #7d8a80; border: 2px solid var(--ligne);
   }
-  .etape.ok .num { background: #1e6b45; color: #fff; }
-  .etape .lbl { font-size: .82rem; line-height: 1.3; color: #2c4636; }
-  .etape .lbl b { display: block; font-size: .86rem; color: #14321f; }
+  .step.on .dot { background: var(--vert-vif); color: #fff; border-color: var(--vert-vif); }
+  .step .lbl { font-size: .74rem; font-weight: 700; color: #2c4636; text-align: center; }
+  .step .sub { font-size: .64rem; color: #7d8a80; text-align: center; margin-top: -4px; }
+  .lien { flex: 1; height: 2px; background: var(--ligne); margin: 0 10px 26px; }
+  .lien.on { background: var(--vert-vif); }
 
+  /* ---------- bandeau mention ---------- */
   .mention {
-    background: #eef5f0; border: 1px solid #d5e5da; border-left: 5px solid #1e6b45;
-    border-radius: 0 10px 10px 0; padding: 8px 14px; font-size: .8rem;
-    color: #2c4636; margin: 10px 0 16px;
+    background: #dff0e5; border: 1px solid #c4e2d0; border-radius: 12px;
+    padding: 10px 16px; font-size: .8rem; color: #24523a; margin-bottom: 16px;
   }
 
+  /* ---------- cartes filieres ---------- */
   .carte-filiere {
-    background: #ffffff; border: 1.5px solid #d3e4d9; border-radius: 14px;
-    padding: 14px 16px 12px; height: 100%;
+    background: var(--carte); border: 1.5px solid var(--ligne); border-radius: 14px;
+    padding: 13px 15px 11px; height: 100%;
     box-shadow: 0 3px 12px rgba(31, 60, 43, .07);
   }
-  .carte-filiere.premiere { border-color: #1e6b45; background: linear-gradient(180deg, #eaf3ed 0%, #ffffff 60%); }
-  .carte-filiere .rang { font-size: .68rem; font-weight: 700; letter-spacing: .06em; color: #7d8a80; }
-  .carte-filiere.premiere .rang { color: #1e6b45; }
-  .carte-filiere .sigle { font-family: 'Outfit'; font-size: 1.25rem; font-weight: 700; color: #14321f; margin: 2px 0; }
-  .carte-filiere .nom { font-size: .74rem; color: #5b6459; line-height: 1.35; min-height: 2.6em; }
-  .carte-filiere .barre { height: 8px; background: #e2eae4; border-radius: 99px; overflow: hidden; margin-top: 8px; }
-  .carte-filiere .barre div { height: 100%; background: linear-gradient(90deg, #1e6b45, #2e8a5c); border-radius: 99px; }
-  .carte-filiere .pct { font-family: 'Outfit'; font-weight: 700; color: #1e6b45; font-size: .95rem; margin-top: 4px; }
+  .carte-filiere.premiere { border-color: var(--vert-vif); background: linear-gradient(180deg, #eaf5ee 0%, #ffffff 55%); }
+  .carte-filiere .rang {
+    display: inline-block; font-size: .62rem; font-weight: 700; letter-spacing: .05em;
+    color: #7d8a80; margin-bottom: 4px;
+  }
+  .carte-filiere.premiere .rang {
+    background: var(--vert-vif); color: #fff; border-radius: 999px; padding: 2px 10px;
+  }
+  .carte-filiere .sigle { font-family: 'Outfit'; font-size: 1.22rem; font-weight: 800; color: #14321f; }
+  .carte-filiere .nom { font-size: .72rem; color: #5b6459; line-height: 1.35; min-height: 2.6em; }
+  .carte-filiere .barre { height: 7px; background: #e2eae4; border-radius: 99px; overflow: hidden; margin-top: 8px; }
+  .carte-filiere .barre div { height: 100%; background: linear-gradient(90deg, var(--vert), var(--vert-vif)); }
+  .carte-filiere .pct { font-family: 'Outfit'; font-weight: 800; color: var(--vert-vif); font-size: .95rem; text-align: right; }
 
+  /* ---------- chat ---------- */
   [data-testid="stChatMessage"] {
-    border-radius: 18px; padding: 15px 18px; margin-bottom: 12px;
-    border: 1px solid #e2eae4; background: #ffffff;
-    box-shadow: 0 3px 14px rgba(31, 60, 43, .06);
+    border-radius: 16px; padding: 15px 18px; margin-bottom: 12px;
+    border: 1px solid var(--ligne); background: var(--carte);
+    box-shadow: 0 2px 10px rgba(31, 60, 43, .05);
   }
-
-  /* --- Barre laterale sombre (inspiration myAuxilium, en vert ISPM) --- */
-  [data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #0a2b19 0%, #10402a 70%, #14603a 100%);
-  }
-  [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 {
-    color: #ffffff; font-family: 'Outfit';
-  }
-  [data-testid="stSidebar"] label p,
-  [data-testid="stSidebar"] .stMarkdown p,
-  [data-testid="stSidebar"] [data-testid="stCaptionContainer"],
-  [data-testid="stSidebar"] [data-testid="stCaptionContainer"] p,
-  [data-testid="stSidebar"] [data-testid="stWidgetLabel"] p {
-    color: #d9e8de !important;
-  }
-  [data-testid="stSidebar"] [data-testid="stExpander"] {
-    background: rgba(255, 255, 255, .07); border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, .18);
-  }
-  [data-testid="stSidebar"] [data-testid="stExpander"] summary p,
-  [data-testid="stSidebar"] [data-testid="stExpander"] summary span {
-    color: #e8f2ec !important;
-  }
-  [data-testid="stSidebar"] hr { border-color: rgba(255,255,255,.2); }
-  span[data-baseweb="tag"] { background: #1e6b45 !important; border-radius: 999px; }
-  [data-testid="stSidebar"] .stButton button {
-    background: rgba(255,255,255,.10); color: #eaf6ef; border-color: rgba(255,255,255,.35);
-  }
-  [data-testid="stSidebar"] .stButton button:hover:enabled {
-    background: #ffffff; color: #14321f; border-color: #ffffff;
-  }
-  [data-testid="stSidebar"] .stButton button[kind="primary"],
-  [data-testid="stSidebar"] .stButton button[data-testid="stBaseButton-primary"] {
-    background: #2e8a5c; color: #ffffff; border-color: #2e8a5c;
-  }
-
-  /* Zone de saisie facon pill */
   [data-testid="stChatInput"] {
-    border-radius: 999px; border: 1.5px solid #d3e4d9;
+    border-radius: 999px; border: 1.5px solid #d3e4d9; background: #fff;
     box-shadow: 0 4px 16px rgba(31, 60, 43, .08);
   }
-  [data-testid="stChatInput"]:focus-within { border-color: #1e6b45; }
+  [data-testid="stChatInput"]:focus-within { border-color: var(--vert-vif); }
 
+  /* ---------- sidebar ---------- */
+  [data-testid="stSidebar"] { background: linear-gradient(180deg, var(--vert-nuit) 0%, #114a33 100%); }
+  [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 { color: #fff; font-family: 'Outfit'; }
+  [data-testid="stSidebar"] label p, [data-testid="stSidebar"] .stMarkdown p,
+  [data-testid="stSidebar"] [data-testid="stCaptionContainer"],
+  [data-testid="stSidebar"] [data-testid="stCaptionContainer"] p,
+  [data-testid="stSidebar"] [data-testid="stWidgetLabel"] p { color: #d9e8de !important; }
+  [data-testid="stSidebar"] [data-testid="stExpander"] {
+    background: rgba(255,255,255,.07); border-radius: 12px; border: 1px solid rgba(255,255,255,.18);
+  }
+  [data-testid="stSidebar"] [data-testid="stExpander"] summary p,
+  [data-testid="stSidebar"] [data-testid="stExpander"] summary span { color: #e8f2ec !important; }
+  [data-testid="stSidebar"] hr { border-color: rgba(255,255,255,.2); }
+  span[data-baseweb="tag"] { background: var(--vert) !important; border-radius: 999px; }
+
+  .logo-bloc { text-align: center; padding: 6px 0 2px; }
+  .logo-bloc .rond {
+    width: 58px; height: 58px; border-radius: 50%; background: #fff; margin: 0 auto 8px;
+    display: flex; align-items: center; justify-content: center; font-size: 1.7rem;
+    box-shadow: 0 4px 14px rgba(0,0,0,.25);
+  }
+  .logo-bloc .titre { color: #fff; font-family: 'Outfit'; font-weight: 800; font-size: 1.05rem; letter-spacing: .03em; }
+  .logo-bloc .sous { color: #9fc4ae; font-size: .68rem; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px; color: #cfe8d9;
+    font-size: .8rem; font-weight: 600; padding: 8px 12px; border-radius: 10px; margin: 2px 0;
+  }
+  .nav-item.actif { background: var(--vert-vif); color: #fff; }
+
+  /* ---------- boutons ---------- */
   .stButton button {
-    border: 1.5px solid #1e6b45; color: #145032; background: #ffffff;
-    border-radius: 999px; font-size: .82rem; font-weight: 600; padding: 6px 15px;
+    border: 1.5px solid var(--vert); color: #145032; background: #ffffff;
+    border-radius: 999px; font-size: .8rem; font-weight: 700; padding: 7px 16px;
     transition: all .15s ease;
   }
   .stButton button:hover:enabled {
-    background: #1e6b45; color: #ffffff;
-    transform: translateY(-1px); box-shadow: 0 4px 12px rgba(30, 107, 69, .30);
-  }
-  .stButton button[kind="primary"], .stButton button[data-testid="stBaseButton-primary"] {
-    background: #1e6b45; color: #ffffff; border-color: #1e6b45; font-size: .9rem; padding: 9px 15px;
+    background: var(--vert); color: #fff; transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(20, 96, 63, .3);
   }
   .stButton button:disabled { opacity: .45; }
+  [data-testid="stSidebar"] .stButton button[kind="primary"],
+  [data-testid="stSidebar"] .stButton button[data-testid="stBaseButton-primary"] {
+    background: #ffffff; color: #0b3d2b; border-color: #ffffff;
+  }
+  [data-testid="stSidebar"] .stButton button[kind="secondary"] {
+    background: var(--menthe); color: #0b3d2b; border-color: var(--menthe);
+  }
 
   .footer-note {
-    text-align: center; color: #7d8a80; font-size: .72rem;
-    margin-top: 24px; padding-top: 12px; border-top: 1px solid #e2eae4;
+    text-align: center; color: #7d8a80; font-size: .7rem;
+    margin-top: 22px; padding-top: 12px; border-top: 1px solid var(--ligne);
   }
 </style>
 """, unsafe_allow_html=True)
@@ -186,7 +219,6 @@ def _registre_sources() -> dict:
 
 
 def afficher_sources(texte: str):
-    """Panneau Sources : détail du registre pour chaque [src-…] cité."""
     cites = sorted(set(re.findall(r"src-[a-z0-9-]+", texte)))
     if not cites:
         return
@@ -204,7 +236,6 @@ def afficher_sources(texte: str):
 
 
 def questions_suivantes(meta) -> list:
-    """Questions exploratoires contextuelles proposées après chaque réponse."""
     outils = [a["outil"] for a in meta["outils"]] if meta else []
     if meta and meta.get("refus"):
         return ["Quels parcours me correspondent ?",
@@ -212,7 +243,7 @@ def questions_suivantes(meta) -> list:
     for a in (meta["outils"] if meta else []):
         if a["outil"] == "analyser_profil_ml" and "top3" in a.get("sortie", {}):
             s = [t["sigle"] for t in a["sortie"]["top3"]]
-            return [f"Pourquoi ton modèle recommande-t-il ce parcours ?",
+            return ["Pourquoi ton modèle recommande-t-il ce parcours ?",
                     f"Compare {s[0]} et {s[1]}",
                     f"Quels sont les prérequis de bac pour {s[0]} ?"]
         if a["outil"] == "comparer_parcours":
@@ -240,10 +271,16 @@ def traiter(question: str):
                                       "meta": {k: r[k] for k in ["outils", "latence_ms", "refus", "mode"]}})
 
 
-# ----------------------------------------------------------- profil declare
+# ----------------------------------------------------------- barre laterale
 with st.sidebar:
-    st.header("👤 Étape 1 — Mon profil")
-    st.caption("L'assistant n'utilise que ce que vous déclarez ici — jamais votre style d'écriture.")
+    st.markdown("""
+    <div class="logo-bloc">
+      <div class="rond">🎓</div>
+      <div class="titre">ORIENT'IA</div>
+      <div class="sous">Plateforme d'Orientation</div>
+    </div>
+    """, unsafe_allow_html=True)
+    st.markdown('<div class="nav-item actif">👤&nbsp; Mon Profil</div>', unsafe_allow_html=True)
 
     serie = st.selectbox("🎯 Série de bac *", [""] + tools.SERIES, key="k_serie",
                          help="Obligatoire : détermine les filières accessibles")
@@ -266,21 +303,30 @@ with st.sidebar:
               "matieres_preferees": matieres, "competences": competences, "interets": interets,
               "environnement": environnement, "metiers_vises": metiers}
 
+    remplis = sum(bool(v) for v in [serie, matieres, interets, competences, environnement, metiers])
+    st.progress(remplis / 6, text=f"Profil : {remplis}/6")
     pret = bool(serie and matieres and interets)
-    if pret:
-        st.success("Profil prêt ✔", icon="✅")
-    else:
+    if not pret:
         manques = [n for n, v in [("série de bac", serie), ("matières", matieres),
                                   ("intérêts", interets)] if not v]
-        st.warning("Il manque : " + ", ".join(manques), icon="✏️")
+        st.caption("✏️ Il manque : " + ", ".join(manques))
 
+    with st.expander("🎓 Parcours (16 filières)"):
+        for m_nom, sigles_m in tools._FORMATIONS["mentions_lmd"]["mentions"].items():
+            st.caption(m_nom)
+            for s in sigles_m:
+                st.markdown(f"{EMOJI_FILIERE.get(s, '🎓')} **{s}** — "
+                            f"<small>{tools._PAR_SIGLE[s]['nom']}</small>", unsafe_allow_html=True)
+    with st.expander("📚 Ressources (sources officielles)"):
+        for sid, r in _registre_sources().items():
+            st.caption(f"[{sid}] {r['titre']} — {r['statut']}, {r['date_consultation']}")
+
+    st.divider()
     if st.button("🧭 Obtenir ma recommandation", type="primary",
                  use_container_width=True, disabled=not pret):
         traiter("Quels parcours me correspondent ?")
         st.rerun()
-
-    st.divider()
-    if st.button("🧹 Nouvelle conversation", use_container_width=True):
+    if st.button("＋ Nouvelle Session", type="secondary", use_container_width=True):
         st.session_state.messages = []
         st.rerun()
     if agent.os.environ.get("ANTHROPIC_API_KEY"):
@@ -304,23 +350,28 @@ a_recommandation = any(m.get("meta") and any(o["outil"] == "analyser_profil_ml"
                        for m in st.session_state.messages if m.get("meta"))
 
 st.markdown(f"""
-<div class="orientia-hero">
-  <h1>🎓 ORIENT'IA</h1>
-  <p class="tagline">Assistant intelligent d'orientation — Institut Supérieur Polytechnique de Madagascar · 16 filières</p>
+<div class="topnav">
+  <span class="brand">ORIENT'IA</span>
+  <span class="links">
+    <a href="https://ispm-edu.com" target="_blank">Site ISPM</a>
+    <a href="mailto:contact@ispm.education">Contact</a>
+  </span>
 </div>
-<div class="etapes">
-  <div class="etape {'ok' if pret else ''}">
-    <div class="num">{'✓' if pret else '1'}</div>
-    <div class="lbl"><b>Remplir mon profil</b>dans le panneau de gauche 👈</div>
-  </div>
-  <div class="etape {'ok' if a_pose_question else ''}">
-    <div class="num">{'✓' if a_pose_question else '2'}</div>
-    <div class="lbl"><b>Poser une question</b>ou cliquer « Obtenir ma recommandation »</div>
-  </div>
-  <div class="etape {'ok' if a_recommandation else ''}">
-    <div class="num">{'✓' if a_recommandation else '3'}</div>
-    <div class="lbl"><b>Explorer les résultats</b>top 3, sources citées, traces</div>
-  </div>
+<div class="hero">
+  <span class="cap">🎓</span><h1>ORIENT'IA</h1>
+  <p class="tagline">Assistant intelligent d'orientation — 16 filières</p>
+  <div class="chips"><span>◉ Sources officielles citées</span><span>☑ 38/38 tests</span>
+  <span>◈ Modèle ML expliqué</span></div>
+</div>
+<div class="stepper">
+  <div class="step {'on' if pret else ''}"><div class="dot">{'✓' if pret else '1'}</div>
+    <div class="lbl">Remplir mon profil</div><div class="sub">panneau de gauche</div></div>
+  <div class="lien {'on' if pret else ''}"></div>
+  <div class="step {'on' if a_pose_question else ''}"><div class="dot">{'✓' if a_pose_question else '2'}</div>
+    <div class="lbl">Poser une question</div><div class="sub">ou « Obtenir ma recommandation »</div></div>
+  <div class="lien {'on' if a_recommandation else ''}"></div>
+  <div class="step {'on' if a_recommandation else ''}"><div class="dot">{'✓' if a_recommandation else '3'}</div>
+    <div class="lbl">Explorer les résultats</div><div class="sub">top 3 · sources · traces</div></div>
 </div>
 <div class="mention">ℹ️ ORIENT'IA constitue un outil d'aide à l'orientation. Ses recommandations ne
 remplacent ni l'avis d'un conseiller pédagogique ni une décision officielle d'admission.</div>
@@ -329,7 +380,6 @@ remplacent ni l'avis d'un conseiller pédagogique ni une décision officielle d'
 
 # ---------------------------------------------------------------- rendu chat
 def cartes_top3(meta):
-    """Si la reponse contient un appel au modele ML, affiche le top-3 en cartes."""
     for a in meta["outils"]:
         if a["outil"] == "analyser_profil_ml" and "top3" in a.get("sortie", {}):
             top3 = a["sortie"]["top3"]
@@ -338,7 +388,7 @@ def cartes_top3(meta):
                 pct = round(t["probabilite"] * 100)
                 col.markdown(f"""
 <div class="carte-filiere {'premiere' if i == 0 else ''}">
-  <div class="rang">{'🥇 MEILLEURE CORRESPONDANCE' if i == 0 else f'#{i + 1}'}</div>
+  <span class="rang">{'◉ MEILLEURE CORRESPONDANCE' if i == 0 else f'#{i + 1}'}</span>
   <div class="sigle">{EMOJI_FILIERE.get(t['sigle'], '🎓')} {t['sigle']}</div>
   <div class="nom">{t['nom']}</div>
   <div class="barre"><div style="width:{max(pct, 3)}%"></div></div>
@@ -373,8 +423,7 @@ for m in st.session_state.messages:
                     st.caption("Aucun outil appelé (refus de sécurité ou réponse directe).")
                 st.caption("Trace complète : dossier traces/ (JSONL).")
 
-# Questions exploratoires contextuelles apres la derniere reponse,
-# sinon suggestions de depart.
+
 # Collecte progressive DANS le chat (exigence « recueillir progressivement ») :
 # quand l'assistant demande le profil, un mini-formulaire apparait dans la
 # conversation — l'utilisateur repond a l'IA sans passer par la barre laterale.

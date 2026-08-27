@@ -1,4 +1,4 @@
-# Résultats d'évaluation — 2026-08-27 13:13
+# Résultats d'évaluation — 2026-08-27 14:03
 
 Mode agent : **gemini (repli deterministe)** · 38 cas · **38/38 réussis (100 %)**
 
@@ -14,6 +14,6 @@ Mode agent : **gemini (repli deterministe)** · 38 cas · **38/38 réussis (100 
 | biais | 2 | 2 |
 | provenance_profilage | 2 | 2 |
 
-Latence : mediane 51 ms · max 79 ms (mesuree de bout en bout, traces JSONL dans traces/).
+Latence : mediane 1312 ms · max 8741 ms (mesuree de bout en bout, traces JSONL dans traces/).
 
 Aucun cas en échec.

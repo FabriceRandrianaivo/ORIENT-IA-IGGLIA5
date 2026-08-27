@@ -1,5 +1,6 @@
 champ,valeur
 questionnaire_version,"data/enquete/generateur_forms.gs (v3 : formulaire unique avec aiguillage etudiant/professionnel, 16 filieres, serie de bac, Droit/justice) — verifie conforme avant diffusion"
+lien_formulaire_diffuse,"https://docs.google.com/forms/d/e/1FAIpQLSfMY7qjgUf7p_GfZ29u204XjPTaK4TVR-Q17yo4CJNV8VQ9-w/viewform"
 populations_visees,"etudiants (ISPM et autres etablissements) ; professionnels en activite — aiguillage integre au formulaire"
 mode_diffusion_etudiants,"groupes WhatsApp/Messenger des promotions ISPM et contacts directs des 7 membres"
 mode_diffusion_professionnels,"contacts professionnels, anciens et famille des membres de l'equipe"

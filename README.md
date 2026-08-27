@@ -88,7 +88,7 @@ Notebooks d'analyse : [notebooks/01_eda.ipynb](notebooks/01_eda.ipynb) (explorat
 
 ### Enquête (données réelles)
 
-1. Formulaires générés par `data/enquete/generateur_forms.gs` (Apps Script) — consentement explicite, aucune donnée nominative.
+1. Formulaire généré par `data/enquete/generateur_forms.gs` (Apps Script) — consentement explicite, aucune donnée nominative. **[Formulaire diffusé](https://docs.google.com/forms/d/e/1FAIpQLSfMY7qjgUf7p_GfZ29u204XjPTaK4TVR-Q17yo4CJNV8VQ9-w/viewform)** (98 réponses reçues, gelé le 26/08 au soir). Réponses anonymisées livrées dans `data/enquete/` (brutes, recodées, écartées avec motifs).
 2. Après gel : `python data/enquete/recoder_reponses.py --etudiants export1.csv --pros export2.csv`
 3. Mesure de généralisation : `python models/transfert_reel.py` (montage du sujet : synthétique = entraînement, enquête = validation/test). Registre de collecte : `data/enquete/registre_collecte.csv`.
 

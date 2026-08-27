@@ -96,7 +96,20 @@ st.markdown(f"""
   .stApp {{ background: var(--fond); }}
   .stApp p, .stApp li, .stApp label p {{ color: var(--encre); }}
   .block-container {{ padding-top: 0.4rem; max-width: 64rem; }}
-  #MainMenu, footer, header[data-testid="stHeader"] {{ visibility: hidden; height: 0; }}
+  #MainMenu, footer {{ visibility: hidden; height: 0; }}
+  header[data-testid="stHeader"] {{ background: transparent; height: 2.2rem; }}
+  header[data-testid="stHeader"] > * {{ visibility: hidden; }}
+  /* Le bouton d'ouverture/fermeture de la barre laterale doit TOUJOURS rester visible */
+  [data-testid="stSidebarCollapsedControl"], [data-testid="collapsedControl"],
+  [data-testid="stSidebarCollapseButton"], header [data-testid="stExpandSidebarButton"] {{
+    visibility: visible !important; display: flex !important;
+    position: fixed; top: 8px; left: 8px; z-index: 9999;
+    background: var(--vert-nuit); border-radius: 10px; padding: 4px 6px;
+  }}
+  [data-testid="stSidebarCollapsedControl"] *, [data-testid="collapsedControl"] *,
+  header [data-testid="stExpandSidebarButton"] * {{
+    visibility: visible !important; color: #ffffff !important; fill: #ffffff !important;
+  }}
   {"* { transition: none !important; animation: none !important; }" if not st.session_state.animations else ""}
 
   .topnav {{

@@ -164,6 +164,31 @@ def _mode_deterministe(question: str, profil: dict, appels: list) -> str:
         appels.append({"outil": nom, "entree": kwargs, "sortie": sortie})
         return sortie
 
+    def recommander():
+        """Recommandation top-3 — appelee par plusieurs branches : verbe explicite,
+        question personnelle d'orientation, ou continuation (« je viens de remplir »)."""
+        analyse = appel("analyser_profil_ml", profil=profil)
+        if "erreur" in analyse:
+            noms = {"serie_bac": "votre serie de bac", "matieres_preferees": "vos matieres preferees",
+                    "interets": "vos centres d'interet"}
+            attendus = ", ".join(noms.get(c, c) for c in analyse["champs_manquants"])
+            return (f"Avant de recommander, il me manque des informations importantes : **{attendus}**. "
+                    "Renseignez-les dans le panneau Profil (je ne devine jamais a votre place, et je "
+                    "n'infere rien de votre style d'ecriture).")
+        top = analyse["top3"]
+        graphe = appel("chemins_graphe", sigle=top[0]["sigle"])
+        metiers = [r["cible"] for r in graphe["relations"] if r["relation"] == "prepareA"][:3]
+        lignes = ["**Recommandation (top 3 du modele ML)** :", ""]
+        for i, t in enumerate(top, 1):
+            lignes.append(f"{i}. **{t['sigle']}** — {t['nom']} · probabilite {t['probabilite']:.0%}")
+        lignes += ["",
+                   f"**Facteurs du modele** : {', '.join(analyse['facteurs_principaux']) or 'n/d'}",
+                   f"**Graphe de connaissances** : {top[0]['sigle']} prepare notamment a : "
+                   f"{', '.join(metiers) or 'debouches non precises'} [src-filieres]",
+                   f"**Incertitude declaree** : {analyse['avertissement']}",
+                   "", f"_{MENTION}_"]
+        return "\n".join(lignes)
+
     q = _sans_accents(question.lower())
     sigles = [s.upper() for s in RE_SIGLES.findall(question)]
 
@@ -175,6 +200,13 @@ def _mode_deterministe(question: str, profil: dict, appels: list) -> str:
                 "d'**enquete reelles** anonymisees. Mes informations sur les formations viennent du "
                 "site officiel de l'ISPM [src-filieres, src-inscription, src-brochure]. "
                 "Les limites (volume, auto-selection) sont declarees dans le registre de collecte.")
+
+    # Continuation de dialogue : « je viens de remplir », « c'est fait », « voila »
+    # — le mode deterministe n'a pas de memoire, mais un message court de ce type
+    # signifie toujours « mon profil est pret, vas-y » -> recommandation.
+    if len(q) <= 45 and re.search(r"\b(rempl|repli|complet|fait|voila|termin|pret|"
+                                  r"c.est bon|vas.?y|allons.?y)", q):
+        return recommander()
 
     # Comparaison entre deux filieres.
     if len(sigles) >= 2 and re.search(r"compar|differen|versus|\bvs\b|ou bien", q):
@@ -217,27 +249,7 @@ def _mode_deterministe(question: str, profil: dict, appels: list) -> str:
     if (re.search(r"recommande|conseille|correspond|oriente[sz]?[ -]moi|me convien", q)
             or re.search(r"j'aime|je prefere|je suis (fort|bon)", q)
             or (personnel and objet_orientation and mot_choix)):
-        analyse = appel("analyser_profil_ml", profil=profil)
-        if "erreur" in analyse:
-            noms = {"serie_bac": "votre serie de bac", "matieres_preferees": "vos matieres preferees",
-                    "interets": "vos centres d'interet"}
-            attendus = ", ".join(noms.get(c, c) for c in analyse["champs_manquants"])
-            return (f"Avant de recommander, il me manque des informations importantes : **{attendus}**. "
-                    "Renseignez-les dans le panneau Profil (je ne devine jamais a votre place, et je "
-                    "n'infere rien de votre style d'ecriture).")
-        top = analyse["top3"]
-        graphe = appel("chemins_graphe", sigle=top[0]["sigle"])
-        metiers = [r["cible"] for r in graphe["relations"] if r["relation"] == "prepareA"][:3]
-        lignes = ["**Recommandation (top 3 du modele ML)** :", ""]
-        for i, t in enumerate(top, 1):
-            lignes.append(f"{i}. **{t['sigle']}** — {t['nom']} · probabilite {t['probabilite']:.0%}")
-        lignes += ["",
-                   f"**Facteurs du modele** : {', '.join(analyse['facteurs_principaux']) or 'n/d'}",
-                   f"**Graphe de connaissances** : {top[0]['sigle']} prepare notamment a : "
-                   f"{', '.join(metiers) or 'debouches non precises'} [src-filieres]",
-                   f"**Incertitude declaree** : {analyse['avertissement']}",
-                   "", f"_{MENTION}_"]
-        return "\n".join(lignes)
+        return recommander()
 
     # Liste complete de l'offre de formation -> reponse structuree depuis
     # formations.json (les 6 mentions et 16 parcours), pas un tirage de passages.

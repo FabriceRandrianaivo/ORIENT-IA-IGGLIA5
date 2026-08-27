@@ -718,6 +718,8 @@ elif page == "parametres":
     st.caption("Aucun compte, aucune donnée personnelle : le profil déclaré reste local à la "
                "session (exigence d'anonymat du sujet).")
 
-st.markdown('<div class="footer-note">Prototype académique — Examen de fin d\'études M2, ISPM · '
-            'Données : site officiel + brochure août 2025 · Traces complètes dans traces/ (JSONL)</div>',
-            unsafe_allow_html=True)
+st.markdown('<div class="footer-note"><b>ORIENT\'IA constitue un outil d\'aide à l\'orientation. '
+            'Ses recommandations ne remplacent ni l\'avis d\'un conseiller pédagogique ni une '
+            'décision officielle d\'admission.</b><br>Prototype académique — Examen de fin '
+            'd\'études M2, ISPM · Données : site officiel + brochure août 2025 · Traces complètes '
+            'dans traces/ (JSONL)</div>', unsafe_allow_html=True)

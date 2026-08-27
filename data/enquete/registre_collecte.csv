@@ -1,8 +1,8 @@
 champ,valeur
 questionnaire_version,"data/enquete/generateur_forms.gs (v3 : formulaire unique avec aiguillage etudiant/professionnel, 16 filieres, serie de bac, Droit/justice) — verifie conforme avant diffusion"
 populations_visees,"etudiants (ISPM et autres etablissements) ; professionnels en activite — aiguillage integre au formulaire"
-mode_diffusion_etudiants,"[A PRECISER par l'equipe : groupes de promo WhatsApp/Messenger, ...]"
-mode_diffusion_professionnels,"[A PRECISER par l'equipe : LinkedIn, famille, contacts, ...]"
+mode_diffusion_etudiants,"groupes WhatsApp/Messenger des promotions ISPM et contacts directs des 7 membres"
+mode_diffusion_professionnels,"contacts professionnels, anciens et famille des membres de l'equipe"
 date_heure_lancement,"2026-08-26 (apres-midi) — formulaire unique v3 diffuse ; les 2 formulaires v2 fermes sans reponse"
 date_heure_gel,"2026-08-26 vers 21h50 (export export_reponses.csv) — fermeture du formulaire a confirmer dans Google Forms"
 reponses_recues_total,"98"

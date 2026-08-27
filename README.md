@@ -15,7 +15,7 @@ ORIENT'IA produit une orientation personnalisée et argumentée vers les **16 fi
 | | Calibration (ECE) | **0,073** |
 | | Stabilité du top-3 sous perturbation | 0,82 |
 | **Transfert synthétique → réel** (79 réponses d'enquête) | Top-3 / Top-1 | **0,73 ± 0,10** / 0,48 — perte de transfert ~10 pts ([détail](models/RAPPORT-TRANSFERT.md)) |
-| Évaluation de bout en bout | 32 cas / 9 catégories imposées | **32/32 réussis** |
+| Évaluation de bout en bout | 38 cas / 9 catégories imposées | **38/38 réussis** |
 | Latence de l'agent (mode déterministe) | médiane | < 10 ms |
 | Coût de fonctionnement | mode déterministe / mode Gemini | 0 Ar (aucune API) / quota gratuit Google AI Studio |
 
@@ -28,7 +28,7 @@ Site officiel ISPM ──scrape──► Corpus + registre des sources ──►
                                                                         │
 Profils synthétiques (train) ──► Dataset ──► Modèle ML top-3 ──┐        │
 Enquête réelle (validation/test) ─┘                            ▼        ▼
-                                                    AGENT (5 outils, graphe de connaissances,
+                                                    AGENT (6 outils, graphe de connaissances,
                                                     refus sécurité, incertitude déclarée)
                                                                         │
                                               Recommandation argumentée + sources citées
@@ -61,7 +61,7 @@ L'interface s'ouvre dans le navigateur : renseigner son profil dans la barre lat
 
 | Mode | Condition | Description |
 |---|---|---|
-| Déterministe | par défaut | 100 % local et hors-ligne : routeur d'intentions + outils. C'est le mode évalué 32/32. |
+| Déterministe | par défaut | 100 % local et hors-ligne : routeur d'intentions + outils. Évalué 38/38 (comme le mode Gemini). |
 | Gemini | `GEMINI_API_KEY` (gratuite sur Google AI Studio) | Les mêmes outils décident, Gemini reformule — il ne peut pas ajouter de faits ; retombe sur le mode déterministe en cas d'échec réseau. |
 | Groq | `GROQ_API_KEY` (gratuite sur console.groq.com) | Même principe que Gemini (API OpenAI-compatible, très rapide). |
 | Anthropic | `ANTHROPIC_API_KEY` | Boucle d'appels d'outils pilotée par le LLM. |
@@ -75,7 +75,7 @@ python data/scrape_ispm.py                 # 1. collecte du corpus ISPM + regist
 python data/synthetic/generateur.py        # 2. 3 000 profils synthétiques (seed 42, documentés)
 python models/train.py                     # 3. entraînement + comparaison + métriques + rapport
 python agent/build_graph.py                # 4. graphe de connaissances (115 arêtes)
-python eval/run_eval.py                    # 5. campagne d'évaluation (32 cas) -> RESULTATS.md
+python eval/run_eval.py                    # 5. campagne d'évaluation (38 cas) -> RESULTATS.md
 ```
 
 Notebooks d'analyse : [notebooks/01_eda.ipynb](notebooks/01_eda.ipynb) (exploration) et [notebooks/02_training.ipynb](notebooks/02_training.ipynb) (entraînement commenté).
@@ -95,7 +95,7 @@ Notebooks d'analyse : [notebooks/01_eda.ipynb](notebooks/01_eda.ipynb) (explorat
 ├── models/          train.py, model.joblib, métriques, rapport, transfert_reel.py
 ├── rag/             moteur de recherche hybride (BM25 + TF-IDF, citations)
 ├── agent/           agent (3 modes), 5 outils, graphe, prompts, interface Streamlit
-├── eval/            32 cas de test (9 catégories), harnais, résultats
+├── eval/            38 cas de test (9 catégories), harnais, résultats
 ├── traces/          traces JSONL de chaque interaction (observabilité)
 ├── deploy/          options de déploiement web gratuit (Render / tunnel / HF)
 └── docs/            architecture, limites-biais-risques, scénario vidéo

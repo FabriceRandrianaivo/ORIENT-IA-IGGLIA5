@@ -37,9 +37,12 @@ SYNONYMES = {"carriere": "debouches metiers", "job": "metier",
 
 def etendre(question: str) -> str:
     """Expansion de synonymes : rapproche le vocabulaire de l'utilisateur
-    (carriere, job, universite) de celui du corpus (debouches, metier, institut)."""
+    (carriere, job, universite) de celui du corpus (debouches, metier, institut).
+    La comparaison se fait sans accents (carrieres == carrières)."""
+    q_plate = unicodedata.normalize("NFD", question.lower())
+    q_plate = "".join(c for c in q_plate if unicodedata.category(c) != "Mn")
     for mot, expansion in SYNONYMES.items():
-        if re.search(rf"\b{mot}s?\b", question, re.I):
+        if re.search(rf"\b{mot}s?\b", q_plate):
             question = f"{question} {expansion}"
     return question
 

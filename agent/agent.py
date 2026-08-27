@@ -299,6 +299,14 @@ def _mode_deterministe(question: str, profil: dict, appels: list) -> str:
     res = appel("rechercher_formation", question=question)
     q_etendue = etendre(question)
     passages = [p for p in res["passages"] if _pertinent(q_etendue, p["texte"])]
+    # Garantie structurelle : si un sigle est cite, sa fiche officielle est
+    # toujours presente — le classement lexical ne peut pas la faire disparaitre.
+    if sigles:
+        fid = f"fiche-{sigles[0]}"
+        if not any(p.get("id") == fid for p in passages):
+            chunk = next((c for c in tools._RECHERCHE.chunks if c["id"] == fid), None)
+            if chunk:
+                passages.insert(0, {**chunk, "score": 1.0})
     if not passages:
         # Filet de securite : une question personnelle sur son orientation qui ne
         # matche aucun document est une demande de recommandation mal formulee,
